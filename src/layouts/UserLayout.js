@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {Icon} from 'antd';
 import logo from '../assets/logo.svg';
 import {Link} from 'react-router-dom'
-import SiderMenu from '../components/SiderMenu';
+import SiderMenu from '../components/SiderMenu-bak';
 
 const links = [
     {

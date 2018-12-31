@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import { Menu, Icon } from 'antd';
 import {Link} from 'react-router-dom';
-import { urlToList } from '../_utils/pathTools';
+// import { urlToList } from '../_utils/pathTools';
 import { getMenuMatches } from './SiderMenuUtils';
-import { isUrl } from '../_utils/utils';
+// import { isUrl } from '@/utils/utils';
 import styles from './index.less';
 
 const { SubMenu } = Menu;
@@ -13,7 +13,6 @@ const { SubMenu } = Menu;
 //   icon: 'setting',
 //   icon: 'http://demo.com/icon.png',
 //   icon: <Icon type="setting" />,
-
 const getIcon = icon => {
   if (typeof icon === 'string' && isUrl(icon)) {
     return <img src={icon} alt="icon" className={styles.icon} />;
@@ -159,4 +158,16 @@ export default class BaseMenu extends PureComponent {
       </Menu>
     );
   }
+}
+
+function urlToList(url) {
+    const urllist = url.split('/').filter(i => i);
+    return urllist.map((urlItem, index) => `/${urllist.slice(0, index + 1).join('/')}`);
+}
+
+
+const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+
+export function isUrl(path) {
+    return reg.test(path);
 }

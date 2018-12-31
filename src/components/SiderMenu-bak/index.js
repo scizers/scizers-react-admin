@@ -6,12 +6,9 @@ import { getFlatMenuKeys } from './SiderMenuUtils';
 const SiderMenuWrapper = React.memo(props => {
   const { isMobile, menuData, collapsed, onCollapse } = props;
   const flatMenuKeys = getFlatMenuKeys(menuData);
-
-  console.log(isMobile)
-
   return isMobile ? (
     <Drawer
-      visible={!false}
+      visible={!collapsed}
       placement="left"
       onClose={() => onCollapse(true)}
       style={{
@@ -19,10 +16,10 @@ const SiderMenuWrapper = React.memo(props => {
         height: '100vh',
       }}
     >
-      <SiderMenu {...props} flatMenuKeys={flatMenuKeys} collapsed={isMobile ? false : collapsed} />
+      <SiderMenu {...props} flatMenuKeys={flatMenuKeys} collapsed={isMobile ? false : collapsed}/>
     </Drawer>
   ) : (
-    <SiderMenu {...props} flatMenuKeys={flatMenuKeys} />
+    <SiderMenu {...props} flatMenuKeys={flatMenuKeys}/>
   );
 });
 

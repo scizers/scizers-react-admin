@@ -1,5 +1,10 @@
 import pathToRegexp from 'path-to-regexp';
-import { urlToList } from '../_utils/pathTools';
+// import { urlToList } from '../_utils/pathTools';
+
+export function urlToList(url) {
+    const urllist = url.split('/').filter(i => i);
+    return urllist.map((urlItem, index) => `/${urllist.slice(0, index + 1).join('/')}`);
+}
 
 /**
  * Recursively flatten the data
