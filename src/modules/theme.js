@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
 
     case 'TOGGLE_SIDEBAR_COLLAPSED':
-      console.log(state)
+      // console.log(state)
       return {
         ...state,
         collapsed: !state.collapsed

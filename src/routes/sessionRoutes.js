@@ -1,7 +1,8 @@
-import Login from '../../user/Login';
+import Login from '../../user/Login'
+
 export default {
-    Login: {
-        component: Login,
-        path: '/login'
-    },
-};
+  Login: {
+    component: Login,
+    path: '/login'
+  }
+}

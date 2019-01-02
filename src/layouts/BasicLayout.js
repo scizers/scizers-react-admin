@@ -57,8 +57,7 @@ class BasicLayout extends React.PureComponent {
 
   componentDidMount () {
     const {
-      dispatch,
-      route: { routes, authority }
+      dispatch
     } = this.props
 
     // dispatch({
@@ -90,22 +89,6 @@ class BasicLayout extends React.PureComponent {
   matchParamsPath = (pathname, breadcrumbNameMap) => {
     const pathKey = Object.keys(breadcrumbNameMap).find(key => pathToRegexp(key).test(pathname))
     return breadcrumbNameMap[pathKey]
-  }
-
-  getRouterAuthority = (pathname, routeData) => {
-    let routeAuthority = ['noAuthority']
-    const getAuthority = (key, routes) => {
-      routes.map(route => {
-        if (route.path && pathToRegexp(route.path).test(key)) {
-          routeAuthority = route.authority
-        } else if (route.routes) {
-          routeAuthority = getAuthority(key, route.routes)
-        }
-        return route
-      })
-      return routeAuthority
-    }
-    return getAuthority(pathname, routeData)
   }
 
   getPageTitle = (pathname, breadcrumbNameMap) => {
@@ -148,13 +131,11 @@ class BasicLayout extends React.PureComponent {
       isMobile,
       menuData,
       breadcrumbNameMap,
-      route: { routes },
       fixedHeader
     } = this.props
 
 
     const isTop = PropsLayout === 'topmenu'
-    const routerConfig = this.getRouterAuthority(pathname, routes)
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {}
 
     const layout = (
