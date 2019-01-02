@@ -534,9 +534,10 @@ const App = () => (
     <Route exact path="/dashboard/monitor" render={(route) => {
       return (
         <BasicLayout
-          collapsed={false}
-          fixSiderbar={true}
-          theme={'dark'}
+          // collapsed={false}
+          // fixSiderbar={true}
+          // theme={'dark'}
+
           location={window.location}
           menuData={menuData}
           route={{

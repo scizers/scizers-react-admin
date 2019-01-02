@@ -12,13 +12,14 @@ import Media from 'react-media'
 // import Authorized from '@/utils/Authorized';
 import logo from '../assets/logo.svg'
 // import Footer from './Footer';
-// import Header from './Header';
+import Header from './Header'
 import Context from './MenuContext'
 // import Exception403 from '../pages/Exception/403';
 // import PageLoading from '@/components/PageLoading';
 import SiderMenu from '../components/SiderMenu'
 
 import styles from './BasicLayout.less'
+import { bindActionCreators } from 'redux'
 
 const { Content } = Layout
 
@@ -59,23 +60,21 @@ class BasicLayout extends React.PureComponent {
       dispatch,
       route: { routes, authority }
     } = this.props
-    dispatch({
-      type: 'user/fetchCurrent'
-    })
-    dispatch({
-      type: 'setting/getSetting'
-    })
-    dispatch({
-      type: 'menu/getMenuData',
-      payload: { routes, authority }
-    })
+
+    // dispatch({
+    //   type: 'setting/getSetting'
+    // })
+
+    // dispatch({
+    //   type: 'menu/getMenuData',
+    //   payload: { routes, authority }
+    // })
   }
 
   componentDidUpdate (preProps) {
     // After changing to phone mode,
     // if collapsed is true, you need to click twice to display
     const { collapsed, isMobile } = this.props
-    // console.log(collapsed, isMobile, 'collapsed, isMobile')
 
     if (isMobile && !preProps.isMobile && !collapsed) {
       this.handleMenuCollapse(false)
@@ -139,12 +138,9 @@ class BasicLayout extends React.PureComponent {
   }
 
   handleMenuCollapse = collapsed => {
-    console.log('this is woring perhapds')
-    // const { dispatch } = this.props
-    // dispatch({
-    //   type: 'global/changeLayoutCollapsed',
-    //   payload: collapsed
-    // })
+    this.props.dispatch({
+      type: 'TOGGLE_SIDEBAR_COLLAPSED'
+    })
   }
 
   render () {
@@ -160,9 +156,13 @@ class BasicLayout extends React.PureComponent {
       fixedHeader
     } = this.props
 
+
     const isTop = PropsLayout === 'topmenu'
     const routerConfig = this.getRouterAuthority(pathname, routes)
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {}
+
+    console.log(isTop && !isMobile)
+
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (
@@ -181,6 +181,14 @@ class BasicLayout extends React.PureComponent {
             minHeight: '100vh'
           }}
         >
+
+          <Header
+            menuData={menuData}
+            handleMenuCollapse={this.handleMenuCollapse}
+            logo={logo}
+            isMobile={isMobile}
+            {...this.props}
+          />
 
           {/*
 
@@ -211,7 +219,33 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-export default connect(null, null)(props => {
+
+const mapStateToProps = ({ theme }) => {
+  return ({
+    collapsed: theme.collapsed,
+    layout: theme.layout,
+    theme: theme.theme,
+    navTheme: theme.navTheme,
+    fixSiderbar: theme.fixSiderbar,
+    breadcrumbNameMap: theme.breadcrumbNameMap
+  })
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    dispatch
+  )
+
+/*
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home)
+
+*/
+
+
+export default connect(mapStateToProps, null)(props => {
   // console.log(props)
   return (
     <Media query="(max-width: 599px)">

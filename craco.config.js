@@ -2,6 +2,18 @@ const CracoAntDesignPlugin = require('craco-antd')
 const slash = require('slash2')
 
 module.exports = {
+  babel: {
+    plugins: [
+      [
+        '@babel/plugin-proposal-decorators',
+        {
+          // https://babeljs.io/blog/2018/09/17/decorators
+          // https://github.com/mobxjs/mobx/issues/1352
+          legacy: true
+        }
+      ]
+    ]
+  },
   plugins: [
     {
       plugin: CracoAntDesignPlugin,
