@@ -9,6 +9,7 @@ import styles from './Header.less'
 const { Header } = Layout
 
 class HeaderView extends PureComponent {
+
   state = {
     visible: true
   }
@@ -42,24 +43,19 @@ class HeaderView extends PureComponent {
   handleNoticeClear = type => {
     message.success('this is ttest message')
     const { dispatch } = this.props
-    dispatch({
-      type: 'global/clearNotices',
-      payload: type
-    })
+
+    console.log(type, ' this is working here')
   }
 
   handleMenuClick = ({ key }) => {
     const { dispatch } = this.props
+    console.log(key, ' this is working')
 
   }
 
   handleNoticeVisibleChange = visible => {
-    if (visible) {
-      const { dispatch } = this.props
-      dispatch({
-        type: 'global/fetchNotices'
-      })
-    }
+    console.log(visible, ' this is worign here ')
+
   }
 
   handScroll = () => {
@@ -128,4 +124,14 @@ class HeaderView extends PureComponent {
   }
 }
 
-export default connect(null, null)(HeaderView)
+
+const mapStateToProps = ({ global }) => {
+  return ({
+    currentUser: global.currentUser,
+    notices: global.notices
+  })
+}
+
+export default connect(mapStateToProps, null)(HeaderView)
+
+

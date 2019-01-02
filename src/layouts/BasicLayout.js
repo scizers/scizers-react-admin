@@ -72,8 +72,6 @@ class BasicLayout extends React.PureComponent {
   }
 
   componentDidUpdate (preProps) {
-    // After changing to phone mode,
-    // if collapsed is true, you need to click twice to display
     const { collapsed, isMobile } = this.props
 
     if (isMobile && !preProps.isMobile && !collapsed) {
@@ -122,8 +120,6 @@ class BasicLayout extends React.PureComponent {
     // });
 
     const pageName = 'Some Page nmae'
-
-
     return `${pageName} - Ant Design Pro`
   }
 
@@ -161,18 +157,16 @@ class BasicLayout extends React.PureComponent {
     const routerConfig = this.getRouterAuthority(pathname, routes)
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {}
 
-    console.log(isTop && !isMobile)
-
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (
           <SiderMenu
+            {...this.props}
             logo={logo}
             theme={navTheme}
             onCollapse={this.handleMenuCollapse}
             menuData={menuData}
             isMobile={isMobile}
-            {...this.props}
           />
         )}
         <Layout
@@ -219,7 +213,6 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-
 const mapStateToProps = ({ theme }) => {
   return ({
     collapsed: theme.collapsed,
@@ -236,17 +229,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-/*
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home)
-
-*/
-
-
 export default connect(mapStateToProps, null)(props => {
-  // console.log(props)
   return (
     <Media query="(max-width: 599px)">
       {isMobile => <BasicLayout {...props} isMobile={isMobile}/>}
