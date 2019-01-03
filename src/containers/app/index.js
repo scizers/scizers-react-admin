@@ -5,10 +5,11 @@ import memoizeOne from 'memoize-one'
 import Home from '../home'
 import About from '../about'
 import Dashboard from '../dashboard'
-import UserLayout from '../../layouts/UserLayout'
-import PublicLayout from '../../layouts/PublicLayout'
+// import UserLayout from '../../layouts/UserLayout'
+// import PublicLayout from '../../layouts/PublicLayout'
 import AuthLayout from '../../layouts/AuthLayout'
 import BasicLayout from '../../layouts/BasicLayout'
+import Login from '../../containers/login'
 
 import publicRoutes from '../../routes/publicRoutes'
 import authRoutes from '../../routes/authRoutes'
@@ -279,6 +280,15 @@ const App = () => (
       )
     }}/>
 
+    <Route exact path="/login" render={(route) => {
+      return (
+        <AuthLayout
+          location={window.location}
+          menuData={menuData}>
+          <Login/>
+        </AuthLayout>
+      )
+    }}/>
 
   </div>
 )

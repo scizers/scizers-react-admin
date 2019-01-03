@@ -165,15 +165,18 @@ class BasicLayout extends React.PureComponent {
             {...this.props}
           />
 
+
+          <Content className={styles.content} style={contentStyle}>
+            {/*   <Authorized authority={routerConfig} noMatch={<Exception403 />}>
+
+            </Authorized>*/}
+
+            {children}
+          </Content>
+
           {/*
 
-        <Header
-            menuData={menuData}
-            handleMenuCollapse={this.handleMenuCollapse}
-            logo={logo}
-            isMobile={isMobile}
-            {...this.props}
-          />
+
           <Footer />*/}
         </Layout>
       </Layout>

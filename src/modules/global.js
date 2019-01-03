@@ -77,7 +77,7 @@ const initialState = {
       'avatar': 'https://gw.alipayobjects.com/zos/rmsportal/GvqBnKhFgObvnSGkDsje.png',
       'title': '左侧图标用于区分不同的类型',
       'datetime': '2017-08-07',
-      'type': 'notification'
+      'type': 'message'
     },
     {
       'id': '000000005',

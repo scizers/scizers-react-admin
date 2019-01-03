@@ -1,9 +1,9 @@
-@import '../../assets/vars';
+@import '~antd/lib/style/themes/default.less';
 
 .main {
-  width: 368px;
+  max-width: 368px;
   margin: 0 auto;
-  @media screen and (max-width: $screen-sm) {
+  @media screen and (max-width: @screen-sm) {
     width: 95%;
   }
 
@@ -16,7 +16,7 @@
     transition: color 0.3s;
 
     &:hover {
-      color: $primary-color;
+      color: @primary-color;
     }
   }
 
@@ -29,4 +29,15 @@
       float: right;
     }
   }
+
+  .forgot {
+    float: right;
+  }
+
+  .button {
+    width: 100%;
+  }
 }
+
+
+
