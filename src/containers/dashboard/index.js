@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-const About = () => (
-    <div className={'asdf'}>
-        <h1>About Page</h1>
+class Dashboard extends Component {
+  constructor (props) {
+    super(props)
+  }
+
+  render () {
+    return (
+      <div className={'asdf'}>
+        <h1>This is Dashboard here</h1>
         <p>Did you get here via Redux?</p>
-    </div>
-)
+      </div>
+    )
+  }
 
-export default About
+}
+
+export default Dashboard
+

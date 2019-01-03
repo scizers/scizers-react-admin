@@ -145,7 +145,8 @@ const initialState = {
       'status': 'processing',
       'type': 'event'
     }
-  ]
+  ],
+  buttonLoading: false
 }
 
 export default (state = initialState, action) => {
@@ -155,6 +156,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         collapsed: !state.collapsed
+      }
+
+    case 'SHOW_BTN_LOADING':
+      return {
+        ...state,
+        buttonLoading: true
+      }
+
+    case 'HIDE_BTN_LOADING':
+      return {
+        ...state,
+        buttonLoading: false
       }
 
     default:
