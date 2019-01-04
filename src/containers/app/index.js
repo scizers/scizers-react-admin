@@ -289,7 +289,6 @@ class BasicLayoutWrapper extends Component {
   }
 }
 
-
 class App extends Component {
 
   constructor (props) {
@@ -348,7 +347,6 @@ class App extends Component {
             })
           }
         })}
-
 
         <Route exact path="/login" render={(route) => {
           return (
