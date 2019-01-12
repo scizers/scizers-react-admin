@@ -10,8 +10,8 @@ import {
   Icon
 } from 'antd'
 import { ChromePicker } from 'react-color'
-// import { push } from 'connected-react-router'
 import _ from 'lodash'
+import moment from 'moment'
 
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -19,6 +19,7 @@ import { notification } from 'antd/lib/index'
 import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'
+import { createMatchSelector } from 'connected-react-router'
 
 const FormItem = Form.Item
 const { Option } = Select
@@ -72,6 +73,33 @@ class AddWebsite extends PureComponent {
     })
   }
 
+  setFormValues = async (slug) => {
+
+    let { data } = await Request.getWebsite(slug)
+
+    this.setState({
+      extraFeilds: data.extraUrls.length
+    })
+
+    let x = {
+      url: data.url,
+      category: data.category,
+      tags: data.tags,
+      description: data.description,
+      baseColor: data.baseColor,
+      logoBgColor: data.logoBgColor,
+      logoUrl: data.logoUrl,
+      projectDate: moment(data.projectDate)
+    }
+
+    _.each(data.extraUrls, (val, k) => {
+      x[`extraUrl-${k}`] = val
+    })
+
+    this.props.form.setFieldsValue(x)
+
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -93,10 +121,24 @@ class AddWebsite extends PureComponent {
       '                        \n' +
       '                        \n' +
       '                    </div>',
-
       extraFeilds: 2
 
     }
+
+
+  }
+
+  componentDidMount () {
+
+    let searchParams = new URLSearchParams(this.props.search)
+    let slug = searchParams.get('slug')
+
+
+    if (slug) {
+      this.setFormValues(slug)
+    }
+
+
   }
 
   render () {
@@ -190,16 +232,17 @@ class AddWebsite extends PureComponent {
             </FormItem>
 
             <FormItem {...formItemLayout} label={'Description'}>
-              {getFieldDecorator('desc', {
-                valuePropName: 'fileList',
+              {getFieldDecorator('description', {
+                initialValue: this.state.editorState,
+                valuePropName: 'value',
                 getValueFromEvent: this.onChange
-              })(<ReactQuill defaultValue={this.state.editorState}/>)}
+              })(<ReactQuill/>)}
             </FormItem>
 
             <FormItem {...formItemLayout} label={'Website Primary Color'}>
 
               {getFieldDecorator('baseColor', {
-                initialValue: '#ff00FF',
+                // initialValue: '#ff00FF',
                 valuePropName: 'color',
                 trigger: 'onChange'
                 // getValueFromEvent: 'onChangeComplete'
@@ -254,9 +297,10 @@ class AddWebsite extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ global }) => ({
+const mapStateToProps = ({ global, router }) => ({
   loading: global.buttonLoading,
-  categories: global.categories
+  categories: global.categories,
+  search: router.location.search
 })
 const mapDispatchToProps = dispatch => {
   return {

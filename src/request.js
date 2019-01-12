@@ -84,7 +84,21 @@ class Request {
         })
 
     })
+  }
 
+  getWebsite (slug) {
+    return new Promise((next) => {
+      authAxios
+        .get(`/website/${slug}`)
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
   }
 
 }

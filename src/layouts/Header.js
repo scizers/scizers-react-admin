@@ -88,8 +88,8 @@ class HeaderView extends PureComponent {
   }
 
   render () {
-    const { isMobile, handleMenuCollapse, setting } = this.props
-    const { navTheme, layout, fixedHeader } = {}
+    const { isMobile, handleMenuCollapse, theme } = this.props
+    const { navTheme, layout, fixedHeader } = theme
     const { visible } = this.state
     const isTop = layout === 'topmenu'
     const width = this.getHeadWidth()
@@ -97,7 +97,7 @@ class HeaderView extends PureComponent {
       <Header style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
         {isTop && !isMobile ? (
           <TopNavHeader
-            theme={'dark'}
+            theme={navTheme}
             mode="horizontal"
             onCollapse={handleMenuCollapse}
             onNoticeClear={this.handleNoticeClear}
@@ -124,10 +124,11 @@ class HeaderView extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ global }) => {
+const mapStateToProps = ({ global, theme }) => {
   return ({
     currentUser: global.currentUser,
-    notices: global.notices
+    notices: global.notices,
+    theme
   })
 }
 

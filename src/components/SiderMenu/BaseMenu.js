@@ -9,11 +9,6 @@ import styles from './index.less';
 
 const { SubMenu } = Menu;
 
-// Allow menu.js config icon as string or ReactNode
-//   icon: 'setting',
-//   icon: 'http://demo.com/icon.png',
-//   icon: <Icon type="setting" />,
-
 const getIcon = icon => {
   if (typeof icon === 'string' && isUrl(icon)) {
     return <img src={icon} alt="icon" className={styles.icon} />;
@@ -122,7 +117,7 @@ export default class BaseMenu extends PureComponent {
   render() {
     const {
       openKeys,
-      theme,
+      navTheme,
       mode,
       location: { pathname },
       className,
@@ -148,7 +143,7 @@ export default class BaseMenu extends PureComponent {
       <Menu
         key="Menu"
         mode={mode}
-        theme={theme}
+        theme={navTheme}
         onOpenChange={handleOpenChange}
         selectedKeys={selectedKeys}
         style={style}

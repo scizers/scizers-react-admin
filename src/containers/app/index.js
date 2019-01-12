@@ -6,6 +6,7 @@ import Home from '../home'
 import About from '../about'
 import AddWebsite from '../websites/add'
 import AllWebsite from '../websites/all'
+// import EditWebsite from '../websites/add'
 import Dashboard from '../dashboard'
 import NewPage from '../newpage'
 import Exception from '../../components/Exception'
@@ -32,16 +33,6 @@ const menuData = [
     ]
   },
   {
-    'path': '/newpaage',
-    'name': 'newpage',
-    'icon': 'dashboard',
-    'component': NewPage,
-    'authority': [
-      'admin',
-      'user'
-    ]
-  },
-  {
     'path': '/websites',
     'icon': 'chrome',
     'name': 'Websites',
@@ -61,8 +52,14 @@ const menuData = [
         'name': 'All Website',
         'title': 'All Website',
         'component': AllWebsite
+      },
+      {
+        'path': '/websites/website',
+        'name': 'Single Website',
+        'title': 'Single Website',
+        'component': AddWebsite,
+        'dontShowOnMenu': true
       }
-
     ]
   }
 ]
@@ -85,6 +82,7 @@ const Exp403 = () => (<Exception
 
 class BasicLayoutWrapper extends Component {
   render () {
+
     const { menuData, component, path, user } = this.props
 
     if (!user) {
@@ -123,9 +121,6 @@ class App extends Component {
       token: localStorage.getItem('token'),
       user: (localStorage.getItem('user') != 'undefined') ? JSON.parse(localStorage.getItem('user')) : null
     }
-    // undefined is intentionally written as string here
-
-    console.log(this.state)
   }
 
   render () {
