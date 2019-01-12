@@ -139,14 +139,15 @@ const initialState = {
     },
     {
       'id': '000000012',
-      'title': 'ABCD 版本发布',
+      'title': 'ishaan sharma ',
       'description': '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
       'extra': '进行中',
       'status': 'processing',
-      'type': 'event'
+      'type': 'message'
     }
   ],
-  buttonLoading: false
+  buttonLoading: false,
+  categories: ['Information Technology', 'Finance', 'E-Commerce', 'Web Application', 'Cooperate Website', 'Personal Website']
 }
 
 export default (state = initialState, action) => {

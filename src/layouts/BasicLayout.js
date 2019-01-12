@@ -131,7 +131,8 @@ class BasicLayout extends React.PureComponent {
       isMobile,
       menuData,
       breadcrumbNameMap,
-      fixedHeader
+      fixedHeader,
+      pageTitle
     } = this.props
 
 
@@ -183,7 +184,7 @@ class BasicLayout extends React.PureComponent {
     )
     return (
       <React.Fragment>
-        <DocumentTitle title={'Some title here asdfasdf'}>
+        <DocumentTitle title={pageTitle}>
           <ContainerQuery query={query}>
             {params => (
               <Context.Provider value={this.getContext()}>

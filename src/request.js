@@ -56,6 +56,37 @@ class Request {
     })
   }
 
+  addWebsite (data) {
+    return new Promise((next) => {
+      authAxios
+        .post('/website', { data })
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  getWebsites (data) {
+    return new Promise((next) => {
+      authAxios
+        .post('/websites', { ...data })
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+
+  }
+
 }
 
 export default new Request()

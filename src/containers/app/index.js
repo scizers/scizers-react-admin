@@ -5,7 +5,9 @@ import memoizeOne from 'memoize-one'
 import Home from '../home'
 import About from '../about'
 import AddWebsite from '../websites/add'
+import AllWebsite from '../websites/all'
 import Dashboard from '../dashboard'
+import NewPage from '../newpage'
 import Exception from '../../components/Exception'
 
 import AuthLayout from '../../layouts/AuthLayout'
@@ -30,6 +32,16 @@ const menuData = [
     ]
   },
   {
+    'path': '/newpaage',
+    'name': 'newpage',
+    'icon': 'dashboard',
+    'component': NewPage,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
     'path': '/websites',
     'icon': 'chrome',
     'name': 'Websites',
@@ -41,7 +53,14 @@ const menuData = [
       {
         'path': '/websites/add-website',
         'name': 'Add Website',
+        'title': 'Add Website',
         'component': AddWebsite
+      },
+      {
+        'path': '/websites/all-website',
+        'name': 'All Website',
+        'title': 'All Website',
+        'component': AllWebsite
       }
 
     ]
@@ -79,7 +98,6 @@ class BasicLayoutWrapper extends Component {
       .flatten()
       .find({ 'path': path })
 
-
     if (menuItem.authority !== undefined && menuItem.authority.indexOf(user.userType) === -1) {
       console.log('this user should not be here ', path)
       return <Exp403/>
@@ -89,6 +107,7 @@ class BasicLayoutWrapper extends Component {
     return (
       <BasicLayout
         location={window.location}
+        pageTitle={`${menuItem.title} - Scizers Portfolio App`}
         menuData={menuData}>
         {!!component ? <this.props.component/> : <Exp/>}
       </BasicLayout>)
@@ -102,9 +121,11 @@ class App extends Component {
     super(props)
     this.state = {
       token: localStorage.getItem('token'),
-      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+      user: (localStorage.getItem('user') != 'undefined') ? JSON.parse(localStorage.getItem('user')) : null
     }
+    // undefined is intentionally written as string here
 
+    console.log(this.state)
   }
 
   render () {

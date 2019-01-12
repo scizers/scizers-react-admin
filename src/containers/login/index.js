@@ -40,6 +40,8 @@ class NormalLoginForm extends React.Component {
           localStorage.setItem('token', x.token)
           localStorage.setItem('user', JSON.stringify(x.user))
 
+          // console.log(x)
+
           dispatch(push('/dashboard'))
 
         } else {
@@ -47,6 +49,7 @@ class NormalLoginForm extends React.Component {
             message: 'Invalid Login',
             description: x.message
           })
+
         }
       }
     })
