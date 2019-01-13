@@ -18,6 +18,16 @@ import Request from '../../../request'
 import { connect } from 'react-redux'
 
 const FormItem = Form.Item
+const Types = [
+  { label: 'Desktop', limit: 1, name: 'desktop', ext: 'jpg' },
+  { label: 'Desktop Full', limit: 1, name: 'desktop-full', ext: 'jpg' },
+  { label: 'iPad', limit: 1, name: 'ipad', ext: 'jpg' },
+  { label: 'iPad Full', limit: 1, name: 'ipad-full', ext: 'jpg' },
+  { label: 'iPhone', limit: 1, name: 'iphone', ext: 'jpg' },
+  { label: 'iPhone Full', limit: 1, name: 'iphone-full', ext: 'jpg' },
+  { label: 'Logo Feature', limit: 1, name: 'logoFeature', ext: 'jpg' },
+  { label: 'Main Feature', limit: 1, name: 'mainFeature', ext: 'png' }
+]
 
 @Form.create()
 class WebsiteScreenshots extends PureComponent {
@@ -26,21 +36,65 @@ class WebsiteScreenshots extends PureComponent {
 
     let { data, websiteUrl } = await Request.getWebsite(slug)
 
-    let extraUrls = []
-    _.each(data.extraUrls, (x, key) => {
-      let k = key + 1
-      extraUrls.push({
-        uid: k,
-        name: `${data.urlSlug}-extras-${k}.jpg`,
-        status: 'done',
-        url: `${websiteUrl}/screenshots/${data.urlSlug}-extras-${k}.jpg`
+    this.setState({ websiteUrl })
+
+    if (data) {
+
+      let extraUrls = []
+      _.each(data.extraUrls, (x, key) => {
+        let k = key + 1
+        extraUrls.push({
+          uid: k,
+          name: `${data.urlSlug}-extras-${k}.jpg`,
+          status: 'done',
+          url: `${websiteUrl}/screenshots/${data.urlSlug}-extras-${k}.jpg`
+        })
       })
-    })
 
-    this.props.form.setFieldsValue({
-      extraUrls: extraUrls
-    })
 
+      let others = {}
+
+      _.each(Types, (item) => {
+        others[item.name] = [{
+          uid: item.name,
+          name: `${data.urlSlug}-${item.name}`,
+          status: 'done',
+          url: `${websiteUrl}/screenshots/${data.urlSlug}-${item.name}.${item.ext}`
+        }]
+      })
+
+
+      this.props.form.setFieldsValue({
+        extraUrls,
+        ...others
+      })
+
+      this.setState({
+        allFormData: {
+          extraUrls,
+          ...others
+        }
+      })
+
+    }
+    else {
+      notification.error({
+        message: 'Error',
+        description: 'Unable to get url'
+      })
+    }
+
+
+  }
+  uploadFileHandler = (e, name) => {
+
+    if (Array.isArray(e)) {
+      return e
+    }
+    let allFormData = this.state.allFormData
+    allFormData[name] = e.fileList
+    this.setState({ allFormData })
+    return e && e.fileList
   }
   handleCancel = () => this.setState({ previewVisible: false })
   handlePreview = (file) => {
@@ -49,12 +103,7 @@ class WebsiteScreenshots extends PureComponent {
       previewVisible: true
     })
   }
-  uploadFileHandler = e => {
-    if (Array.isArray(e)) {
-      return e
-    }
-    return e && e.fileList
-  }
+
   handleSubmit = e => {
     const { dispatch, form } = this.props
     e.preventDefault()
@@ -70,7 +119,9 @@ class WebsiteScreenshots extends PureComponent {
     this.state = {
       previewVisible: false,
       previewImage: '',
-      extraUrls: []
+      websiteUrl: '',
+      extraUrls: [],
+      allFormData: {}
     }
   }
 
@@ -83,17 +134,15 @@ class WebsiteScreenshots extends PureComponent {
       this.setFormValues(slug)
     }
 
-
   }
 
   render () {
 
-    const { submitting } = this.props
     const {
       form: { getFieldDecorator, getFieldValue }
     } = this.props
 
-    const { previewVisible, previewImage, extraUrls } = this.state
+    const { previewVisible, previewImage, websiteUrl, allFormData } = this.state
 
     const formItemLayout = {
       labelCol: {
@@ -121,12 +170,38 @@ class WebsiteScreenshots extends PureComponent {
       }
     }
 
-    const uploadButton = (
-      <div>
-        <Icon type="plus"/>
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    )
+
+    const getUploadFormField = (name, label, limit, ext) => {
+
+      if (!limit) limit = 1
+
+      return (
+        <FormItem {...formItemLayout} label={label}>
+          {getFieldDecorator(name, {
+            valuePropName: 'fileList',
+            getValueFromEvent: (e) => {
+              this.uploadFileHandler(e, name)
+            }
+          })(
+            <Upload
+              accept={ext === 'jpg' ? 'image/jpeg' : 'image/png'}
+              name={'file'}
+              action={`${websiteUrl}/filesUploader`}
+              listType="picture-card"
+              onPreview={this.handlePreview}
+            >
+
+              {allFormData[name] !== undefined && allFormData[name].length < limit ? (
+                <div>
+                  <Icon type="plus"/>
+                  <div className="ant-upload-text">Upload</div>
+                </div>
+              ) : (null)}
+            </Upload>
+          )}
+        </FormItem>
+      )
+    }
 
     return (
       <PageHeaderWrapper
@@ -135,22 +210,19 @@ class WebsiteScreenshots extends PureComponent {
       >
 
         <Card bordered={true}>
+
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
 
-            <FormItem {...formItemLayout} label={'URL'}>
-              {getFieldDecorator('extraUrls', {
-                valuePropName: 'fileList',
-                getValueFromEvent: this.uploadFileHandler
-              })(
-                <Upload
-                  action="//jsonplaceholder.typicode.com/posts/"
-                  listType="picture-card"
-                  onPreview={this.handlePreview}
-                >
-                  {uploadButton}
-                </Upload>
-              )}
-            </FormItem>
+            {Types.map((item, key) => {
+
+              return (<React.Fragment key={key}>
+                {getUploadFormField(item.name, item.label, item.limit, item.ext)}
+              </React.Fragment>)
+
+            })}
+
+            {getUploadFormField('extraUrls', 'Extra Urls Screenshots', 5, 'jpg')}
+
 
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={this.props.loading}>
@@ -161,7 +233,8 @@ class WebsiteScreenshots extends PureComponent {
           </Form>
         </Card>
         <Modal width={800} visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage}/>
+          <img alt="example" style={{ display: 'inline-block', margin: '0 auto', maxWidth: '100%' }}
+               src={previewImage}/>
         </Modal>
 
       </PageHeaderWrapper>
