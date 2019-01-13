@@ -6,17 +6,14 @@ import Home from '../home'
 import About from '../about'
 import AddWebsite from '../websites/add'
 import AllWebsite from '../websites/all'
-// import EditWebsite from '../websites/add'
+import WebsiteScreenShot from '../websites/screens'
 import Dashboard from '../dashboard'
-import NewPage from '../newpage'
 import Exception from '../../components/Exception'
 
 import AuthLayout from '../../layouts/AuthLayout'
 import BasicLayout from '../../layouts/BasicLayout'
 import Login from '../../containers/login'
 
-import publicRoutes from '../../routes/publicRoutes'
-import authRoutes from '../../routes/authRoutes'
 import _ from 'lodash'
 
 const menuData = [
@@ -54,10 +51,17 @@ const menuData = [
         'component': AllWebsite
       },
       {
-        'path': '/websites/website',
+        'path': '/websites/edit-website',
         'name': 'Single Website',
         'title': 'Single Website',
         'component': AddWebsite,
+        'dontShowOnMenu': true
+      },
+      {
+        'path': '/websites/screen-website',
+        'name': 'WebsiteScreenShot',
+        'title': 'Website ScreenShots',
+        'component': WebsiteScreenShot,
         'dontShowOnMenu': true
       }
     ]
