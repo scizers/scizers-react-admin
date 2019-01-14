@@ -32,6 +32,20 @@ const Types = [
 @Form.create()
 class WebsiteScreenshots extends PureComponent {
 
+  defaultError = () => {
+    notification.error({
+      message: 'Error',
+      description: 'Unable to get data'
+    })
+
+  }
+  handleCancel = () => this.setState({ previewVisible: false })
+  handlePreview = (file) => {
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true
+    })
+  }
   setFormValues = async (slug) => {
 
     let { data, websiteUrl } = await Request.getWebsite(slug)
@@ -41,7 +55,13 @@ class WebsiteScreenshots extends PureComponent {
     if (data) {
 
       let extraUrls = []
-      _.each(data.extraUrls, (x, key) => {
+
+      let extraUrlsCount = data.extraUrlsCount
+      if (!data.customImages) {
+        extraUrlsCount = data.extraUrls.length
+      }
+
+      _.times(extraUrlsCount, (key) => {
         let k = key + 1
         extraUrls.push({
           uid: k,
@@ -50,7 +70,6 @@ class WebsiteScreenshots extends PureComponent {
           url: `${websiteUrl}/screenshots/${data.urlSlug}-extras-${k}.jpg`
         })
       })
-
 
       let others = {}
 
@@ -78,38 +97,38 @@ class WebsiteScreenshots extends PureComponent {
 
     }
     else {
-      notification.error({
-        message: 'Error',
-        description: 'Unable to get url'
-      })
+      this.defaultError()
     }
 
 
   }
   uploadFileHandler = (e, name) => {
+    console.log(e, name)
 
     if (Array.isArray(e)) {
       return e
     }
     let allFormData = this.state.allFormData
     allFormData[name] = e.fileList
+
     this.setState({ allFormData })
     return e && e.fileList
   }
-  handleCancel = () => this.setState({ previewVisible: false })
-  handlePreview = (file) => {
-    this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true
-    })
-  }
-
-  handleSubmit = e => {
+  handleSubmit = async e => {
     const { dispatch, form } = this.props
+    const { slug } = this.state
     e.preventDefault()
-    form.validateFieldsAndScroll(async (err, valData) => {
+    form.validateFieldsAndScroll(async (err, data) => {
       if (!err) {
-        console.log(valData)
+
+        _.each(data, (item, key) => {
+          _.each(item, (x) => {
+            delete x.thumbUrl
+          })
+        })
+
+        let resp = await Request.editWebsiteScreens({ slug, data })
+        console.log(resp)
       }
     })
   }
@@ -132,14 +151,18 @@ class WebsiteScreenshots extends PureComponent {
 
     if (slug) {
       this.setFormValues(slug)
+      this.setState({
+        slug
+      })
+    } else {
+      this.defaultError()
     }
-
   }
 
   render () {
 
     const {
-      form: { getFieldDecorator, getFieldValue }
+      form: { getFieldDecorator }, token
     } = this.props
 
     const { previewVisible, previewImage, websiteUrl, allFormData } = this.state
@@ -176,16 +199,18 @@ class WebsiteScreenshots extends PureComponent {
       if (!limit) limit = 1
 
       return (
-        <FormItem {...formItemLayout} label={label}>
+        <FormItem {...formItemLayout} label={`${label} (${ext})`}>
           {getFieldDecorator(name, {
             valuePropName: 'fileList',
             getValueFromEvent: (e) => {
-              this.uploadFileHandler(e, name)
+              console.log('are you here sir ')
+              return this.uploadFileHandler(e, name)
             }
           })(
             <Upload
               accept={ext === 'jpg' ? 'image/jpeg' : 'image/png'}
               name={'file'}
+              headers={{ Authorization: `Bearer ${token}` }}
               action={`${websiteUrl}/filesUploader`}
               listType="picture-card"
               onPreview={this.handlePreview}
@@ -244,6 +269,7 @@ class WebsiteScreenshots extends PureComponent {
 
 const mapStateToProps = ({ global, router }) => ({
   loading: global.buttonLoading,
+  token: global.token,
   search: router.location.search
 })
 const mapDispatchToProps = dispatch => {

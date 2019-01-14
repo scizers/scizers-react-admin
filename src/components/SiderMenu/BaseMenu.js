@@ -20,8 +20,8 @@ const getIcon = icon => {
 };
 
 export default class BaseMenu extends PureComponent {
+
   /**
-   * 获得菜单子节点
    * @memberof SiderMenu
    */
   getNavMenuItems = (menusData, parent) => {
@@ -30,7 +30,13 @@ export default class BaseMenu extends PureComponent {
     }
     return menusData
       .filter(item => item.name && !item.hideInMenu)
-      .map(item => this.getSubMenuOrItem(item, parent))
+      .map(item => {
+
+        if (!item.dontShowOnMenu) {
+          return this.getSubMenuOrItem(item, parent)
+        }
+
+      })
       .filter(item => item);
   };
 
@@ -69,7 +75,6 @@ export default class BaseMenu extends PureComponent {
   };
 
   /**
-   * 判断是否是http链接.返回 Link 或 a
    * Judge whether it is http link.return a or Link
    * @memberof SiderMenu
    */

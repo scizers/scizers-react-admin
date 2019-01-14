@@ -49,6 +49,7 @@ const initialState = {
     'address': '西湖区工专路 77 号',
     'phone': '0752-268888888'
   },
+  token: null,
   notices: [
     {
       'id': '000000001',
@@ -143,7 +144,7 @@ const initialState = {
       'description': '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
       'extra': '进行中',
       'status': 'processing',
-      'type': 'message'
+      'type': 'notification'
     }
   ],
   buttonLoading: false,
@@ -169,6 +170,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         buttonLoading: false
+      }
+
+
+    case 'SET_AUTH_TOKEN':
+      console.log(action)
+      return {
+        ...state,
+        token: action.token
       }
 
     default:

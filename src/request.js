@@ -101,6 +101,21 @@ class Request {
     })
   }
 
+  editWebsiteScreens ({ slug, data }) {
+    return new Promise((next) => {
+      authAxios
+        .put(`/website/${slug}`, data)
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
 }
 
 export default new Request()

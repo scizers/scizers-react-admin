@@ -55,19 +55,15 @@ class BasicLayout extends React.PureComponent {
     this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual)
   }
 
-  componentDidMount () {
+  componentWillMount () {
     const {
       dispatch
     } = this.props
 
-    // dispatch({
-    //   type: 'setting/getSetting'
-    // })
-
-    // dispatch({
-    //   type: 'menu/getMenuData',
-    //   payload: { routes, authority }
-    // })
+    dispatch({
+      type: 'SET_AUTH_TOKEN',
+      token: localStorage.getItem('token')
+    })
   }
 
   componentDidUpdate (preProps) {

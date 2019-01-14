@@ -63,6 +63,13 @@ const menuData = [
         'title': 'Website ScreenShots',
         'component': WebsiteScreenShot,
         'dontShowOnMenu': true
+      },
+      {
+        'path': '/websites/asdfasdf-website',
+        'name': 'WebsiteScreenShot',
+        'title': 'title of page ScreenShots',
+        'component': WebsiteScreenShot,
+        'dontShowOnMenu': true
       }
     ]
   }
