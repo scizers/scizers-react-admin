@@ -4,6 +4,9 @@ import {
   Table,
   Badge,
   Card,
+  Tooltip,
+  notification,
+  Switch,
   Input, Button, Icon
 } from 'antd'
 import Request from '../../../request'
@@ -13,6 +16,8 @@ import Highlighter from 'react-highlight-words'
 import styles from './styles.less'
 import { connect } from 'react-redux'
 import memoizeOne from 'memoize-one'
+import update from 'immutability-helper'
+import { getUrlPushWrapper } from '../../../routes'
 
 class AllWebsites extends Component {
 
@@ -20,8 +25,10 @@ class AllWebsites extends Component {
     data: [],
     pagination: {},
     loading: false,
-    searchText: ''
+    searchText: '',
+    dataSearchParams: {}
   }
+
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination }
     pager.current = pagination.current
@@ -37,7 +44,10 @@ class AllWebsites extends Component {
     })
   }
   fetch = async (params = {}) => {
-    this.setState({ loading: true })
+    this.setState({
+      loading: true,
+      dataSearchParams: params
+    })
     let data = await Request.getWebsites({ ...params })
     let pagination = { ...this.state.pagination }
     pagination.total = data.count
@@ -112,6 +122,65 @@ class AllWebsites extends Component {
   constructor (props) {
     super(props)
     this.fetch2 = memoizeOne(this.fetch)
+  }
+
+  toogleEnabled = async ({ urlSlug }) => {
+
+    let { data: d } = this.state
+    let x = _.findIndex(d, { urlSlug })
+
+    let data = update(d, {
+      [x]: {
+        rowLoading: { $set: true }
+      }
+    })
+
+    this.setState({ data })
+
+    await Request.toggleWebsiteEnabled({ urlSlug })
+
+    data = update(d, {
+      [x]: {
+        enabled: { $set: !d[x].enabled },
+        rowLoading: { $set: false }
+      }
+    })
+    this.setState({ data })
+
+
+    //  enabled: { $set: false },
+
+
+  }
+
+  deleteWebsite = async ({ urlSlug }) => {
+
+    let { data: d } = this.state
+    let x = _.findIndex(d, { urlSlug })
+
+    let data = update(d, {
+      [x]: {
+        deleteLoading: { $set: true }
+      }
+    })
+    this.setState({ data })
+
+    await Request.deleteWebsite({ urlSlug })
+
+    data = update(d, { $splice: [[x, 1]] })
+    this.setState({ data })
+
+    notification.success({
+      message: 'Website Deleted Successfully',
+      duration: 20,
+      key: `${urlSlug}-close`,
+      btn: <Button onClick={async () => {
+        await Request.undoDeleteWebsite({ urlSlug })
+        this.fetch2(this.state.dataSearchParams)
+        notification.close(`${urlSlug}-close`)
+      }}>Undo Delete</Button>
+
+    })
 
   }
 
@@ -120,7 +189,7 @@ class AllWebsites extends Component {
   }
 
   render () {
-    const { categories } = this.props
+    const { categories, dispatch } = this.props
     const columns = [
       {
         title: 'Website Url',
@@ -188,20 +257,49 @@ class AllWebsites extends Component {
       {
         title: 'Enabled',
         width: 100,
-        dataIndex: 'enabled',
-        key: 'enabled',
-        render: cat => {
-          return <div>{cat ? <Badge status="success" text="YES"/>
-            : <Badge status="error" text="NO"/>
-          }</div>
+        render: val => {
+          return <React.Fragment>
+            <Switch checkedChildren={<Icon type="check"/>}
+                    unCheckedChildren={<Icon type="close"/>}
+                    checked={val.enabled}
+                    loading={val.rowLoading}
+                    onChange={() => {
+                      this.toogleEnabled({ urlSlug: val.urlSlug })
+                    }}/>
+          </React.Fragment>
         }
       },
       {
         title: 'Action',
         key: 'operation',
-        // fixed: 'right',
-        width: 100,
-        render: () => <a href="javascript:;">action</a>
+        fixed: 'right',
+        width: 150,
+        render: val => (<React.Fragment>
+            <Tooltip title="Edit Details">
+              <Button className={styles.btn}
+                      shape="circle" onClick={() => {
+                dispatch(getUrlPushWrapper('websites.edit', { slug: val.urlSlug }))
+              }} icon="edit"/>
+            </Tooltip>
+
+            <Tooltip title="Edit Screenshot">
+              <Button className={styles.btn}
+                      onClick={() => {
+                        dispatch(getUrlPushWrapper('websites.screenshots', { slug: val.urlSlug }))
+                      }}
+                      shape="circle" icon="snippets"/>
+            </Tooltip>
+
+            <Tooltip title="Delete Domain">
+              <Button className={styles.btn}
+                      loading={val.deleteLoading}
+                      onClick={() => {
+                        this.deleteWebsite({ urlSlug: val.urlSlug })
+                      }}
+                      type="danger" shape="circle" icon="delete"/>
+            </Tooltip>
+          </React.Fragment>
+        )
       }
     ]
     return (

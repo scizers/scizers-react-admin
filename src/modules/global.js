@@ -174,7 +174,6 @@ export default (state = initialState, action) => {
 
 
     case 'SET_AUTH_TOKEN':
-      console.log(action)
       return {
         ...state,
         token: action.token

@@ -19,7 +19,7 @@ module.exports = {
       plugin: CracoAntDesignPlugin,
       options: {
         lessLoaderOptions: {
-          // modifyVars: { '@primary-color': '#ffd000' },
+          modifyVars: { '@primary-color': '#48c75b' },
           // strictMath: true,
           // noIeCompat: true,
           javascriptEnabled: true

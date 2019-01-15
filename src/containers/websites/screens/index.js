@@ -7,12 +7,12 @@ import {
   Card,
   Icon,
   Modal,
-  Upload
+  Upload,
+  notification
 } from 'antd'
 import _ from 'lodash'
 import moment from 'moment'
 
-import { notification } from 'antd/lib/index'
 import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'

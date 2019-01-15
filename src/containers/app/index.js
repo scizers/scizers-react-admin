@@ -2,78 +2,14 @@ import React, { Component } from 'react'
 import { Route, Link, Redirect } from 'react-router-dom'
 import memoizeOne from 'memoize-one'
 
-import Home from '../home'
-import About from '../about'
-import AddWebsite from '../websites/add'
-import AllWebsite from '../websites/all'
-import WebsiteScreenShot from '../websites/screens'
-import Dashboard from '../dashboard'
+import menuData, { getUrlPath } from '../../routes'
 import Exception from '../../components/Exception'
-
 import AuthLayout from '../../layouts/AuthLayout'
 import BasicLayout from '../../layouts/BasicLayout'
 import Login from '../../containers/login'
 
 import _ from 'lodash'
 
-const menuData = [
-  {
-    'path': '/dashboard',
-    'name': 'Dashboard',
-    'icon': 'dashboard',
-    'locale': 'menu.dashboard',
-    'homepage': true,
-    'component': Dashboard,
-    'authority': [
-      'admin',
-      'user'
-    ]
-  },
-  {
-    'path': '/websites',
-    'icon': 'chrome',
-    'name': 'Websites',
-    'authority': [
-      'admin',
-      'user'
-    ],
-    'children': [
-      {
-        'path': '/websites/add-website',
-        'name': 'Add Website',
-        'title': 'Add Website',
-        'component': AddWebsite
-      },
-      {
-        'path': '/websites/all-website',
-        'name': 'All Website',
-        'title': 'All Website',
-        'component': AllWebsite
-      },
-      {
-        'path': '/websites/edit-website',
-        'name': 'Single Website',
-        'title': 'Single Website',
-        'component': AddWebsite,
-        'dontShowOnMenu': true
-      },
-      {
-        'path': '/websites/screen-website',
-        'name': 'WebsiteScreenShot',
-        'title': 'Website ScreenShots',
-        'component': WebsiteScreenShot,
-        'dontShowOnMenu': true
-      },
-      {
-        'path': '/websites/asdfasdf-website',
-        'name': 'WebsiteScreenShot',
-        'title': 'title of page ScreenShots',
-        'component': WebsiteScreenShot,
-        'dontShowOnMenu': true
-      }
-    ]
-  }
-]
 
 const Exp = () => (<Exception
   type="404"

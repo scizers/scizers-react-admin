@@ -1,6 +1,7 @@
 import moment from 'moment'
 import React from 'react'
 import { parse, stringify } from 'qs'
+import update from 'immutability-helper'
 
 export function fixedZero (val) {
   return val * 1 < 10 ? `0${val}` : val
@@ -99,12 +100,6 @@ function getRenderArr (routes) {
   return renderArr
 }
 
-/**
- * Get router routing configuration
- * { path:{name,...param}}=>Array<{name,path ...param}>
- * @param {string} path
- * @param {routerData} routerData
- */
 export function getRoutes (path, routerData) {
   let routes = Object.keys(routerData).filter(
     routePath => routePath.indexOf(path) === 0 && routePath !== path
@@ -138,7 +133,6 @@ export function getQueryPath (path = '', query = {}) {
   return path
 }
 
-/* eslint no-useless-escape:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/
 
 export function isUrl (path) {
@@ -172,7 +166,10 @@ export function formatWan (val) {
   return result
 }
 
-
 export function log (param) {
+  return console.dir(arguments)
+}
+
+export function getMutatedState (param) {
   return console.dir(arguments)
 }

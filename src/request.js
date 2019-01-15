@@ -116,6 +116,51 @@ class Request {
     })
   }
 
+  toggleWebsiteEnabled ({ urlSlug }) {
+    return new Promise((next) => {
+      authAxios
+        .get(`/website/${urlSlug}/toggle`)
+        .then((d) => {
+          next()
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+    })
+
+  }
+
+  deleteWebsite ({ urlSlug }) {
+    return new Promise((next) => {
+      authAxios
+        .delete(`/website/${urlSlug}`)
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  undoDeleteWebsite ({ urlSlug }) {
+    return new Promise((next) => {
+      authAxios
+        .patch(`/website/${urlSlug}`)
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
 }
 
 export default new Request()
