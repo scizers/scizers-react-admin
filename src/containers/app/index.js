@@ -7,7 +7,7 @@ import Exception from '../../components/Exception'
 import AuthLayout from '../../layouts/AuthLayout'
 import BasicLayout from '../../layouts/BasicLayout'
 import Login from '../../containers/login'
-
+import '../../index.css'
 import _ from 'lodash'
 
 
@@ -132,4 +132,3 @@ class App extends Component {
 }
 
 export default App
-

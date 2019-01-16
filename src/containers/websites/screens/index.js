@@ -193,7 +193,6 @@ class WebsiteScreenshots extends PureComponent {
       }
     }
 
-
     const getUploadFormField = (name, label, limit, ext) => {
 
       if (!limit) limit = 1

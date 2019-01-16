@@ -148,7 +148,16 @@ const initialState = {
     }
   ],
   buttonLoading: false,
-  categories: ['Information Technology', 'Finance', 'E-Commerce', 'Web Application', 'Cooperate Website', 'Personal Website']
+  categories: [
+    'Information Technology',
+    'Education',
+    'Finance',
+    'E-Commerce',
+    'Web Application',
+    'Cooperate',
+    'Personal',
+    'Medical'
+  ]
 }
 
 export default (state = initialState, action) => {

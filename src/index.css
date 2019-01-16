@@ -1,3 +1,7 @@
 .ant-drawer-body {
     padding: 0px !important;
 }
+
+.ql-snow .ql-editor h5 {
+    font-size: 1.4em;
+}
