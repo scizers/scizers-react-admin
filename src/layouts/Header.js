@@ -23,8 +23,19 @@ class HeaderView extends PureComponent {
     return null
   }
 
-  componentDidMount () {
-    document.addEventListener('scroll', this.handScroll, { passive: true })
+  handleMenuClick = ({ key }) => {
+    const { dispatch } = this.props
+
+    switch (key) {
+      case 'logout' :
+        dispatch({ type: 'LOGOUT' })
+        break
+      default:
+        console.log(key, ' this is working')
+
+    }
+
+
   }
 
   componentWillUnmount () {
@@ -47,10 +58,16 @@ class HeaderView extends PureComponent {
     console.log(type, ' this is working here')
   }
 
-  handleMenuClick = ({ key }) => {
-    const { dispatch } = this.props
-    console.log(key, ' this is working')
+  componentDidMount () {
+    document.addEventListener('scroll', this.handScroll, { passive: true })
 
+    let { dispatch } = this.props
+    let user = localStorage.getItem('user')
+    user = JSON.parse(user)
+    dispatch({
+      type: 'SET_CURRENT_USER',
+      user
+    })
   }
 
   handleNoticeVisibleChange = visible => {
@@ -132,6 +149,11 @@ const mapStateToProps = ({ global, theme }) => {
   })
 }
 
-export default connect(mapStateToProps, null)(HeaderView)
+export default connect(mapStateToProps, dispatch => {
+    return {
+      dispatch
+    }
+  }
+)(HeaderView)
 
 

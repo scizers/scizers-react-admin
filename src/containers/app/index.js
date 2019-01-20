@@ -10,7 +10,6 @@ import Login from '../../containers/login'
 import '../../index.css'
 import _ from 'lodash'
 
-
 const Exp = () => (<Exception
   type="404"
   desc={'You Seems lost !!'}
@@ -18,7 +17,6 @@ const Exp = () => (<Exception
   redirect={'/dashboard'}
   backText={'Go To Homepage?'}
 />)
-
 const Exp403 = () => (<Exception
   type="403"
   desc={'Sorry You Don\'t have access to this area !!'}
@@ -31,6 +29,8 @@ class BasicLayoutWrapper extends Component {
   render () {
 
     const { menuData, component, path, user } = this.props
+
+    // console.log(user)
 
     if (!user) {
       return (<Redirect to="/login"/>)
@@ -48,6 +48,10 @@ class BasicLayoutWrapper extends Component {
       return <Exp403/>
     }
 
+    if (!menuItem.title) {
+      menuItem.title = 'Untitled'
+    }
+    // console.log(menuItem)
 
     return (
       <BasicLayout
@@ -99,6 +103,7 @@ class App extends Component {
         }}/>
 
         {menuData.map((item, key) => {
+
           if (!item.children) {
             return (<Route exact path={item.path} key={item.path} render={(route) => {
               return <BasicLayoutWrapper component={item.component} path={item.path} user={user} menuData={menuData}/>
@@ -124,6 +129,12 @@ class App extends Component {
               menuData={menuData}>
               <Login/>
             </AuthLayout>
+          )
+        }}/>
+
+        <Route exact path="/" render={(route) => {
+          return (
+            <Redirect to="/dashboard"/>
           )
         }}/>
 

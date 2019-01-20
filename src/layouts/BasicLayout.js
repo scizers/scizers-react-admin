@@ -8,6 +8,7 @@ import { ContainerQuery } from 'react-container-query'
 import classNames from 'classnames'
 import pathToRegexp from 'path-to-regexp'
 import Media from 'react-media'
+import _ from 'lodash'
 
 // import Authorized from '@/utils/Authorized';
 import logo from '../assets/logo.svg'
@@ -19,7 +20,7 @@ import Context from './MenuContext'
 import SiderMenu from '../components/SiderMenu'
 
 import styles from './BasicLayout.less'
-import { bindActionCreators } from 'redux'
+import { push } from 'connected-react-router'
 
 const { Content } = Layout
 
@@ -67,12 +68,23 @@ class BasicLayout extends React.PureComponent {
   }
 
   componentDidUpdate (preProps) {
-    const { collapsed, isMobile } = this.props
+    const { collapsed, isMobile, currentUser, dispatch } = this.props
 
     if (isMobile && !preProps.isMobile && !collapsed) {
       this.handleMenuCollapse(false)
     }
+
+    if (!Object.is(preProps.currentUser, currentUser)) {
+
+      if (_.isEmpty(currentUser)) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        dispatch(push('/login'))
+      }
+
+    }
   }
+
 
   getContext () {
     const { location, breadcrumbNameMap } = this.props
@@ -194,23 +206,21 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ theme }) => {
+const mapStateToProps = ({ theme, global }) => {
   return ({
     collapsed: theme.collapsed,
     layout: theme.layout,
     theme: theme.theme,
     navTheme: theme.navTheme,
     fixSiderbar: theme.fixSiderbar,
-    breadcrumbNameMap: theme.breadcrumbNameMap
+    breadcrumbNameMap: theme.breadcrumbNameMap,
+    currentUser: global.currentUser
   })
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    dispatch
-  )
+const mapDispatchToProps = dispatch => ({ dispatch })
 
-export default connect(mapStateToProps, null)(props => {
+export default connect(mapStateToProps, mapDispatchToProps)(props => {
   return (
     <Media query="(max-width: 599px)">
       {isMobile => <BasicLayout {...props} isMobile={isMobile}/>}

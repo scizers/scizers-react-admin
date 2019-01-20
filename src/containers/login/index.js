@@ -40,9 +40,14 @@ class NormalLoginForm extends React.Component {
           localStorage.setItem('token', x.token)
           localStorage.setItem('user', JSON.stringify(x.user))
 
-          // console.log(x)
+          dispatch({
+            type: 'SET_CURRENT_USER',
+            user: x.user
+          })
 
-          dispatch(push('/dashboard'))
+          setTimeout(() => {
+            dispatch(push('/'))
+          }, 300)
 
         } else {
           notification.error({
