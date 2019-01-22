@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// export const API_URL = 'http://ndribackend.wss.io'
-export const API_URL = 'http://localhost:8083'
+export const API_URL = 'http://portfolio.scizers.com'
+// export const API_URL = 'http://localhost:8083'
 
 let authAxios = axios.create({
   baseURL: API_URL
