@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const API_URL = 'http://portfolio.scizers.com'
-// export const API_URL = 'http://localhost:8083'
+//export const API_URL = 'http://portfolio.scizers.com'
+export const API_URL = 'http://localhost:8083'
 
 let authAxios = axios.create({
   baseURL: API_URL
@@ -71,10 +71,40 @@ class Request {
     })
   }
 
+  addCountry(data) {
+    return new Promise((next) => {
+      authAxios
+        .post('/country', data)
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
   getWebsites (data) {
     return new Promise((next) => {
       authAxios
         .post('/websites', { ...data })
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  getCountries(data) {
+    return new Promise((next) => {
+      authAxios
+        .get('/country', { params: { ...data } })
         .then((d) => {
           next(d.data)
         })

@@ -33,6 +33,7 @@ class NormalLoginForm extends React.Component {
 
         let x = await Request.login(values)
 
+        console.log('sd', x)
         dispatch(hideLoader())
 
         if (!x.error) {
