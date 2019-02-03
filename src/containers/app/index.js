@@ -28,9 +28,9 @@ const Exp403 = () => (<Exception
 class BasicLayoutWrapper extends Component {
   render () {
 
-    const { menuData, component, path, user } = this.props
+    const { menuData, component, path } = this.props
 
-    // console.log(user)
+    let user = (localStorage.getItem('user') != 'undefined') ? JSON.parse(localStorage.getItem('user')) : null
 
     if (!user) {
       return (<Redirect to="/login"/>)

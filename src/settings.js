@@ -1,6 +1,6 @@
 export default {}
 
-export const pageTitle = 'MedMatrix Merlin'
-export const subTitle = 'Our Great Subtitle here'
+export const pageTitle = 'Shudh Doodh'
+export const subTitle = 'Pure Milk Devlivered at Your Doorstep'
 // export const apiUrl = `http://medmatrix.wss.io`
-export const apiUrl = `http://localhost:8037`
+export const apiUrl = `http://localhost:8083`

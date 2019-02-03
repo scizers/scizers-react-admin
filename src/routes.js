@@ -1,9 +1,8 @@
 import Dashboard from './containers/dashboard'
-import WebsiteScreenShot from './containers/websites/screens'
-import AddWebsite from './containers/websites/add'
-import AddCountry from './containers/country/add'
-import AllCountry from './containers/country/all'
-import AllWebsite from './containers/websites/all'
+import Undercons from './containers/undercons'
+import AllUsers from './containers/users/all'
+import AddUsers from './containers/users/add'
+
 import { push } from 'connected-react-router'
 import _ from 'lodash'
 
@@ -21,37 +20,36 @@ const menu = [
     ]
   },
   {
-    'path': '/master',
-    'icon': 'chrome',
-    'name': 'Masters',
-    'key': 'websites',
+    'path': '/users',
+    'name': 'Users',
+    'icon': 'user',
+    'key': 'users',
+    'component': Undercons,
     'authority': [
       'admin',
       'user'
     ],
     'children': [
       {
-        'path': '/master/all-country',
-        'name': 'All Country',
-        'title': 'All Country',
-
-        'component': AllCountry
+        'path': '/users/add',
+        'name': 'Add User',
+        'title': 'Add User',
+        'component': AddUsers
       },
       {
-        'path': '/master/add-country',
-        'name': 'Add Country',
-        'title': 'Add Country',
-        'component': AddCountry
+        'path': '/users/all',
+        'name': 'All Users',
+        'title': 'All Users',
+        'component': AllUsers
       }
-
-
     ]
-  },
+  }
   /* {
      'path': '/websites',
      'icon': 'chrome',
      'name': 'Websites',
      'key': 'websites',
+     'authority': [
      'authority': [
        'admin',
        'user'

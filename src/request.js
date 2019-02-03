@@ -2,18 +2,22 @@ import axios from 'axios'
 
 import { apiUrl } from './settings'
 
+export const API_URL = apiUrl
+
 let authAxios = axios.create({
   baseURL: apiUrl
 })
 
+
+let getToken = () => {
+  return ({ 'headers': { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+}
+
+
 class Request {
 
   constructor () {
-    // asyncStorage
-    //   .getToken()
-    //   .then((data) => {
-    //     localStorage.getItem('token') = data
-    //   })
+
   }
 
   error = (err) => {
@@ -23,21 +27,6 @@ class Request {
       }
     } catch (e) {
     }
-  }
-
-  deleteHeads (data) {
-    return new Promise((next, error) => {
-      authAxios
-        .delete('/heads', { data: { _id: data } }, { 'headers': { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          error(err)
-          this.error(err)
-        })
-
-    })
   }
 
   login (data) {
@@ -55,10 +44,10 @@ class Request {
     })
   }
 
-  addWebsite (data) {
+  getAllUser (data) {
     return new Promise((next) => {
       authAxios
-        .post('/website', { data })
+        .get('/users', { params: { ...data } }, getToken())
         .then((d) => {
           next(d.data)
         })
@@ -70,115 +59,10 @@ class Request {
     })
   }
 
-  addCountry (data) {
+  addUser (data) {
     return new Promise((next) => {
       authAxios
-        .post('/country', data)
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  getWebsites (data) {
-    return new Promise((next) => {
-      authAxios
-        .post('/websites', { ...data })
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  getCountries (data) {
-    return new Promise((next) => {
-      authAxios
-        .get('/country', { params: { ...data } })
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  getWebsite (slug) {
-    return new Promise((next) => {
-      authAxios
-        .get(`/website/${slug}`)
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  editWebsiteScreens ({ slug, data }) {
-    return new Promise((next) => {
-      authAxios
-        .put(`/website/${slug}`, data)
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  toggleWebsiteEnabled ({ urlSlug }) {
-    return new Promise((next) => {
-      authAxios
-        .get(`/website/${urlSlug}/toggle`)
-        .then((d) => {
-          next()
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-    })
-
-  }
-
-  deleteWebsite ({ urlSlug }) {
-    return new Promise((next) => {
-      authAxios
-        .delete(`/website/${urlSlug}`)
-        .then((d) => {
-          next(d.data)
-        })
-        .catch((err) => {
-          next({ error: true, err })
-          this.error(err)
-        })
-
-    })
-  }
-
-  undoDeleteWebsite ({ urlSlug }) {
-    return new Promise((next) => {
-      authAxios
-        .patch(`/website/${urlSlug}`)
+        .post('/users', { ...data }, getToken())
         .then((d) => {
           next(d.data)
         })
@@ -193,4 +77,3 @@ class Request {
 }
 
 export default new Request()
-
