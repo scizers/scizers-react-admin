@@ -1,10 +1,9 @@
 import axios from 'axios'
 
-//export const API_URL = 'http://portfolio.scizers.com'
-export const API_URL = 'http://localhost:8083'
+import { apiUrl } from './settings'
 
 let authAxios = axios.create({
-  baseURL: API_URL
+  baseURL: apiUrl
 })
 
 class Request {
@@ -71,7 +70,7 @@ class Request {
     })
   }
 
-  addCountry(data) {
+  addCountry (data) {
     return new Promise((next) => {
       authAxios
         .post('/country', data)
@@ -101,7 +100,7 @@ class Request {
     })
   }
 
-  getCountries(data) {
+  getCountries (data) {
     return new Promise((next) => {
       authAxios
         .get('/country', { params: { ...data } })
