@@ -134,11 +134,15 @@ class TableComp extends Component {
 
     let x = []
     _.each(this.props.columns, (i) => {
-      if (i.searchPropsName) {
-        i = { ...this.getColumnSearchProps(i.searchPropsName), ...i }
+
+
+      if (i.searchTextName) {
+        i = { ...this.getColumnSearchProps(i.searchTextName), ...i }
       }
       x.push(i)
+
     })
+
     this.setState({
       columns: x
     })

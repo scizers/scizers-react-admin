@@ -36,7 +36,6 @@ class AllUsers extends Component {
     })
   }
 
-
   render () {
     const columns = [
       {
@@ -44,7 +43,7 @@ class AllUsers extends Component {
         key: 'name',
         sorter: true,
         dataIndex: 'name',
-        searchPropsName: 'name'
+        searchTextName: 'name'
       },
       {
         title: 'Email',
