@@ -55,6 +55,16 @@ class Exception extends React.PureComponent {
               },
               <Button type="primary">{backText}</Button>
             )}
+
+
+            <Button onClick={() => {
+
+              localStorage.removeItem('token')
+              localStorage.removeItem('user')
+              window.location.reload();
+
+            }} type="danger" style={{ marginLeft: 10 }}>Logout</Button>
+
           </div>
         </div>
       </div>

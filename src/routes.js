@@ -43,49 +43,34 @@ const menu = [
         'component': AllUsers
       }
     ]
+  },
+  {
+    'path': '/plants',
+    'name': 'Plants',
+    'icon': 'user',
+    'key': 'plants',
+    'component': Undercons,
+    'authority': [
+      'user',
+    ],
+    'children': [
+      {
+        'path': '/users/atest',
+        'name': 'Add User',
+        'title': 'Add User',
+        'component': AddUsers,
+        'authority': [
+          'user'
+        ]
+      },
+      {
+        'path': '/users/all',
+        'name': 'All Users',
+        'title': 'All Users',
+        'component': AllUsers
+      }
+    ]
   }
-  /* {
-     'path': '/websites',
-     'icon': 'chrome',
-     'name': 'Websites',
-     'key': 'websites',
-     'authority': [
-     'authority': [
-       'admin',
-       'user'
-     ],
-     'children': [
-       {
-         'path': '/websites/add-website',
-         'name': 'Add Website',
-         'title': 'Add Website',
-         'key': 'add',
-         'component': AddWebsite
-       },
-       {
-         'path': '/websites/all-website',
-         'name': 'All Website',
-         'title': 'All Website',
-         'component': AllWebsite
-       },
-       {
-         'path': '/websites/edit-website',
-         'name': 'Edit Website',
-         'key': 'edit',
-         'title': 'Edit Website',
-         'component': AddWebsite,
-         'dontShowOnMenu': true
-       },
-       {
-         'path': '/websites/screen-website',
-         'name': 'WebsiteScreenShot',
-         'key': 'screenshots',
-         'title': 'Website ScreenShots',
-         'component': WebsiteScreenShot,
-         'dontShowOnMenu': true
-       }
-     ]
-   }*/
 ]
 
 export const getUrlPushWrapper = (keyString, query) => {

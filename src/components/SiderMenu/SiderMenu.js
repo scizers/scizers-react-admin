@@ -46,7 +46,7 @@ export default class SiderMenu extends PureComponent {
   }
 
   render () {
-    const { logo, collapsed, onCollapse, fixSiderbar, theme } = this.props
+    const { logo, collapsed, onCollapse, fixSiderbar, theme, user } = this.props
     const { openKeys } = this.state
     const defaultProps = collapsed ? {} : { openKeys }
 
@@ -76,6 +76,7 @@ export default class SiderMenu extends PureComponent {
           <BaseMenu
             {...this.props}
             mode="inline"
+            user={user}
             handleOpenChange={this.handleOpenChange}
             onOpenChange={this.handleOpenChange}
             style={{ padding: '16px 0', width: '100%' }}
