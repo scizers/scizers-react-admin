@@ -10304,6 +10304,11 @@ string-width@^1.0.1:
     is-fullwidth-code-point "^2.0.0"
     strip-ansi "^4.0.0"
 
+string@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/string/-/string-3.3.3.tgz#5ea211cd92d228e184294990a6cc97b366a77cb0"
+  integrity sha1-XqIRzZLSKOGEKUmQpsyXs2anfLA=
+
 string_decoder@^1.0.0, string_decoder@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.1.1.tgz#9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
@@ -10463,6 +10468,15 @@ symbol-observable@^1.2.0:
 symbol-tree@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
+
+"sz-react-utils@git+https://ce4bc2b094a42083cda8ca8a5e50be5c0de6067f:x-oauth-basic@github.com/scizers/sz-react-utils.git#0.0.17":
+  version "1.0.3"
+  resolved "git+https://ce4bc2b094a42083cda8ca8a5e50be5c0de6067f:x-oauth-basic@github.com/scizers/sz-react-utils.git#dcda6e34e979176b3d52e837a31831cce440caa6"
+  dependencies:
+    lodash "^4.17.11"
+    memoize-one "^5.0.0"
+    react-highlight-words "^0.16.0"
+    string "^3.3.3"
 
 table@^4.0.3:
   version "4.0.3"

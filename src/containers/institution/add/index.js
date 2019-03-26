@@ -9,70 +9,84 @@ import {
   Card,
   Icon
 } from 'antd'
-import { ChromePicker } from 'react-color'
 import _ from 'lodash'
 import moment from 'moment'
 import { FormUtils as GetAllFormFields } from 'sz-react-utils'
+import { matchPath } from 'react-router-dom'
 
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
 import { notification } from 'antd/lib/index'
 import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'
 import { createMatchSelector } from 'connected-react-router'
-
-// inputSchema.fields
+import { getUrlParams } from '../../../routes'
 
 let inputTypes = {
   fields: [
     {
-      label: 'Full Name',
+      prefixComp: <h3>Institution Details</h3>,
+      label: 'Institution / Company Name',
       key: 'name',
       required: true
     },
-    {
-      label: 'Email',
-      key: 'email',
-      required: true
-    },
-    {
-      label: 'Password',
-      key: 'password',
-      required: true
-    },
-    {
-      label: 'User Type',
-      key: 'userType',
-      required: true,
-      type: 'select', options: ['Agent', 'Applicant', 'Either']
-    }]
+    { key: 'institutioncontact', label: 'Institution Contact' },
+    { key: 'institutioncontactphone', label: 'Institution Contact Phone' },
+    { key: 'institutioncontactemail', label: 'Institution Contact email' },
+    { key: 'companyemail', label: 'Company Email', prefixComp: <h3>Company Details</h3> },
+    { key: 'stocksymbol', label: 'Stock Symbol' },
+    { key: 'companyphone', label: 'Company Phone' },
+    { key: 'companyfax', label: 'Company Fax' },
+    { key: 'companyurl', label: 'Company Url' },
+    { key: 'companyaddress1', label: 'Company Address 1' },
+    { key: 'companyaddress2', label: 'Company Address2' },
+    { key: 'companycity', label: 'Company City' },
+    { key: 'companystate', label: 'Company State' },
+    { key: 'companyzipcode', label: 'Company Zip Code' },
+    { key: 'companycountry', label: 'Company Country' },
+    { key: 'companytype', label: 'Company Type' },
+    { key: 'companydescription', label: 'Company Description' },
+    { key: 'companysize', label: 'Company Size' },
+    { key: 'addmetrxcompellingevent', label: 'Addmetrx Compelling Event' },
+    { key: 'companysubmissionstage', label: 'Company Submission Stage' },
+    { key: 'companymarketcap', label: 'Companymarket Cap' },
+    { key: 'numberofemployees', label: 'Number of Employees' },
+    { key: 'annualrevenue', label: 'Annual Revenue' },
+    { key: 'lifecyclestage', label: 'Lifecycle Stage' }
+  ]
 }
 
 const FormItem = Form.Item
 const { Option } = Select
 
 @Form.create()
-class AddWebsite extends PureComponent {
+class AddInstitution extends PureComponent {
 
+  state = {
+    id: null
+  }
   handleSubmit = e => {
     const { dispatch, form } = this.props
+    const { id } = this.state
     e.preventDefault()
     form.validateFieldsAndScroll(async (err, valData) => {
       if (!err) {
 
         dispatch(showLoader())
 
-        let x = await Request.addUser(valData)
+        let x = null
+        if (!!id) {
+          x = await Request.editInstitution(valData, { id })
+        } else {
+          x = await Request.addInstitution(valData)
+        }
 
         dispatch(hideLoader())
 
         if (!x.error) {
           notification.success({
-            message: 'Users added successfully'
+            message: 'Added successfully'
           })
-          this.props.form.setFieldsValue({})
-
+          this.props.form.resetFields()
         } else {
           notification.error({
             message: 'Error Saving',
@@ -83,43 +97,42 @@ class AddWebsite extends PureComponent {
       }
     })
   }
+  setFormValues = async (id) => {
 
-  setFormValues = async (slug) => {
+    const { dispatch, form } = this.props
 
-    let { data } = await Request.getWebsite(slug)
 
-    this.setState({
-      extraFeilds: data.extraUrls.length
-    })
+    dispatch(showLoader())
 
-    let x = {
-      url: data.url,
-      category: data.category,
-      tags: data.tags,
-      description: data.description,
-      baseColor: data.baseColor,
-      logoBgColor: data.logoBgColor,
-      logoUrl: data.logoUrl,
-      projectDate: moment(data.projectDate)
+    let { error, data } = await Request.getInstitution({ id })
+    if (error) {
+      notification.error({
+        message: 'Error Loading Data'
+      })
+    } else {
+      form.setFieldsValue(data)
     }
 
-    _.each(data.extraUrls, (val, k) => {
-      x[`extraUrl-${k}`] = val
-    })
-
-    this.props.form.setFieldsValue(x)
+    dispatch(hideLoader())
 
   }
 
   constructor (props) {
     super(props)
-    this.state = {}
-
 
   }
 
   componentDidMount () {
 
+    let data = getUrlParams('institution.edit', this.props.pathname)
+
+    if (!!data && data.id) {
+      this.setState({
+        id: data.id
+      })
+      this.setFormValues(data.id)
+
+    }
 
   }
 
@@ -165,8 +178,8 @@ class AddWebsite extends PureComponent {
 
     return (
       <PageHeaderWrapper
-        title={'Add New Website'}
-        content={'This is some descopt '}
+        title={'Add New Institution / Company'}
+
       >
 
         <Card bordered={true}>
@@ -192,7 +205,8 @@ class AddWebsite extends PureComponent {
 const mapStateToProps = ({ global, router }) => ({
   loading: global.buttonLoading,
   categories: global.categories,
-  search: router.location.search
+  pathname: router.location.pathname,
+  router
 })
 const mapDispatchToProps = dispatch => {
   return {
@@ -204,4 +218,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddWebsite)
+)(AddInstitution)

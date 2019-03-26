@@ -45,28 +45,57 @@ const menu = [
     ]
   },
   {
-    'path': '/plants',
+    'path': '/plant',
     'name': 'Plants',
-    'icon': 'user',
+    'icon': 'alert',
     'key': 'plants',
     'component': Undercons,
     'authority': [
       'user',
+      'admin'
     ],
     'children': [
       {
-        'path': '/users/atest',
-        'name': 'Add User',
-        'title': 'Add User',
+        'path': '/plant/add',
+        'name': 'Add Plant',
+        'title': 'Add Plant',
         'component': AddUsers,
         'authority': [
           'user'
         ]
       },
       {
-        'path': '/users/all',
-        'name': 'All Users',
-        'title': 'All Users',
+        'path': '/plant/all',
+        'name': 'All Plants',
+        'title': 'All Plants',
+        'component': AllUsers
+      }
+    ]
+  },
+  {
+    'path': '/chillingcenter',
+    'name': 'Chilling Centers',
+    'icon': 'alert',
+    'key': 'chillingCenters',
+    'component': Undercons,
+    'authority': [
+      'user',
+      'admin'
+    ],
+    'children': [
+      {
+        'path': '/ChillingCenter/add',
+        'name': 'Add Chilling Centers',
+        'title': 'Add Chilling Centers',
+        'component': AddUsers,
+        'authority': [
+          'user'
+        ]
+      },
+      {
+        'path': '/ChillingCenter/all',
+        'name': 'All Chilling Centers',
+        'title': 'All Chilling Centers',
         'component': AllUsers
       }
     ]

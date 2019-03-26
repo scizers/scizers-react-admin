@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PageHeaderWrapper from '../../../components/PageHeaderWrapper'
-import TableComp from '../../../components/_utils/table'
+import { TableComp } from 'sz-react-utils'
 import {
   Table,
   Badge,
