@@ -74,6 +74,83 @@ class Request {
     })
   }
 
+
+  addInstitution (data) {
+    return new Promise((next) => {
+      authAxios
+        .post('/institution', { ...data })
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  getInstitution ({ id }) {
+    return new Promise((next) => {
+      authAxios
+        .get(`/institution/${id}`, getToken())
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  editInstitution (data, { id }) {
+    return new Promise((next) => {
+      authAxios
+        .put(`/institution/${id}`, { ...data }, getToken())
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  deleteInstitution ({ id }) {
+    return new Promise((next) => {
+      authAxios
+        .delete(`/institution/${id}`, getToken())
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  getAllInstitution (data) {
+    return new Promise((next) => {
+      authAxios
+        .get('/institution', { params: { ...data } })
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+
 }
 
 export default new Request()

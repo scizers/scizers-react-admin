@@ -29,6 +29,7 @@
     "lodash-decorators": "^6.0.1",
     "memoize-one": "^5.0.0",
     "moment": "^2.23.0",
+    "path-parser": "^4.2.0",
     "path-to-regexp": "^2.4.0",
     "react": "16.7.0",
     "react-color": "^2.17.0",
