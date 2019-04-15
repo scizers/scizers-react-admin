@@ -10,6 +10,12 @@ import AddUsers from './containers/users/add'
 
 import AddInstitution from './containers/institution/add'
 import AllInstitution from './containers/institution/all'
+import contact from './containers/contacts/add'
+
+import listMakes from './containers/makesAndModels/all'
+
+import AddMakes from './containers/makesAndModels/add'
+import AddCar from './containers/car/add'
 
 
 const menu = [
@@ -139,7 +145,70 @@ const menu = [
 
       }
     ]
-  }
+  },
+    {
+        'path': '/contact',
+        'name': 'mcontact menu ',
+        'icon': 'user',
+        'key': 'contact',
+        'component': Undercons,
+        'authority': [
+            'admin',
+            'user'
+        ],
+        'children': [
+            {
+                'path': '/contact/add',
+                'name': 'add coantct ',
+                'title': 'add contact ',
+                'component': contact
+            }
+        ]
+    },
+    {
+        'path': '/makesAndModels',
+        'name': 'Makes and model ',
+        'icon': 'settings',
+        'key': 'makesandmodels',
+        'component': Undercons,
+        'authority': [
+            'admin',
+            'user'
+        ],
+        'children': [
+            {
+                'path': '/make/add',
+                'name': 'Add Make/Brand ',
+                'title': 'Add Make / Brand ',
+                'component': AddMakes
+            },
+            {
+                'path': '/make/list',
+                'name': 'list Make/Brand ',
+                'title': 'list Make / Brand ',
+                'component': listMakes
+            }
+        ]
+    },
+    {
+        'path': '/cars',
+        'name': 'Cars ',
+        'icon': 'settings',
+        'key': 'cars',
+        'component': Undercons,
+        'authority': [
+            'admin',
+            'user'
+        ],
+        'children': [
+            {
+                'path': '/car/add',
+                'name': 'Add Car ',
+                'title': 'Add Car ',
+                'component': AddCar
+            }
+        ]
+    }
 ]
 
 export const getUrlPushWrapper = (keyString, query) => {

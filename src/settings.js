@@ -1,6 +1,6 @@
 export default {}
 
-export const pageTitle = 'HTAMPS'
+export const pageTitle = 'Ponnanm design'
 export const subTitle = 'Powered by Hindusthan Thermostatics'
 // export const apiUrl = `http://medmatrix.wss.io`
-export const apiUrl = `http://localhost:8043`
+export const apiUrl = `http://localhost:8083`

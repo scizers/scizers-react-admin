@@ -68,10 +68,10 @@ class NormalLoginForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit} className={styles.main}>
         <Form.Item>
-          {getFieldDecorator('mobile', {
+            {getFieldDecorator('email', {
             rules: [{ required: true, message: 'Please input your 10 digit mobile no!' }]
           })(
-            <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }}/>} placeholder="Mobile No (10 Digit)"/>
+                <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Email address"/>
           )}
         </Form.Item>
         <Form.Item>
