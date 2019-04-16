@@ -18,7 +18,7 @@
   "dependencies": {
     "@craco/craco": "^3.2.3",
     "@mapbox/react-colorpickr": "^8.1.2",
-    "antd": "latest",
+    "antd": "^3.16.3",
     "axios": "^0.18.0",
     "color": "^3.1.0",
     "connected-react-router": "4.5.0",
