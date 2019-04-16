@@ -178,6 +178,19 @@ class Request {
         })
     }
 
+    getAllModels(data) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/make/model/' + data.make, {params: {...data}}, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
     addFuel(data) {
         return new Promise((next) => {
 

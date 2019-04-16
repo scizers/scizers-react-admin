@@ -13,6 +13,7 @@ import AllInstitution from './containers/institution/all'
 import contact from './containers/contacts/add'
 
 import listMakes from './containers/makesAndModels/all'
+import listModel from './containers/Models/all'
 
 import AddMakes from './containers/makesAndModels/add'
 import AddCar from './containers/car/add'
@@ -215,6 +216,13 @@ const menu = [
                 'name': 'Add Model ',
                 'title': 'Add Model ',
                 'component': AddModel
+            },
+            {
+                key: 'listModel',
+                'path': '/model/list',
+                'name': 'list Model ',
+                'title': 'list Model ',
+                'component': listModel
             }
         ]
     },
