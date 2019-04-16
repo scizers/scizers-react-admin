@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import PageHeaderWrapper from '../../../components/PageHeaderWrapper'
 import {
     Drawer,
-    Badge,
+    Popconfirm,
     Card,
     Tooltip,
     notification,
@@ -38,11 +38,11 @@ class AllInstitution extends Component {
         })
     }
 
-    delete = async ({id}) => {
+    deleteMakes = async ({_id}) => {
 
         this.setState({loading: true})
 
-        await Request.deleteInstitution({id})
+        await Request.deleteMake({_id})
 
         this.setState({loading: false})
 
@@ -51,7 +51,7 @@ class AllInstitution extends Component {
         notification.success({
             message: 'Deleted Successfully',
             duration: 20,
-            key: `${id}-close`
+            key: `${_id}-close`
         })
 
     }
@@ -79,19 +79,24 @@ class AllInstitution extends Component {
                 width: 100,
                 fixed: 'right',
                 render: (val) => {
-
                     return <div>
 
                         <Tooltip title="Edit Details">
                             <Button shape="circle" onClick={() => {
-                                dispatch(getPushPathWrapper('institution.edit', {id: val._id}))
+                                dispatch(getPushPathWrapper('makesandmodels.editMake', {id: val._id}))
                             }} icon="edit"/>
                         </Tooltip>
 
                         <Tooltip title="Edit Details">
-                            <Button type="danger" shape="circle" icon="delete" onClick={() => {
-                                this.delete({id: val._id})
-                            }}/>
+                            <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
+                                this.deleteMakes(val)
+                            }} onCancel={() => {
+                                console.log()
+                            }} okText="Yes" cancelText="No">
+                                <Button type="danger" shape="circle" icon="delete"/>
+                            </Popconfirm>,
+
+
                         </Tooltip>
 
                     </div>

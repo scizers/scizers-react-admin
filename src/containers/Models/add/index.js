@@ -26,10 +26,11 @@ const Option = Select.Option;
 const Search = Input.Search;
 
 @Form.create()
-class AddMakes extends PureComponent {
+class AddModel extends PureComponent {
 
     state = {
-        id: null
+        id: null,
+        makes: []
     }
 
     handleSubmit = e => {
@@ -41,13 +42,13 @@ class AddMakes extends PureComponent {
 
                 dispatch(showLoader())
 
-                let x = null
-
-                if (id) {
-                    x = await Request.editMake({...valData, _id: id})
-                } else {
-                    x = await Request.addMakes(valData)
-                }
+                // let x = null
+                let x = await Request.addModel(valData)
+                // if (id) {
+                //     x = await Request.editMake({...valData, _id: id})
+                // } else {
+                //     x = await Request.addModel(valData)
+                // }
 
                 dispatch(hideLoader())
 
@@ -68,20 +69,43 @@ class AddMakes extends PureComponent {
     }
 
     componentDidMount() {
-        let data = getUrlParams('makesandmodels.editMake', this.props.pathname)
-        if (data && data.id) {
+        Request
+            .getAllMakes()
+            .then(({data, error, message}) => {
+                if (!error) {
+                    this.setState({
+                        makes: data
+                    })
+
+                } else {
+
+                    notification.error({
+                        message: 'Error Getting Data',
+                        description: message
+                    })
+
+                }
+            })
+
+    }
+
+
+    componentDidMountbackup() {
+        let data = getUrlParams('makesandmodels.listMake', this.props.pathname)
+        console.log(data, "==rfhrh")
+
+        if (data) {
             Request
-                .getMake({id: data.id})
+                .getAllMakes()
                 .then(({data, error, message}) => {
                     if (!error) {
-
                         this.setState({
-                            id: data._id
+                            makes: data.make
                         })
-                        this.props.form.setFieldsValue({
-                            make: data.make
-                        })
-
+                        /* this.props.form.setFieldsValue({
+                         make: data.make
+                         })
+                         */
                     } else {
 
                         notification.error({
@@ -100,7 +124,11 @@ class AddMakes extends PureComponent {
             fields: [
 
                 {
-                    key: 'make', type: 'text', placeholder: 'Enter Your Brand'
+                    key: 'make', type: 'select', placeholder: 'Enter Your Make', options: this.state.makes
+                },
+                {
+                    key: 'carModel', type: 'text', placeholder: 'Enter Your Model'
+
                 }
 
             ],
@@ -131,7 +159,7 @@ class AddMakes extends PureComponent {
         }
 
         return (
-            <PageHeaderWrapper title={'Add New Make '}>
+            <PageHeaderWrapper title={'Add New Model '}>
                 <Card bordered={true}>
                     <Form onSubmit={this.handleSubmit} hideRequiredMark style={{marginTop: 8}}>
 
@@ -168,4 +196,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddMakes)
+)(AddModel)

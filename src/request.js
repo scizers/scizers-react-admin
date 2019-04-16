@@ -153,7 +153,7 @@ class Request {
     addMakes(data) {
         return new Promise((next) => {
 
-            authAxios.post('/make', {...data}, getToken())
+            authAxios.post('/backOffice/make', {...data}, getToken())
                 .then((d) => {
                     console.log(d)
                     next(d.data)
@@ -167,8 +167,82 @@ class Request {
 
     getAllMakes(data) {
         return new Promise((next) => {
-            console.log(data, "-------------------")
-            authAxios.get('/makes', {params: {...data}}, getToken())
+            authAxios.get('/backOffice/make', {params: {...data}}, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    addFuel(data) {
+        return new Promise((next) => {
+
+            authAxios.post('/backOffice/fuelType', {...data}, getToken())
+                .then((d) => {
+                    console.log(d)
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+
+    getMake({id}) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/make/' + id, {}, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+
+    editMake(data) {
+        return new Promise((next) => {
+            console.log(data, "@@@@@@@@@@@@222")
+            authAxios.put('/backOffice/make/' + data._id, {params: {...data}}, getToken())
+                .then((d) => {
+                    console.log(d, "=========")
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+
+    deleteMake(data) {
+        return new Promise((next) => {
+            console.log(data, "@@@@@@@@@@@@222")
+            authAxios.delete('/backOffice/make/' + data._id, {params: {...data}}, getToken())
+                .then((d) => {
+                    console.log(d, "=========")
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    addModel(data) {
+        return new Promise((next) => {
+
+            authAxios.post('/backOffice/model', {...data}, getToken())
                 .then((d) => {
                     console.log(d)
                     next(d.data)
