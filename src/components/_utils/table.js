@@ -19,7 +19,6 @@ class TableComp extends Component {
     dataSearchParams: {}
   }
 
-
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination }
     pager.current = pagination.current
@@ -42,7 +41,6 @@ class TableComp extends Component {
     })
 
     let data = await this.props.apiRequest({ ...params, regExFilters: ['name', 'email'] })
-    // let data = await Request.getAllUser({ ...params, regExFilters: ['name', 'email'] })
 
     let pagination = { ...this.state.pagination }
     pagination.total = data.count
@@ -116,6 +114,10 @@ class TableComp extends Component {
       )
     }
   })
+
+
+
+
   handleSearch = (selectedKeys, confirm) => {
     confirm()
     this.setState({ searchText: selectedKeys[0] })
@@ -134,7 +136,6 @@ class TableComp extends Component {
 
     let x = []
     _.each(this.props.columns, (i) => {
-
 
       if (i.searchTextName) {
         i = { ...this.getColumnSearchProps(i.searchTextName), ...i }

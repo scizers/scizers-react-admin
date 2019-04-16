@@ -9,6 +9,7 @@ import BasicLayout from '../../layouts/BasicLayout'
 import Login from '../../containers/login'
 import '../../index.css'
 import _ from 'lodash'
+import { pageTitle } from '../../settings'
 
 const Exp = () => (<Exception
   type="404"
@@ -55,7 +56,9 @@ class BasicLayoutWrapper extends Component {
 
     return (
       <BasicLayout
+
         location={window.location}
+        title={pageTitle}
         pageTitle={`${menuItem.title} - Scizers Portfolio App`}
         menuData={menuData}>
         {!!component ? <this.props.component/> : <Exp/>}

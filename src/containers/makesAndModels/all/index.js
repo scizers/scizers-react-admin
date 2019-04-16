@@ -17,7 +17,6 @@ import {connect} from 'react-redux'
 import update from 'immutability-helper'
 
 import {apiUrl} from '../../../settings'
-import table from '../../../components/_utils/tableList'
 
 import {TableComp} from 'sz-react-utils'
 import {getPushPathWrapper} from '../../../routes'

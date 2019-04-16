@@ -17,7 +17,7 @@ import listMakes from './containers/makesAndModels/all'
 import AddMakes from './containers/makesAndModels/add'
 import AddCar from './containers/car/add'
 import AddModel from './containers/Models/add'
-import AddFuel from './containers/fuel/add'
+// import AddFuel from './containers/fuel/add'
 
 const menu = [
     {
@@ -228,14 +228,14 @@ const menu = [
             'admin',
             'user'
         ],
-        'children': [
+       /* 'children': [
             {
                 'path': '/fuel/add',
                 'name': 'Add fuel ',
                 'title': 'Add fuel ',
                 'component': AddFuel
             }
-        ]
+        ]*/
     },
     {
         'path': '/cars',
