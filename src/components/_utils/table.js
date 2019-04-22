@@ -123,10 +123,12 @@ class TableMain extends Component {
       )
     }
   })
+
   handleSearch = (selectedKeys, confirm) => {
     confirm()
     this.setState({ searchText: selectedKeys[0] })
   }
+
   handleReset = (clearFilters) => {
     clearFilters()
     this.setState({ searchText: '' })
@@ -270,7 +272,6 @@ class TableMain extends Component {
       <React.Fragment>{!!apiRequest ? this.renderDynamic() : this.renderStatic()}</React.Fragment>
     )
   }
-
 
 }
 

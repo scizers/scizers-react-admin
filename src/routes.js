@@ -294,7 +294,6 @@ const menu = [
                 'title': 'list variantName ',
                 'component': listVariant
             },
-            ,
             {
                 key: 'editVariant',
                 'path': '/variant/edit/:id/:makeId/:modelId/:fuelId',

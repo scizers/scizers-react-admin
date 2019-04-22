@@ -32,7 +32,7 @@ class Request {
     login(data) {
         return new Promise((next, error) => {
             authAxios
-                .post('/login', data)
+              .post('/loginadmin', data)
                 .then((d) => {
                     next(d.data)
                 })
