@@ -18,7 +18,11 @@ import listModel from './containers/Models/all'
 import AddMakes from './containers/makesAndModels/add'
 import AddCar from './containers/car/add'
 import AddModel from './containers/Models/add'
-// import AddFuel from './containers/fuel/add'
+import AddFuel from './containers/fuel/add'
+import listFuel from './containers/fuel/all'
+import AddVariant from './containers/variant/add'
+import listVariant from './containers/variant/all'
+
 
 const menu = [
     {
@@ -223,6 +227,13 @@ const menu = [
                 'name': 'list Model ',
                 'title': 'list Model ',
                 'component': listModel
+            },
+            {
+                key: 'editModel',
+                'path': '/model/edit/:id/:makeId',
+                'name': 'Edit Model ',
+                'title': 'Edit Model ',
+                'component': AddModel
             }
         ]
     },
@@ -236,14 +247,62 @@ const menu = [
             'admin',
             'user'
         ],
-       /* 'children': [
+        'children': [
             {
                 'path': '/fuel/add',
                 'name': 'Add fuel ',
                 'title': 'Add fuel ',
                 'component': AddFuel
+            },
+            {
+                key: 'listFuel',
+                'path': '/fuelType/list',
+                'name': 'list Fuel ',
+                'title': 'list FuelType ',
+                'component': listFuel
+            },
+            {
+                key: 'editFuel',
+                'path': '/fuel/edit/:id/:makeId/:modelId',
+                'name': 'Edit Fuel ',
+                'title': 'Edit Fuel ',
+                'component': AddFuel
             }
-        ]*/
+        ]
+    },
+    {
+        'path': '/variant',
+        'name': 'variant ',
+        'icon': 'settings',
+        'key': 'variant',
+        'component': Undercons,
+        'authority': [
+            'admin',
+            'user'
+        ],
+        'children': [
+            {
+                'path': '/variant/add',
+                'name': 'Add variant ',
+                'title': 'Add variant ',
+                'component': AddVariant
+            },
+            {
+                key: 'listVariant',
+                'path': '/variant/list',
+                'name': 'list variant ',
+                'title': 'list variantName ',
+                'component': listVariant
+            },
+            ,
+            {
+                key: 'editVariant',
+                'path': '/variant/edit/:id/:makeId/:modelId/:fuelId',
+                'name': 'variant Fuel ',
+                'title': 'variant Fuel ',
+                'component': AddVariant
+            }
+        ]
     },
     {
         'path': '/cars',
@@ -344,7 +403,6 @@ export const getUrlObject = (keyString) => {
     return val
 }
 //</editor-fold>
-
 
 
 export default menu

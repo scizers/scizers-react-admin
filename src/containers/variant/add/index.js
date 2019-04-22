@@ -31,7 +31,13 @@ class AddModel extends PureComponent {
 
     state = {
         id: null,
-        makes: []
+        makes: [],
+        models: [],
+        fuels: [],
+        make: '',
+        model: '',
+        makeId: null
+
     }
 
     handleSubmit = e => {
@@ -44,15 +50,14 @@ class AddModel extends PureComponent {
                 dispatch(showLoader())
 
                 let x = null
+
+
                 if (id) {
-                    x = await Request.editModel({
-                        ...valData,
-                        makeId: this.state.makeId,
-                        modelId: this.state.modelId,
-                        _id: id
+                    x = await Request.editVariant({
+                        ...valData, _id: id
                     })
                 } else {
-                    x = await Request.addModel(valData)
+                    x = await Request.addVariant(valData)
                 }
 
                 dispatch(hideLoader())
@@ -73,12 +78,10 @@ class AddModel extends PureComponent {
         })
     }
 
-
-    async componentDidMount() {
+    async   componentDidMount() {
         Request
             .getAllMakes()
             .then(({data, error, message}) => {
-
                 if (!error) {
                     this.setState({
                         makes: data
@@ -94,15 +97,16 @@ class AddModel extends PureComponent {
 
                 }
             })
-        let data1 = await getUrlParams('models.editModel', this.props.pathname)
 
+    }
+
+
+    async componentDidMount() {
+        let data1 = await getUrlParams('variant.editVariant', this.props.pathname)
+        console.log(data1, "data")
         if (data1 && data1.id && data1.makeId) {
-            this.setState({
-                makeId: data1.makeId,
-                modelId: data1.id
-
-            })
             Request
+
                 .getMake({id: data1.makeId})
                 .then(({data, error, message}) => {
                     if (!error) {
@@ -114,14 +118,13 @@ class AddModel extends PureComponent {
                         })
                         Request.getModel({id: data1.id})
                             .then(({data, error, message}) => {
+                                let {model} = data
                                 if (!error) {
                                     this.setState({
-                                        id: data._id,
+                                        id: model
                                     })
-
-
                                     this.props.form.setFieldsValue({
-                                        carModel: data.model[0].carModel
+                                        model: model
                                     })
 
                                 } else {
@@ -146,11 +149,11 @@ class AddModel extends PureComponent {
         }
     }
 
-
     render() {
 
         const {form: {getFieldDecorator, getFieldValue, setFieldsValue}} = this.props
 
+        const {make, model} = this.state
 
         let inputTypes = {
 
@@ -165,10 +168,93 @@ class AddModel extends PureComponent {
                     options: this.state.makes,
                     onChange: (make) => {
                         setFieldsValue({make})
+                        this.state.make = make
+
+                        Request.getAllModels({make})
+                            .then(({data, error, message}) => {
+                                if (!error) {
+                                    this.setState({
+                                        models: data.model
+                                    })
+                                }
+                                else {
+
+                                    notification.error({
+                                        message: 'Error Getting Data',
+                                        description: message
+                                    })
+
+                                }
+                            })
+
+
                     }
                 },
                 {
-                    key: 'carModel', type: 'text', placeholder: 'Enter Your Model'
+                    key: 'model',
+                    type: 'select',
+                    disabled: false,
+                    placeholder: 'Enter Your Model',
+                    keyAccessor: x => x._id,
+                    valueAccessor: x => x.carModel,
+                    options: this.state.models,
+                    onChange: (model) => {
+                        setFieldsValue({model})
+                        this.state.model = model
+
+                        Request.getAllFuels({make, model})
+                            .then(({data, error, message}) => {
+                                if (!error) {
+                                    this.setState({
+                                        fuels: data.fuelTypes
+                                    })
+                                }
+                                else {
+
+                                    notification.error({
+                                        message: 'Error Getting Data',
+                                        description: message
+                                    })
+
+                                }
+                            })
+
+
+                    }
+                },
+
+                {
+                    key: 'fuel',
+                    type: 'select',
+                    disabled: false,
+                    placeholder: 'Enter Your Fuel',
+                    keyAccessor: x => x._id,
+                    valueAccessor: x => x.fuelName,
+                    options: this.state.fuels,
+                    onChange: (fuel) => {
+                        setFieldsValue({fuel})
+                        Request.getAllVariants({make, model, fuel})
+                            .then(({data, error, message}) => {
+                                console.log(data, "varodsidj")
+                                // if (!error) {
+                                //     this.setState({
+                                //         variant: data.variantName
+                                //     })
+                                // }
+                                // else {
+                                //
+                                //     notification.error({
+                                //         message: 'Error Getting Data',
+                                //         description: message
+                                //     })
+                                //
+                                // }
+                            })
+                    }
+                },
+
+                {
+                    key: 'variant', type: 'text', placeholder: 'Enter Your variant'
 
                 }
 

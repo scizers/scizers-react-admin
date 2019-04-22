@@ -31,7 +31,9 @@ class AddModel extends PureComponent {
 
     state = {
         id: null,
-        makes: []
+        makes: [],
+        models: [],
+        makeId: null
     }
 
     handleSubmit = e => {
@@ -44,15 +46,14 @@ class AddModel extends PureComponent {
                 dispatch(showLoader())
 
                 let x = null
+
                 if (id) {
-                    x = await Request.editModel({
-                        ...valData,
-                        makeId: this.state.makeId,
+                    x = await Request.editFuelType({
+                        ...valData, _id: id, makeId: this.state.makeId,
                         modelId: this.state.modelId,
-                        _id: id
                     })
                 } else {
-                    x = await Request.addModel(valData)
+                    x = await Request.addFuel(valData)
                 }
 
                 dispatch(hideLoader())
@@ -73,12 +74,10 @@ class AddModel extends PureComponent {
         })
     }
 
-
-    async componentDidMount() {
+    async   componentDidMount() {
         Request
             .getAllMakes()
             .then(({data, error, message}) => {
-
                 if (!error) {
                     this.setState({
                         makes: data
@@ -94,15 +93,20 @@ class AddModel extends PureComponent {
 
                 }
             })
-        let data1 = await getUrlParams('models.editModel', this.props.pathname)
 
-        if (data1 && data1.id && data1.makeId) {
+    }
+
+
+    async componentDidMount() {
+        let data1 = await getUrlParams('fuel.editFuel', this.props.pathname)
+        if (data1 && data1.id && data1.makeId && data1.modelId) {
             this.setState({
                 makeId: data1.makeId,
-                modelId: data1.id
+                modelId: data1.modelId
 
             })
             Request
+
                 .getMake({id: data1.makeId})
                 .then(({data, error, message}) => {
                     if (!error) {
@@ -112,17 +116,37 @@ class AddModel extends PureComponent {
                         this.props.form.setFieldsValue({
                             make: data.make
                         })
-                        Request.getModel({id: data1.id})
+                        Request.getModel({id: data1.modelId})
                             .then(({data, error, message}) => {
+
+                                let {model} = data
                                 if (!error) {
                                     this.setState({
-                                        id: data._id,
+                                        id: model[0]._id
                                     })
-
-
                                     this.props.form.setFieldsValue({
-                                        carModel: data.model[0].carModel
+                                        model: model[0].carModel
                                     })
+                                    Request.getFuel({id: data1.id, modelId: data1.modelId})
+                                        .then(({data, error, message}) => {
+                                            console.log(data[0]._id, data[0].fuelName)
+                                            if (!error) {
+                                                this.setState({
+                                                    id: data[0]._id
+                                                })
+                                                this.props.form.setFieldsValue({
+                                                    fuelType: data[0].fuelName
+                                                })
+
+                                            } else {
+
+                                                notification.error({
+                                                    message: 'Error Getting Data',
+                                                    description: message
+                                                })
+
+                                            }
+                                        })
 
                                 } else {
 
@@ -165,10 +189,43 @@ class AddModel extends PureComponent {
                     options: this.state.makes,
                     onChange: (make) => {
                         setFieldsValue({make})
+                        Request.getAllModels({make})
+                            .then(({data, error, message}) => {
+                                if (!error) {
+                                    this.setState({
+                                        models: data.model
+                                    })
+                                    console.log(data, data.model)
+                                }
+                                else {
+
+                                    notification.error({
+                                        message: 'Error Getting Data',
+                                        description: message
+                                    })
+
+                                }
+                            })
+
+
                     }
                 },
                 {
-                    key: 'carModel', type: 'text', placeholder: 'Enter Your Model'
+                    key: 'model',
+                    type: 'select',
+                    disabled: false,
+                    placeholder: 'Enter Your Model',
+                    keyAccessor: x => x._id,
+                    valueAccessor: x => x.carModel,
+                    options: this.state.models,
+                    onChange: (model) => {
+                        setFieldsValue({model})
+                    }
+                },
+
+
+                {
+                    key: 'fuelType', type: 'text', placeholder: 'Enter Your Fuel'
 
                 }
 

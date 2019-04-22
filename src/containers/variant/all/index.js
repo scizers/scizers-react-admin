@@ -28,9 +28,21 @@ import {getPushPathWrapper} from '../../../routes'
 const Option = Select.Option
 
 
-class AllModel extends Component {
+class AllFuelType extends Component {
 
-    state = {visible: false, loading: false, disabled: true, uploadData: null, allModels: [], allMakes: [], make: ''}
+    state = {
+        visible: false,
+        loading: false,
+        disabled: true,
+        uploadData: null,
+        allModels: [],
+        allFuel: [],
+        allMakes: [],
+        allVariants: [],
+        fuel: '',
+        make: '',
+        model: ''
+    }
 
     reload = () => {
         this.table.current.reload()
@@ -71,13 +83,13 @@ class AllModel extends Component {
     render() {
 
         const {dispatch} = this.props
-        const {visible, disabled, loading, allMakes, make} = this.state
+        const {visible, disabled, loading, allMakes, allModels, allFuel, model, fuel, make} = this.state
         const columns = [
             {
                 title: 'Name',
                 key: 'name',
                 sorter: true,
-                dataIndex: 'carModel',
+                dataIndex: 'variantName',
                 searchTextName: 'name',
                 filterRegex: true
             },
@@ -92,7 +104,9 @@ class AllModel extends Component {
 
                         <Tooltip title="Edit Details">
                             <Button shape="circle" onClick={() => {
-                                dispatch(getPushPathWrapper('models.editModel', {id: val._id, makeId: make}))
+                                console.log("render")
+                                console.log(val, "val")
+                                dispatch(getPushPathWrapper('variant.editVariant', {id: val._id}))
                             }} icon="edit"/>
                         </Tooltip>
                         <Tooltip title="Edit Details">
@@ -126,12 +140,10 @@ class AllModel extends Component {
                             this.setState({make: make.toString()})
                             Request.getAllModels({make})
                                 .then(({data}) => {
-
                                     this.setState({
                                         allModels: data.model,
                                         loading: false
                                     })
-
                                 })
 
                         }} className="form-control">
@@ -142,11 +154,47 @@ class AllModel extends Component {
 
                         </Select>
                     </div>
+                    <div>
+                        <Select value={this.state.model} style={{width: 200}} onChange={(model) => {
+                            this.setState({model: model.toString()})
+                            Request.getAllFuels({model, make})
+                                .then(({data}) => {
+                                    this.setState({
+                                        allFuel: data.fuelTypes,
+                                        loading: false
+                                    })
+                                })
 
-                    {this.state.make ? <TableComp ref={this.table}
+                        }} className="form-control">
+                            {allModels.map((val, index) => {
+                                return <Option key={index} value={val._id}>{val.carModel}</Option>
+                            })}
+
+                        </Select>
+                    </div>
+                    <div>
+                        <Select value={this.state.fuel} style={{width: 200}} onChange={(fuel) => {
+                            this.setState({fuel: fuel.toString()})
+
+                            Request.getAllVariants({model, make, fuel})
+                                .then(({data}) => {
+                                    this.setState({
+                                        allVariants: data.variants,
+                                        loading: false
+                                    })
+                                })
+
+                        }} className="form-control">
+                            {allFuel.map((val, index) => {
+                                return <Option key={index} value={val._id}>{val.fuelName}</Option>
+                            })}
+
+                        </Select>
+                    </div>
+                    {this.state.fuel ? <TableComp ref={this.table}
                                                   columns={columns}
                                                   loading={this.state.loading}
-                                                  dataSource={this.state.allModels}/> : <Empty/>}
+                                                  dataSource={this.state.allVariants}/> : <Empty/>}
 
                 </Card>
 
@@ -170,4 +218,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AllModel)
+)(AllFuelType)

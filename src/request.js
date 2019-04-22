@@ -155,7 +155,6 @@ class Request {
 
             authAxios.post('/backOffice/make', {...data}, getToken())
                 .then((d) => {
-                    console.log(d)
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -193,8 +192,7 @@ class Request {
 
     addFuel(data) {
         return new Promise((next) => {
-
-            authAxios.post('/backOffice/fuelType', {...data}, getToken())
+            authAxios.post('/backOffice/fuelType', data, getToken())
                 .then((d) => {
                     console.log(d)
                     next(d.data)
@@ -206,12 +204,67 @@ class Request {
         })
     }
 
+    getAllFuels(data) {
+        return new Promise((next) => {
+            authAxios.post('/backOffice/make/model/fuelTypes', data, getToken())
+                .then((d) => {
+                    console.log(d.data, "djdnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
+                    next(d)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    editFuelType(data) {
+        return new Promise((next) => {
+            authAxios.put('/backOffice/fuelType/' + data._id, data, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    getFuel({id, modelId}) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/fuel/' + id, {params: {modelId}}, getToken())
+                .then((d) => {
+                    next(d)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    deleteFuel(data) {
+        return new Promise((next) => {
+            let {val} = data
+
+            authAxios.delete('/backOffice/fuelType/' + val._id, {data})
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
 
     getMake({id}) {
         return new Promise((next) => {
             authAxios.get('/backOffice/make/' + id, {}, getToken())
                 .then((d) => {
                     next(d.data)
+
                 }).catch((err) => {
                 next({error: true, err})
             })
@@ -223,10 +276,8 @@ class Request {
 
     editMake(data) {
         return new Promise((next) => {
-            console.log(data, "@@@@@@@@@@@@222")
             authAxios.put('/backOffice/make/' + data._id, {params: {...data}}, getToken())
                 .then((d) => {
-                    console.log(d, "=========")
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -239,10 +290,8 @@ class Request {
 
     deleteMake(data) {
         return new Promise((next) => {
-            console.log(data, "@@@@@@@@@@@@222")
             authAxios.delete('/backOffice/make/' + data._id, {params: {...data}}, getToken())
                 .then((d) => {
-                    console.log(d, "=========")
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -257,6 +306,49 @@ class Request {
 
             authAxios.post('/backOffice/model', {...data}, getToken())
                 .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    editModel(data) {
+        return new Promise((next) => {
+            authAxios.put('/backOffice/model/' + data.modelId, data, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    deleteModel(data) {
+        return new Promise((next) => {
+            let {val} = data
+            // axios.delete(url, { data: { foo: "bar" } });
+
+            authAxios.delete('/backOffice/model/' + data.make, {data: val})
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    getModel({id}) {
+        return new Promise((next) => {
+            console.log(id, "bharti")
+            authAxios.get('/backOffice/model/' + id, getToken())
+                .then((d) => {
                     console.log(d)
                     next(d.data)
                 }).catch((err) => {
@@ -267,12 +359,51 @@ class Request {
         })
     }
 
+    addVariant(data) {
+        return new Promise((next) => {
+            authAxios.post('/backOffice/variant', data, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    getAllVariants(data) {
+        return new Promise((next) => {
+            authAxios.post('/backOffice/make/model/fuelType/variants', data, getToken())
+                .then((d) => {
+                    next(d)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    editVariant(data) {
+        return new Promise((next) => {
+            authAxios.put('/backOffice/variant/', data, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+
     addCar(data) {
         return new Promise((next) => {
 
             authAxios.post('/car', {...data}, getToken())
                 .then((d) => {
-                    console.log(d)
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
