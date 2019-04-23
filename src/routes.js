@@ -297,8 +297,8 @@ const menu = [
             {
                 key: 'editVariant',
                 'path': '/variant/edit/:id/:makeId/:modelId/:fuelId',
-                'name': 'variant Fuel ',
-                'title': 'variant Fuel ',
+                'name': 'edit Variant  ',
+                'title': 'edit Variant ',
                 'component': AddVariant
             }
         ]

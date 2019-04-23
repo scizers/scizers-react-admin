@@ -133,11 +133,12 @@ class AllFuelType extends Component {
 
         return (
             <PageHeaderWrapper
-                title={'All Makes'}>
+                title={'All Fuels'}>
 
                 <Card bordered={true}>
 
-                    <div>
+                    <div style={{marginBottom: 31}}>
+                        <label style={{marginRight: 20}}>Select Make:</label>
                         <Select value={this.state.make} style={{width: 200}} onChange={(make) => {
                             this.setState({make: make.toString()})
                             Request.getAllModels({make})
@@ -157,6 +158,7 @@ class AllFuelType extends Component {
                         </Select>
                     </div>
                     <div>
+                        <label style={{marginRight: 20}}>Select Model:</label>
                         <Select value={this.state.model} style={{width: 200}} onChange={(model) => {
                             this.setState({model: model.toString()})
                             Request.getAllFuels({model, make})

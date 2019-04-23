@@ -32,7 +32,7 @@ class Request {
     login(data) {
         return new Promise((next, error) => {
             authAxios
-              .post('/loginadmin', data)
+                .post('/loginadmin', data)
                 .then((d) => {
                     next(d.data)
                 })
@@ -232,14 +232,28 @@ class Request {
     }
 
     getFuel({id, modelId}) {
+        console.log(id, modelId)
         return new Promise((next) => {
             authAxios.get('/backOffice/fuel/' + id, {params: {modelId}}, getToken())
+                .then((d) => {
+                    next(d)
+                    console.log(d, "dddddddddddddddd")
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+        })
+    }
+
+    getVariant(data) {
+        console.log(data, "variantData")
+        return new Promise((next) => {
+            authAxios.post('/backOffice/variant/data', data, getToken())
                 .then((d) => {
                     next(d)
                 }).catch((err) => {
                 next({error: true, err})
             })
-
 
         })
     }
@@ -249,6 +263,22 @@ class Request {
             let {val} = data
 
             authAxios.delete('/backOffice/fuelType/' + val._id, {data})
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    deleteVariant(data) {
+        console.log(data, "delet")
+        return new Promise((next) => {
+            let {val} = data
+
+            authAxios.delete('/backOffice/variant/' + val._id, {data})
                 .then((d) => {
                     next(d.data)
                 }).catch((err) => {
@@ -386,8 +416,9 @@ class Request {
     }
 
     editVariant(data) {
+        console.log(data, "Podncjdsncjsdn")
         return new Promise((next) => {
-            authAxios.put('/backOffice/variant/', data, getToken())
+            authAxios.put('/backOffice/variant/' + data._id, data, getToken())
                 .then((d) => {
                     next(d.data)
                 }).catch((err) => {

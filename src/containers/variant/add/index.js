@@ -54,7 +54,10 @@ class AddModel extends PureComponent {
 
                 if (id) {
                     x = await Request.editVariant({
-                        ...valData, _id: id
+                        ...valData, _id: id,
+                        makeId: this.state.makeId,
+                        modelId: this.state.modelId,
+                        fuelId: this.state.fuelId
                     })
                 } else {
                     x = await Request.addVariant(valData)
@@ -78,7 +81,9 @@ class AddModel extends PureComponent {
         })
     }
 
-    async   componentDidMount() {
+
+    async componentDidMount() {
+
         Request
             .getAllMakes()
             .then(({data, error, message}) => {
@@ -98,34 +103,87 @@ class AddModel extends PureComponent {
                 }
             })
 
-    }
 
-
-    async componentDidMount() {
         let data1 = await getUrlParams('variant.editVariant', this.props.pathname)
-        console.log(data1, "data")
-        if (data1 && data1.id && data1.makeId) {
+        console.log(data1, "data1")
+
+        if (data1 && data1.id && data1.makeId && data1.modelId && data1.fuelId) {
+
+            this.setState({
+                makeId: data1.makeId,
+                modelId: data1.modelId,
+                fuelId: data1.fuelId
+
+            })
+
             Request
 
                 .getMake({id: data1.makeId})
                 .then(({data, error, message}) => {
                     if (!error) {
                         this.setState({
-                            id: data.makeId
+                            id: data._id
                         })
                         this.props.form.setFieldsValue({
                             make: data.make
                         })
-                        Request.getModel({id: data1.id})
+                        Request.getModel({id: data1.modelId})
                             .then(({data, error, message}) => {
                                 let {model} = data
                                 if (!error) {
                                     this.setState({
-                                        id: model
+                                        id: data._id
                                     })
                                     this.props.form.setFieldsValue({
-                                        model: model
+                                        model: data.model[0].carModel
                                     })
+
+
+                                    Request.getFuel({id: data1.fuelId, modelId: data1.modelId})
+                                        .then(({data, error, message}) => {
+                                            console.log(data, "fuel")
+                                            if (!error) {
+                                                this.setState({
+                                                    id: data[0]._id
+                                                })
+                                                this.props.form.setFieldsValue({
+                                                    fuel: data[0].fuelName
+                                                })
+
+                                                Request.getVariant({
+                                                    id: data1.id,
+                                                    modelId: data1.modelId,
+                                                    fuelId: data1.fuelId
+                                                })
+                                                    .then(({data, error, message}) => {
+                                                        console.log(data, "fuel")
+                                                        if (!error) {
+                                                            this.setState({
+                                                                id: data[0]._id
+                                                            })
+                                                            this.props.form.setFieldsValue({
+                                                                variant: data[0].variantName
+                                                            })
+
+                                                        } else {
+
+                                                            notification.error({
+                                                                message: 'Error Getting Data',
+                                                                description: message
+                                                            })
+
+                                                        }
+                                                    })
+
+                                            } else {
+
+                                                notification.error({
+                                                    message: 'Error Getting Data',
+                                                    description: message
+                                                })
+
+                                            }
+                                        })
 
                                 } else {
 
@@ -284,7 +342,7 @@ class AddModel extends PureComponent {
         }
 
         return (
-            <PageHeaderWrapper title={'Add New Model '}>
+            <PageHeaderWrapper title={'Add New Variant '}>
                 <Card bordered={true}>
                     <Form onSubmit={this.handleSubmit} hideRequiredMark style={{marginTop: 8}}>
 

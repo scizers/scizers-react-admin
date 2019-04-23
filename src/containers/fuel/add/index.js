@@ -74,7 +74,8 @@ class AddModel extends PureComponent {
         })
     }
 
-    async   componentDidMount() {
+
+    async componentDidMount() {
         Request
             .getAllMakes()
             .then(({data, error, message}) => {
@@ -82,7 +83,6 @@ class AddModel extends PureComponent {
                     this.setState({
                         makes: data
                     })
-
 
                 } else {
 
@@ -93,11 +93,6 @@ class AddModel extends PureComponent {
 
                 }
             })
-
-    }
-
-
-    async componentDidMount() {
         let data1 = await getUrlParams('fuel.editFuel', this.props.pathname)
         if (data1 && data1.id && data1.makeId && data1.modelId) {
             this.setState({
@@ -255,7 +250,7 @@ class AddModel extends PureComponent {
         }
 
         return (
-            <PageHeaderWrapper title={'Add New Model '}>
+            <PageHeaderWrapper title={'Add New Fuel '}>
                 <Card bordered={true}>
                     <Form onSubmit={this.handleSubmit} hideRequiredMark style={{marginTop: 8}}>
 
