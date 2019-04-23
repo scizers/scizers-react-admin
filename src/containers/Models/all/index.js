@@ -96,7 +96,7 @@ class AllModel extends Component {
                             }} icon="edit"/>
                         </Tooltip>
                         <Tooltip title="Edit Details">
-                            <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
+                            <Popconfirm title="Are you sure delete this model?" onConfirm={() => {
 
                                 this.deleteModels({val, make})
                             }} onCancel={() => {
@@ -123,7 +123,7 @@ class AllModel extends Component {
 
                     <div>
                         <label style={{marginRight: 20}}> Select Make:</label>
-                        <Select value={this.state.make} style={{width: 200}} onChange={(make) => {
+                        <Select showSearch value={this.state.make} style={{ width: 200 }} onChange={(make) => {
                             this.setState({make: make.toString()})
                             Request.getAllModels({make})
                                 .then(({data}) => {

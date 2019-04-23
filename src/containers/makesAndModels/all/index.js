@@ -88,7 +88,7 @@ class AllInstitution extends Component {
             </Tooltip>
 
             <Tooltip title="Edit Details">
-              <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
+              <Popconfirm title="Are you sure delete this make?" onConfirm={() => {
                 this.deleteMakes(val)
               }} onCancel={() => {
                 console.log()
