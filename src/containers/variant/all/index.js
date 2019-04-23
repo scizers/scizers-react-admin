@@ -141,7 +141,11 @@ class AllFuelType extends Component {
 
                     <div style={{marginBottom: 31}}>
                         <label style={{marginRight: 20}}>Select Make:</label>
-                        <Select value={this.state.make} style={{width: 200}} onChange={(make) => {
+                        <Select showSearch
+                                filterOption={(input, option) => {
+                                    return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }}
+                                value={this.state.make} style={{ width: 200 }} onChange={(make) => {
                             this.setState({make: make.toString(), model: '', fuel: ''})
                             Request.getAllModels({make})
                                 .then(({data}) => {
@@ -161,7 +165,11 @@ class AllFuelType extends Component {
                     </div>
                     <div style={{marginBottom: 31}}>
                         <label style={{marginRight: 16}}>Select Model:</label>
-                        <Select value={this.state.model} style={{width: 200}} onChange={(model) => {
+                        <Select showSearch
+                                filterOption={(input, option) => {
+                                    return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }}
+                                value={this.state.model} style={{ width: 200 }} onChange={(model) => {
                             this.setState({model: model.toString(), fuel: ''})
                             Request.getAllFuels({model, make})
                                 .then(({data}) => {
@@ -180,7 +188,11 @@ class AllFuelType extends Component {
                     </div>
                     <div>
                         <label style={{marginRight: 30}}>Select Fuel:</label>
-                        <Select value={this.state.fuel} style={{width: 200}} onChange={(fuel) => {
+                        <Select showSearch
+                                filterOption={(input, option) => {
+                                    return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }}
+                                value={this.state.fuel} style={{ width: 200 }} onChange={(fuel) => {
                             this.setState({fuel: fuel.toString()})
 
                             Request.getAllVariants({model, make, fuel})

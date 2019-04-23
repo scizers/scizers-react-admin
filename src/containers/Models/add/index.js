@@ -59,7 +59,7 @@ class AddModel extends PureComponent {
 
                 if (!x.error) {
                     notification.success({
-                      message: id ? `Edited Successfylly` : 'Added successfully'
+                        message: id ? `Updated Successfully` : 'Added successfully'
                     })
                     this.props.form.resetFields()
                 } else {
