@@ -59,7 +59,7 @@ class AddModel extends PureComponent {
 
                 if (!x.error) {
                     notification.success({
-                        message: 'Added successfully'
+                      message: id ? `Edited Successfylly` : 'Added successfully'
                     })
                     this.props.form.resetFields()
                 } else {
@@ -150,6 +150,7 @@ class AddModel extends PureComponent {
     render() {
 
         const {form: {getFieldDecorator, getFieldValue, setFieldsValue}} = this.props
+      const { id } = this.state
 
 
         let inputTypes = {
@@ -198,7 +199,7 @@ class AddModel extends PureComponent {
         }
 
         return (
-            <PageHeaderWrapper title={'Add New Model '}>
+          <PageHeaderWrapper title={id ? 'Edit Model' : 'Add New Model '}>
                 <Card bordered={true}>
                     <Form onSubmit={this.handleSubmit} hideRequiredMark style={{marginTop: 8}}>
 
