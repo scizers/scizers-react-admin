@@ -443,6 +443,49 @@ class Request {
 
         })
     }
+    getAllCars(data) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/cars', {params: {...data}}, getToken())
+              .then((d) => {
+                  console.log(d.data,"cars data ")
+                  next(d.data)
+              }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+    getAllDealers(data) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/dealers', {params: {...data}}, getToken())
+              .then((d) => {
+
+                  next(d.data)
+              }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+    getAllRequirements(data) {
+        return new Promise((next) => {
+            authAxios.get('/backOffice/requirements', {params: {...data}}, getToken())
+              .then((d) => {
+
+                  next(d.data)
+              }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+
+
+
 
 }
 

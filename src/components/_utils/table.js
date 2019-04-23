@@ -135,7 +135,11 @@ class TableMain extends Component {
   }
 
   reload = () => {
-    this.fetch(this.state.dataSearchParams)
+
+    if (!!this.props.apiRequest) {
+      this.fetch(this.state.dataSearchParams)
+    }
+
   }
 
   setDataState = async () => {
