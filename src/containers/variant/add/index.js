@@ -141,7 +141,7 @@ class AddModel extends PureComponent {
 
                                     Request.getFuel({id: data1.fuelId, modelId: data1.modelId})
                                         .then(({data, error, message}) => {
-                                            console.log(data, "fuel")
+
                                             if (!error) {
                                                 this.setState({
                                                     id: data[0]._id
@@ -149,14 +149,12 @@ class AddModel extends PureComponent {
                                                 this.props.form.setFieldsValue({
                                                     fuel: data[0].fuelName
                                                 })
-
                                                 Request.getVariant({
                                                     id: data1.id,
                                                     modelId: data1.modelId,
                                                     fuelId: data1.fuelId
                                                 })
                                                     .then(({data, error, message}) => {
-                                                        console.log(data, "fuel")
                                                         if (!error) {
                                                             this.setState({
                                                                 id: data[0]._id
@@ -164,6 +162,7 @@ class AddModel extends PureComponent {
                                                             this.props.form.setFieldsValue({
                                                                 variant: data[0].variantName
                                                             })
+
 
                                                         } else {
 
@@ -293,20 +292,19 @@ class AddModel extends PureComponent {
                         setFieldsValue({fuel})
                         Request.getAllVariants({make, model, fuel})
                             .then(({data, error, message}) => {
-                                console.log(data, "varodsidj")
-                                // if (!error) {
-                                //     this.setState({
-                                //         variant: data.variantName
-                                //     })
-                                // }
-                                // else {
-                                //
-                                //     notification.error({
-                                //         message: 'Error Getting Data',
-                                //         description: message
-                                //     })
-                                //
-                                // }
+                                if (!error) {
+                                    this.setState({
+                                        variant: data.variantName
+                                    })
+                                }
+                                else {
+
+                                    notification.error({
+                                        message: 'Error Getting Data',
+                                        description: message
+                                    })
+
+                                }
                             })
                     }
                 },

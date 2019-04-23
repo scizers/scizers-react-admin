@@ -140,7 +140,7 @@ class AllFuelType extends Component {
                     <div style={{marginBottom: 31}}>
                         <label style={{marginRight: 20}}>Select Make:</label>
                         <Select value={this.state.make} style={{width: 200}} onChange={(make) => {
-                            this.setState({make: make.toString()})
+                            this.setState({make: make.toString(), model: ''})
                             Request.getAllModels({make})
                                 .then(({data}) => {
                                     this.setState({

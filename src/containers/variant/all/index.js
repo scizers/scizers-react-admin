@@ -142,7 +142,7 @@ class AllFuelType extends Component {
                     <div style={{marginBottom: 31}}>
                         <label style={{marginRight: 20}}>Select Make:</label>
                         <Select value={this.state.make} style={{width: 200}} onChange={(make) => {
-                            this.setState({make: make.toString()})
+                            this.setState({make: make.toString(), model: '', fuel: ''})
                             Request.getAllModels({make})
                                 .then(({data}) => {
                                     this.setState({
@@ -162,7 +162,7 @@ class AllFuelType extends Component {
                     <div style={{marginBottom: 31}}>
                         <label style={{marginRight: 16}}>Select Model:</label>
                         <Select value={this.state.model} style={{width: 200}} onChange={(model) => {
-                            this.setState({model: model.toString()})
+                            this.setState({model: model.toString(), fuel: ''})
                             Request.getAllFuels({model, make})
                                 .then(({data}) => {
                                     this.setState({
