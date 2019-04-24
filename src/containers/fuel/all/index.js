@@ -40,7 +40,8 @@ class AllFuelType extends Component {
         allMakes: [],
         make: '',
         model: '',
-        fuel: ''
+        fuel: '',
+        totalFuel: ''
     }
 
     reload = () => {
@@ -83,7 +84,7 @@ class AllFuelType extends Component {
     render() {
 
         const {dispatch} = this.props
-        const {visible, disabled, loading, allMakes, allModels, model, fuel, make} = this.state
+        const {visible, disabled, loading, allMakes, allModels, model, fuel, make, totalFuel} = this.state
         const columns = [
             {
                 title: 'Name',
@@ -112,7 +113,7 @@ class AllFuelType extends Component {
                             }} icon="edit"/>
                         </Tooltip>
                         <Tooltip title="Edit Details">
-                          <Popconfirm title="Are you sure delete this fuelType?" onConfirm={() => {
+                            <Popconfirm title="Are you sure delete this fuelType?" onConfirm={() => {
 
                                 this.deleteFuels({val, make, model})
                             }} onCancel={() => {
@@ -133,7 +134,7 @@ class AllFuelType extends Component {
 
         return (
             <PageHeaderWrapper
-                title={'All Fuels'}>
+                title={`All Fuels : ${totalFuel}`}>
 
                 <Card bordered={true}>
 
@@ -143,7 +144,7 @@ class AllFuelType extends Component {
                                 filterOption={(input, option) => {
                                     return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }}
-                                value={this.state.make} style={{ width: 200 }} onChange={(make) => {
+                                value={this.state.make} style={{width: 200}} onChange={(make) => {
                             this.setState({make: make.toString(), model: ''})
                             Request.getAllModels({make})
                                 .then(({data}) => {
@@ -168,13 +169,15 @@ class AllFuelType extends Component {
                                     return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }}
 
-                                value={this.state.model} style={{ width: 200 }} onChange={(model) => {
+                                value={this.state.model} style={{width: 200}} onChange={(model) => {
                             this.setState({model: model.toString()})
                             Request.getAllFuels({model, make})
                                 .then(({data}) => {
+                                    console.log(data)
                                     this.setState({
                                         allFuel: data.fuelTypes,
-                                        loading: false
+                                        loading: false,
+                                        totalFuel: data.count
                                     })
                                 })
 

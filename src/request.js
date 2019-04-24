@@ -169,6 +169,7 @@ class Request {
             authAxios.get('/backOffice/make', {params: {...data}}, getToken())
                 .then((d) => {
                     next(d.data)
+
                 }).catch((err) => {
                 next({error: true, err})
             })
@@ -194,7 +195,6 @@ class Request {
         return new Promise((next) => {
             authAxios.post('/backOffice/fuelType', data, getToken())
                 .then((d) => {
-                    console.log(d)
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -208,7 +208,7 @@ class Request {
         return new Promise((next) => {
             authAxios.post('/backOffice/make/model/fuelTypes', data, getToken())
                 .then((d) => {
-                    console.log(d.data, "djdnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
+
                     next(d)
                 }).catch((err) => {
                 next({error: true, err})
@@ -232,12 +232,10 @@ class Request {
     }
 
     getFuel({id, modelId}) {
-        console.log(id, modelId)
         return new Promise((next) => {
             authAxios.get('/backOffice/fuel/' + id, {params: {modelId}}, getToken())
                 .then((d) => {
                     next(d)
-                    console.log(d, "dddddddddddddddd")
                 }).catch((err) => {
                 next({error: true, err})
             })
@@ -246,7 +244,6 @@ class Request {
     }
 
     getVariant(data) {
-        console.log(data, "variantData")
         return new Promise((next) => {
             authAxios.post('/backOffice/variant/data', data, getToken())
                 .then((d) => {
@@ -274,7 +271,6 @@ class Request {
     }
 
     deleteVariant(data) {
-        console.log(data, "delet")
         return new Promise((next) => {
             let {val} = data
 
@@ -376,10 +372,8 @@ class Request {
 
     getModel({id}) {
         return new Promise((next) => {
-            console.log(id, "bharti")
             authAxios.get('/backOffice/model/' + id, getToken())
                 .then((d) => {
-                    console.log(d)
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -416,7 +410,6 @@ class Request {
     }
 
     editVariant(data) {
-        console.log(data, "Podncjdsncjsdn")
         return new Promise((next) => {
             authAxios.put('/backOffice/variant/' + data._id, data, getToken())
                 .then((d) => {
@@ -443,48 +436,47 @@ class Request {
 
         })
     }
+
     getAllCars(data) {
         return new Promise((next) => {
             authAxios.get('/backOffice/cars', {params: {...data}}, getToken())
-              .then((d) => {
-                  console.log(d.data,"cars data ")
-                  next(d.data)
-              }).catch((err) => {
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
                 next({error: true, err})
             })
 
 
         })
     }
+
     getAllDealers(data) {
         return new Promise((next) => {
             authAxios.get('/backOffice/dealers', {params: {...data}}, getToken())
-              .then((d) => {
+                .then((d) => {
 
-                  next(d.data)
-              }).catch((err) => {
+                    next(d.data)
+                }).catch((err) => {
                 next({error: true, err})
             })
 
 
         })
     }
+
     getAllRequirements(data) {
         return new Promise((next) => {
             authAxios.get('/backOffice/requirements', {params: {...data}}, getToken())
-              .then((d) => {
+                .then((d) => {
 
-                  next(d.data)
-              }).catch((err) => {
+                    next(d.data)
+                }).catch((err) => {
                 next({error: true, err})
             })
 
 
         })
     }
-
-
-
 
 
 }
