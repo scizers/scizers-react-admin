@@ -6,6 +6,7 @@ import {
     Card,
     Tooltip,
     notification,
+    Select,
     Switch,
     Upload, Button, Icon
 } from 'antd'
@@ -21,10 +22,18 @@ import {apiUrl} from '../../../settings'
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
-
+const Option = Select.Option
 class AllRequirements extends Component {
 
-    state = {visible: false, loading: false, disabled: true, uploadData: null, totalRequirements: ''}
+    state = {
+        visible: false,
+        loading: false,
+        disabled: true,
+        uploadData: null,
+        totalRequirements: '',
+        allDealers: [],
+        dealerIds: ''
+    }
 
 
     reload = () => {
@@ -35,6 +44,9 @@ class AllRequirements extends Component {
             let regExFilters = _.map(columns, x => x.key)
             if (!!dealerId) {
                 params.dealerId = [dealerId]
+            }
+            if (this.state.dealerIds) {
+                params.dealerId = this.state.dealerIds
             }
             let data = await Request.getAllRequirements({...params, regExFilters})
             this.setState({totalRequirements: data.total})
@@ -67,8 +79,16 @@ class AllRequirements extends Component {
     }
 
 
-    componentDidMount() {
-        let data = getUrlParams('requirements.dealerRequirements', this.props.pathname)
+    async componentWillMount() {
+        let {data: allDealers} = await
+            Request.getAllDealers({count: 10000})
+
+
+        this.setState({
+            allDealers
+        })
+
+        let data = await getUrlParams('requirements.dealerRequirements', this.props.pathname)
         if (data && data.id) {
             this.setState({
                 dealerId: data.id
@@ -76,11 +96,13 @@ class AllRequirements extends Component {
                 this.reload()
             })
         }
+
+
     }
 
     render() {
         const {dispatch} = this.props
-        const {visible, disabled, loading, dealerId} = this.state
+        const {visible, disabled, loading, dealerId, allDealers} = this.state
         const columns = [
             {
                 title: 'DealerName',
@@ -170,7 +192,39 @@ class AllRequirements extends Component {
         return (
             <PageHeaderWrapper
                 title={`All Requirements : ${this.state.totalRequirements}`}>
+                <Card style={{marginBottom: 10}}>
 
+                    <h5>SEARCH BY DEALER</h5>
+                    <Select
+                        showSearch
+                        allowClear
+                        style={{width: 200}}
+                        value={this.state.dealerIds}
+                        placeholder='Select Dealer'
+                        onChange={(dealer) => {
+                            this.setState({dealerIds: dealer.toString()}, () => {
+
+                                this.table.current.reload()
+
+                            })
+                        }}
+
+                        filterOption={(input, option) => {
+                            return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }}
+                    >
+                        {
+                            allDealers.map((val, idn) => {
+                                return (
+                                    <Option key={idn} value={val._id}>{val.dealershipName}</Option>
+                                )
+                            })
+                        }
+
+                    </Select>
+
+
+                </Card>
                 <Card bordered={true}>
                     <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
                                apiRequest={(params) => this.apiRequest(params, columns, dealerId)}/>

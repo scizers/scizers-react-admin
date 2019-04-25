@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PageHeaderWrapper from '../../../components/PageHeaderWrapper'
+
 import {
     Drawer,
     Popconfirm,
@@ -21,24 +22,31 @@ import {apiUrl} from '../../../settings'
 
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
-import {getPushPathWrapper} from '../../../routes'
+import {getPushPathWrapper, getUrlParams} from '../../../routes'
 
 class AllInstitution extends Component {
 
-    state = {visible: false, loading: false, disabled: true, uploadData: null, totalDealers: ""}
+    state = {visible: false, loading: true, disabled: true, uploadData: null, totalDealers: "", dealerId: ''}
 
 
     reload = () => {
         this.table.current.reload()
     }
-    apiRequest = (params, columns) => {
+    apiRequest = (params, columns, dealerId) => {
         return new Promise(async (resolve) => {
             let regExFilters = _.map(columns, x => x.key)
-            let data = await Request.getAllDealers({...params, regExFilters})
+            let data = null
+            if (!!dealerId) {
+                data = await Request.dealerFavDealer(dealerId)
+                data.data = data.dealers
+            } else {
+                data = await Request.getAllDealers({...params, regExFilters})
+            }
             this.setState({totalDealers: data.total})
             resolve(data)
         })
     }
+
 
     deleteMakes = async ({_id}) => {
 
@@ -58,14 +66,32 @@ class AllInstitution extends Component {
 
     }
 
+
     constructor(props) {
         super(props)
         this.table = React.createRef()
     }
 
+    async componentDidMount() {
+        let data = await getUrlParams('dealers.listDealer', this.props.pathname)
+        if (data && data.id) {
+            this.setState({
+                dealerId: data.id,
+                loading: false
+            })
+        } else {
+            this.setState({
+                loading: false
+            })
+        }
+
+
+    }
+
+
     render() {
         const {dispatch} = this.props
-        const {visible, disabled, loading} = this.state
+        const {visible, disabled, loading, dealerId} = this.state
         const columns = [
 
             {
@@ -180,6 +206,14 @@ class AllInstitution extends Component {
                             }} icon="edit"/>
                         </Tooltip>
 
+
+                        <Tooltip title="list Favourite Dealer">
+                            <Button shape="circle" onClick={() => {
+                                dispatch(getPushPathWrapper('dealers.listDealer', {id: val._id}))
+                            }} icon="edit"/>
+                        </Tooltip>
+
+
                         <Tooltip title="Edit Details">
                             <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
                                 this.deleteMakes(val)
@@ -198,14 +232,13 @@ class AllInstitution extends Component {
             }
         ]
 
-
         return (
             <PageHeaderWrapper
                 title={`All Dealers : ${this.state.totalDealers}`}>
 
                 <Card bordered={true}>
-                    <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
-                               apiRequest={(params) => this.apiRequest(params, columns)}/>
+                    {!loading && <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
+                                            apiRequest={(params) => this.apiRequest(params, columns, dealerId)}/> }
                 </Card>
 
             </PageHeaderWrapper>)
@@ -215,8 +248,9 @@ class AllInstitution extends Component {
 }
 
 
-const mapStateToProps = ({global}) => ({
-    categories: global.categories
+const mapStateToProps = ({global, router}) => ({
+    categories: global.categories,
+    pathname: router.location.pathname,
 })
 const mapDispatchToProps = dispatch => {
     return {

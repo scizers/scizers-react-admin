@@ -169,7 +169,6 @@ class Request {
             authAxios.get('/backOffice/make', {params: {...data}}, getToken())
                 .then((d) => {
                     next(d.data)
-
                 }).catch((err) => {
                 next({error: true, err})
             })
@@ -454,7 +453,6 @@ class Request {
         return new Promise((next) => {
             authAxios.get('/backOffice/dealers', {params: {...data}}, getToken())
                 .then((d) => {
-
                     next(d.data)
                 }).catch((err) => {
                 next({error: true, err})
@@ -478,6 +476,20 @@ class Request {
         })
     }
 
+    dealerFavDealer(data) {
+        return new Promise((next) => {
+            let d = {}
+            d.id = data
+            authAxios.post('/backOffice/dealers/favorite/list', d, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
 
 }
 

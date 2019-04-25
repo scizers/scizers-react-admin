@@ -5,6 +5,7 @@ import {
     Popconfirm,
     Card,
     Tooltip,
+    Select,
     notification,
     Switch,
     Upload, Button, Icon
@@ -22,22 +23,28 @@ import {apiUrl} from '../../../settings'
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
-
+const Option = Select.Option
 class AllCar extends Component {
 
-    state = {visible: false, loading: false, disabled: true, uploadData: null, totalCar: ''}
-
+    state = {
+        visible: false, loading: false, disabled: true, uploadData: null, totalCar: '', allDealers: [],
+        dealerId: ''
+    }
 
     reload = () => {
         this.table.current.reload()
     }
+
     apiRequest = (params, columns, dealerId) => {
         return new Promise(async (resolve) => {
             let regExFilters = _.map(columns, x => x.key)
+            console.log(dealerId, ' dealerId')
             if (!!dealerId) {
                 params.dealerId = [dealerId]
             }
-
+            if (this.state.dealerId) {
+                params.dealerId = this.state.dealerId
+            }
             let data = await Request.getAllCars({...params, regExFilters})
             this.setState({totalCar: data.total})
             resolve(data)
@@ -68,8 +75,9 @@ class AllCar extends Component {
     }
 
 
-    componentDidMount() {
-        let data = getUrlParams('cars.dealercars', this.props.pathname)
+    async componentWillMount() {
+
+        let data = await getUrlParams('cars.dealercars', this.props.pathname)
         if (data && data.id) {
             this.setState({
                 dealerId: data.id
@@ -77,12 +85,17 @@ class AllCar extends Component {
                 this.reload()
             })
         }
+
+        let {data: allDealers} = await Request.getAllDealers({count: 10000})
+        this.setState({
+            allDealers
+        })
     }
 
 
     render() {
         const {dispatch} = this.props
-        const {visible, disabled, loading, dealerId} = this.state
+        const {visible, disabled, loading, dealerId, allDealers} = this.state
         const columns = [
             {
                 title: 'CarName',
@@ -115,6 +128,18 @@ class AllCar extends Component {
                 dataIndex: 'variant.name',
                 searchTextName: 'variant',
                 filterRegex: true
+            },
+            {
+                title: 'DealerName',
+                key: 'name',
+                sorter: true,
+                dataIndex: 'dealerId',
+                searchTextName: 'name',
+                filterRegex: true,
+                render: (val, record) => {
+                    return (<div>{record.dealerId ? record.dealerId.dealershipName : ''}</div>)
+
+                }
             },
 
             {
@@ -194,6 +219,40 @@ class AllCar extends Component {
         return (
             <PageHeaderWrapper
                 title={`All Cars : ${this.state.totalCar}`}>
+
+                <Card style={{marginBottom: 10}}>
+
+                    <h5>SEARCH BY DEALER</h5>
+                    <Select
+                        showSearch
+                        allowClear
+                        style={{width: 200}}
+                        value={this.state.dealerId}
+                        placeholder='Select Dealer'
+                        onChange={(dealer) => {
+                            this.setState({dealerId: dealer.toString()}, () => {
+
+                                this.table.current.reload()
+
+                            })
+                        }}
+
+                        filterOption={(input, option) => {
+                            return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }}
+                    >
+                        {
+                            allDealers.map((val, idn) => {
+                                return (
+                                    <Option key={idn} value={val._id}>{val.dealershipName}</Option>
+                                )
+                            })
+                        }
+
+                    </Select>
+
+
+                </Card>
 
                 <Card bordered={true}>
                     <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
