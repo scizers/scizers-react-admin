@@ -88,7 +88,7 @@ class AllInstitution extends Component {
                             }} icon="edit"/>
                         </Tooltip>
 
-                        <Tooltip title="Edit Details">
+                        <Tooltip title="Delete Make">
                             <Popconfirm title="Are you sure delete this make?" onConfirm={() => {
                                 this.deleteMakes(val)
                             }} onCancel={() => {

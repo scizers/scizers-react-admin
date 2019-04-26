@@ -5,6 +5,7 @@ import {
     Popconfirm,
     Card,
     Tooltip,
+    DatePicker,
     Select,
     notification,
     Switch,
@@ -23,12 +24,18 @@ import {apiUrl} from '../../../settings'
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
+const {RangePicker} = DatePicker
+
 const Option = Select.Option
 class AllCar extends Component {
 
     state = {
         visible: false, loading: false, disabled: true, uploadData: null, totalCar: '', allDealers: [],
-        dealerId: ''
+        dealerId: '', time: {
+            key: 'createdAt',
+            from: null,
+            to: null
+        }
     }
 
     reload = () => {
@@ -38,24 +45,23 @@ class AllCar extends Component {
     apiRequest = (params, columns, dealerId) => {
         return new Promise(async (resolve) => {
             let regExFilters = _.map(columns, x => x.key)
-            console.log(dealerId, ' dealerId')
             if (!!dealerId) {
                 params.dealerId = [dealerId]
             }
             if (this.state.dealerId) {
                 params.dealerId = this.state.dealerId
             }
-            let data = await Request.getAllCars({...params, regExFilters})
+            let data = await Request.getAllCars({...params, regExFilters, dateFilter: this.state.time})
             this.setState({totalCar: data.total})
             resolve(data)
         })
     }
 
-    deleteMakes = async ({_id}) => {
+    deleteCars = async ({_id}) => {
 
         this.setState({loading: true})
 
-        await Request.deleteMake({_id})
+        await Request.deleteCar({_id})
 
         this.setState({loading: false})
 
@@ -92,6 +98,20 @@ class AllCar extends Component {
         })
     }
 
+    chooseRangerPicker = (date, dateString) => {
+        this.setState({
+            time: {
+                key: 'createdAt',
+                from: date[0],
+                to: date[1]
+            }
+        }, () => {
+            this.reload()
+
+        })
+
+
+    }
 
     render() {
         const {dispatch} = this.props
@@ -188,6 +208,7 @@ class AllCar extends Component {
             {
                 key: 'actions',
                 title: 'Actions',
+                show: false,
                 width: 100,
                 fixed: 'right',
                 render: (val) => {
@@ -199,9 +220,9 @@ class AllCar extends Component {
                             }} icon="edit"/>
                         </Tooltip>
 
-                        <Tooltip title="Edit Details">
-                            <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
-                                this.deleteMakes(val)
+                        <Tooltip title="Delete Car">
+                            <Popconfirm title="Are you sure delete this Car?" onConfirm={() => {
+                                this.deleteCars(val)
                             }} onCancel={() => {
                                 console.log()
                             }} okText="Yes" cancelText="No">
@@ -220,36 +241,49 @@ class AllCar extends Component {
             <PageHeaderWrapper
                 title={`All Cars : ${this.state.totalCar}`}>
 
+
                 <Card style={{marginBottom: 10}}>
+                    <div style={{display: "flex"}}>
+                        <h4 style={{margin: 5}}>FILTER BY LAST UPDATE</h4>
+                        <RangePicker
+                            showTime={{format: 'HH:mm'}}
+                            format="YYYY-MM-DD HH:mm"
+                            placeholder={['Start Time', 'End Time']}
+                            onChange={this.chooseRangerPicker}
+                            onOk={this.onOk}
+                        />
+                        <h4 style={{
+                            margin: 5,
+                            marginLeft: 10
+                        }}>SEARCH BY DEALER</h4>
+                        <Select
+                            showSearch
+                            allowClear
+                            style={{width: 200}}
+                            value={this.state.dealerId}
+                            placeholder='Select Dealer'
+                            onChange={(dealer) => {
+                                this.setState({dealerId: dealer.toString()}, () => {
 
-                    <h5>SEARCH BY DEALER</h5>
-                    <Select
-                        showSearch
-                        allowClear
-                        style={{width: 200}}
-                        value={this.state.dealerId}
-                        placeholder='Select Dealer'
-                        onChange={(dealer) => {
-                            this.setState({dealerId: dealer.toString()}, () => {
+                                    this.table.current.reload()
 
-                                this.table.current.reload()
+                                })
+                            }}
 
-                            })
-                        }}
+                            filterOption={(input, option) => {
+                                return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }}
+                        >
+                            {
+                                allDealers.map((val, idn) => {
+                                    return (
+                                        <Option key={idn} value={val._id}>{val.dealershipName}</Option>
+                                    )
+                                })
+                            }
 
-                        filterOption={(input, option) => {
-                            return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }}
-                    >
-                        {
-                            allDealers.map((val, idn) => {
-                                return (
-                                    <Option key={idn} value={val._id}>{val.dealershipName}</Option>
-                                )
-                            })
-                        }
-
-                    </Select>
+                        </Select>
+                    </div>
 
 
                 </Card>

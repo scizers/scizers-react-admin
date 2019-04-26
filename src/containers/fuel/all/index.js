@@ -112,7 +112,7 @@ class AllFuelType extends Component {
                                 }))
                             }} icon="edit"/>
                         </Tooltip>
-                        <Tooltip title="Edit Details">
+                        <Tooltip title="Delete Fuel">
                             <Popconfirm title="Are you sure delete this fuelType?" onConfirm={() => {
 
                                 this.deleteFuels({val, make, model})

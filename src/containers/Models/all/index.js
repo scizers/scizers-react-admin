@@ -103,7 +103,7 @@ class AllModel extends Component {
                                 dispatch(getPushPathWrapper('models.editModel', {id: val._id, makeId: make}))
                             }} icon="edit"/>
                         </Tooltip>
-                        <Tooltip title="Edit Details">
+                        <Tooltip title="Delete Model">
                             <Popconfirm title="Are you sure delete this model?" onConfirm={() => {
 
                                 this.deleteModels({val, make})

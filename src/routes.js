@@ -252,6 +252,8 @@ const menu = [
             },
             {
                 key: 'listDealer',
+                dontShowOnMenu: true,
+
                 'path': '/dealers/listDealers/:id',
                 'name': 'List Dealers ',
                 'title': 'list Dealers ',

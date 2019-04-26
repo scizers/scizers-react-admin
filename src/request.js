@@ -491,6 +491,32 @@ class Request {
         })
     }
 
+
+    deleteDealer(data) {
+        return new Promise((next) => {
+            authAxios.delete('/backOffice/dealer/' + data._id, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
+
+    deleteCar(data) {
+        return new Promise((next) => {
+            authAxios.delete('/backOffice/car/' + data._id, getToken())
+                .then((d) => {
+                    next(d.data)
+                }).catch((err) => {
+                next({error: true, err})
+            })
+
+
+        })
+    }
 }
 
 export default new Request()

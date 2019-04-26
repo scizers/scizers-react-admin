@@ -5,6 +5,7 @@ import {
     Popconfirm,
     Card,
     Tooltip,
+    DatePicker,
     notification,
     Select,
     Switch,
@@ -23,6 +24,7 @@ import {apiUrl} from '../../../settings'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
 const Option = Select.Option
+
 class AllRequirements extends Component {
 
     state = {
@@ -32,7 +34,12 @@ class AllRequirements extends Component {
         uploadData: null,
         totalRequirements: '',
         allDealers: [],
-        dealerIds: ''
+        dealerIds: '',
+        time: {
+            key: 'createdAt',
+            from: null,
+            to: null
+        }
     }
 
 
@@ -48,7 +55,7 @@ class AllRequirements extends Component {
             if (this.state.dealerIds) {
                 params.dealerId = this.state.dealerIds
             }
-            let data = await Request.getAllRequirements({...params, regExFilters})
+            let data = await Request.getAllRequirements({...params, regExFilters, dateFilter: this.state.time})
             this.setState({totalRequirements: data.total})
 
             resolve(data)
@@ -99,6 +106,7 @@ class AllRequirements extends Component {
 
 
     }
+
 
     render() {
         const {dispatch} = this.props
@@ -192,6 +200,7 @@ class AllRequirements extends Component {
         return (
             <PageHeaderWrapper
                 title={`All Requirements : ${this.state.totalRequirements}`}>
+
                 <Card style={{marginBottom: 10}}>
 
                     <h5>SEARCH BY DEALER</h5>

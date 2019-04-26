@@ -6,6 +6,7 @@ import {
     Popconfirm,
     Card,
     Tooltip,
+    DatePicker,
     notification,
     Switch,
     Upload, Button, Icon
@@ -23,10 +24,16 @@ import {apiUrl} from '../../../settings'
 // import { TableComp } from 'sz-react-utils'
 import TableComp from '../../../components/_utils/table'
 import {getPushPathWrapper, getUrlParams} from '../../../routes'
-
+const {RangePicker} = DatePicker
 class AllInstitution extends Component {
 
-    state = {visible: false, loading: true, disabled: true, uploadData: null, totalDealers: "", dealerId: ''}
+    state = {
+        visible: false, loading: true, disabled: true, uploadData: null, totalDealers: "", dealerId: '', time: {
+            key: 'createdAt',
+            from: null,
+            to: null
+        }
+    }
 
 
     reload = () => {
@@ -40,7 +47,7 @@ class AllInstitution extends Component {
                 data = await Request.dealerFavDealer(dealerId)
                 data.data = data.dealers
             } else {
-                data = await Request.getAllDealers({...params, regExFilters})
+                data = await Request.getAllDealers({...params, regExFilters, dateFilter: this.state.time})
             }
             this.setState({totalDealers: data.total})
             resolve(data)
@@ -48,18 +55,17 @@ class AllInstitution extends Component {
     }
 
 
-    deleteMakes = async ({_id}) => {
-
+    deleteDealer = async ({_id}) => {
         this.setState({loading: true})
 
-        await Request.deleteMake({_id})
-
+        let x = await Request.deleteDealer({_id})
         this.setState({loading: false})
 
         this.reload()
 
+
         notification.success({
-            message: 'Deleted Successfully',
+            message: x.message,
             duration: 20,
             key: `${_id}-close`
         })
@@ -84,6 +90,21 @@ class AllInstitution extends Component {
                 loading: false
             })
         }
+
+
+    }
+
+    chooseRangerPicker = (date, dateString) => {
+        this.setState({
+            time: {
+                key: 'createdAt',
+                from: date[0],
+                to: date[1]
+            }
+        }, () => {
+            this.reload()
+
+        })
 
 
     }
@@ -195,28 +216,29 @@ class AllInstitution extends Component {
                 render: (val) => {
                     return <div>
 
-                        <Tooltip title="list Cars Details">
+                        <Tooltip title="View Dealer Cars">
                             <Button shape="circle" onClick={() => {
                                 dispatch(getPushPathWrapper('cars.dealercars', {id: val._id}))
-                            }} icon="edit"/>
+                            }} icon="car"/>
                         </Tooltip>
-                        <Tooltip title="list Requirement Details">
+                        <Tooltip title="View Dealer Requirements">
                             <Button shape="circle" onClick={() => {
                                 dispatch(getPushPathWrapper('requirements.dealerRequirements', {id: val._id}))
-                            }} icon="edit"/>
+                            }} icon="inbox"/>
                         </Tooltip>
 
 
-                        <Tooltip title="list Favourite Dealer">
+                        <Tooltip title="View Dealer Favourite">
                             <Button shape="circle" onClick={() => {
                                 dispatch(getPushPathWrapper('dealers.listDealer', {id: val._id}))
-                            }} icon="edit"/>
+                            }} icon="user"/>
                         </Tooltip>
 
 
-                        <Tooltip title="Edit Details">
-                            <Popconfirm title="Are you sure delete this task?" onConfirm={() => {
-                                this.deleteMakes(val)
+                        <Tooltip title="Delete Dealer">
+                            <Popconfirm title="Are you sure delete this Dealer?" onConfirm={() => {
+
+                                this.deleteDealer(val)
                             }} onCancel={() => {
                                 console.log()
                             }} okText="Yes" cancelText="No">
@@ -235,7 +257,16 @@ class AllInstitution extends Component {
         return (
             <PageHeaderWrapper
                 title={`All Dealers : ${this.state.totalDealers}`}>
-
+                <Card style={{marginBottom: 10}}>
+                    <h4>FILTER BY LAST UPDATE</h4>
+                    <RangePicker
+                        showTime={{format: 'HH:mm'}}
+                        format="YYYY-MM-DD HH:mm"
+                        placeholder={['Start Time', 'End Time']}
+                        onChange={this.chooseRangerPicker}
+                        onOk={this.onOk}
+                    />
+                </Card>
                 <Card bordered={true}>
                     {!loading && <TableComp ref={this.table} columns={columns} extraProps={{loading, scroll: {x: 1000}}}
                                             apiRequest={(params) => this.apiRequest(params, columns, dealerId)}/> }
