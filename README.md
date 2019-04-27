@@ -3,8 +3,8 @@
 ## Installation
 
 ```bash
-git clone https://github.com/notrab/create-react-app-redux.git
-cd create-react-app-redux
+git clone https://github.com/scizers/scizers-react-admin
+cd scizers-react-admin
 yarn
 ```
 
