@@ -1,5 +1,5 @@
 const initialState = {
-  currentUser: {
+  user: {
     email: null
   },
   token: null,
@@ -119,13 +119,13 @@ export default (state = initialState, action) => {
     case 'SET_CURRENT_USER':
       return {
         ...state,
-        currentUser: action.user
+        user: action.user
       }
 
     case 'LOGOUT':
       return {
         ...state,
-        currentUser: {}
+        user: {}
       }
 
     case 'SHOW_BTN_LOADING':

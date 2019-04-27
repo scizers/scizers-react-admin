@@ -143,7 +143,7 @@ class HeaderView extends PureComponent {
 
 const mapStateToProps = ({ global, theme }) => {
   return ({
-    currentUser: global.currentUser,
+    user: global.user,
     notices: global.notices,
     theme
   })

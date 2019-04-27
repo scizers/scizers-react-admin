@@ -9,6 +9,8 @@ import classNames from 'classnames'
 import pathToRegexp from 'path-to-regexp'
 import Media from 'react-media'
 import _ from 'lodash'
+import { pageTitle } from '../settings'
+
 
 // import Authorized from '@/utils/Authorized';
 import logo from '../assets/logo.svg'
@@ -67,22 +69,19 @@ class BasicLayout extends React.PureComponent {
     })
   }
 
-  componentDidUpdate (preProps) {
-    const { collapsed, isMobile, currentUser, dispatch } = this.props
+  getPageTitle = (pathname, breadcrumbNameMap) => {
+    const currRouterData = this.matchParamsPath(pathname, breadcrumbNameMap)
 
-    if (isMobile && !preProps.isMobile && !collapsed) {
-      this.handleMenuCollapse(false)
+    if (!currRouterData) {
+      return pageTitle
     }
+    // const pageName = formatMessage({
+    //   id: currRouterData.locale || currRouterData.name,
+    //   defaultMessage: currRouterData.name,
+    // });
 
-    if (!Object.is(preProps.currentUser, currentUser)) {
-
-      if (_.isEmpty(currentUser)) {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        dispatch(push('/login'))
-      }
-
-    }
+    const pageName = 'Some Page nmae'
+    return `${pageName} - ${pageTitle}`
   }
 
 
@@ -99,19 +98,22 @@ class BasicLayout extends React.PureComponent {
     return breadcrumbNameMap[pathKey]
   }
 
-  getPageTitle = (pathname, breadcrumbNameMap) => {
-    const currRouterData = this.matchParamsPath(pathname, breadcrumbNameMap)
+  componentDidUpdate (preProps) {
+    const { collapsed, isMobile, user, dispatch } = this.props
 
-    if (!currRouterData) {
-      return this.props.title
+    if (isMobile && !preProps.isMobile && !collapsed) {
+      this.handleMenuCollapse(false)
     }
-    // const pageName = formatMessage({
-    //   id: currRouterData.locale || currRouterData.name,
-    //   defaultMessage: currRouterData.name,
-    // });
 
-    const pageName = 'Some Page nmae'
-    return `${pageName} - ${this.props.title}`
+    if (!Object.is(preProps.user, user)) {
+
+      if (_.isEmpty(user)) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        dispatch(push('/login'))
+      }
+
+    }
   }
 
   getLayoutStyle = () => {
@@ -154,7 +156,7 @@ class BasicLayout extends React.PureComponent {
             {...this.props}
             logo={logo}
             theme={navTheme}
-            user={this.props.currentUser}
+            user={this.props.user}
             onCollapse={this.handleMenuCollapse}
             menuData={menuData}
             isMobile={isMobile}
@@ -215,7 +217,8 @@ const mapStateToProps = ({ theme, global }) => {
     navTheme: theme.navTheme,
     fixSiderbar: theme.fixSiderbar,
     breadcrumbNameMap: theme.breadcrumbNameMap,
-    currentUser: global.currentUser
+    user: global.user,
+    global
   })
 }
 

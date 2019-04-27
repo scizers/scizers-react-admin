@@ -66,7 +66,7 @@ export default class GlobalHeaderRight extends PureComponent {
 
   render () {
     const {
-      currentUser,
+      user,
       fetchingNotices,
       onNoticeVisibleChange,
       onMenuClick,
@@ -152,16 +152,16 @@ export default class GlobalHeaderRight extends PureComponent {
           />
         </NoticeIcon>
 
-        {currentUser.email ? (
+        {user.email ? (
           <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar
                 size="small"
                 className={styles.avatar}
-                src={currentUser.avatar ? currentUser.avatar : blankAvatar}
+                src={user.avatar ? user.avatar : blankAvatar}
                 alt="avatar"
               />
-              <span className={styles.name}>{currentUser.email}</span>
+              <span className={styles.name}>{user.email}</span>
             </span>
           </HeaderDropdown>
         ) : (
