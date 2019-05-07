@@ -15,14 +15,14 @@ const Exp = () => (<Exception
   type="404"
   desc={'You Seems lost !!'}
   linkElement={Link}
-  redirect={'/dashboard'}
+  redirect={'/budget'}
   backText={'Go To Homepage?'}
 />)
 const Exp403 = () => (<Exception
   type="403"
   desc={'Sorry You Don\'t have access to this area !!'}
   linkElement={Link}
-  redirect={'/dashboard'}
+  redirect={'/budget'}
   backText={'Go To Homepage?'}
 />)
 
@@ -59,7 +59,7 @@ class BasicLayoutWrapper extends Component {
 
         location={window.location}
         title={pageTitle}
-        pageTitle={`${menuItem.title} - Scizers Portfolio App`}
+        pageTitle={`${menuItem.name} - ${pageTitle}`}
         menuData={menuData}>
         {!!component ? <this.props.component/> : <Exp/>}
       </BasicLayout>)
@@ -137,7 +137,13 @@ class App extends Component {
 
         <Route exact path="/" render={(route) => {
           return (
-            <Redirect to="/dashboard"/>
+            <Redirect to="/budget"/>
+          )
+        }}/>
+
+        <Route exact path="/dashboard" render={(route) => {
+          return (
+            <Redirect to="/budget"/>
           )
         }}/>
 

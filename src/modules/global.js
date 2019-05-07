@@ -110,7 +110,8 @@ const initialState = {
     'Cooperate',
     'Personal',
     'Medical'
-  ]
+  ],
+  editSpeaker: false
 }
 
 export default (state = initialState, action) => {
@@ -140,11 +141,16 @@ export default (state = initialState, action) => {
         buttonLoading: false
       }
 
-
     case 'SET_AUTH_TOKEN':
       return {
         ...state,
         token: action.token
+      }
+
+    case 'TOOGLE_EDIT_SPEAKER':
+      return {
+        ...state,
+        editSpeaker: action.editSpeaker
       }
 
     default:

@@ -1,7 +1,12 @@
 import moment from 'moment'
-import React, {Component, PureComponent} from 'react'
+import React, { Component, PureComponent } from 'react'
 
-import {Form, Input, Upload, Icon, Button, InputNumber, Select, DatePicker, Spin, Switch, Radio} from 'antd'
+import ReactQuill from 'react-quill' // ES6
+import 'react-quill/dist/quill.snow.css' // ES6
+import 'react-quill/dist/quill.bubble.css' // ES6
+
+
+import { Form, Input, Upload, Icon, Button, InputNumber, Select, DatePicker, Spin, Switch, Radio } from 'antd'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import S from 'string'
@@ -10,7 +15,7 @@ const RadioGroup = Radio.Group
 
 const FormItem = Form.Item
 const Option = Select.Option
-const {TextArea} = Input
+const { TextArea } = Input
 
 const styles = {
   mainDiv: {
@@ -49,7 +54,7 @@ class SimpleFormElement extends Component {
   section = (type) => {
 
     let x = this.props
-    let {item, apiurl} = this.props
+    let { item, apiurl } = this.props
 
     switch (type) {
       case 'number':
@@ -58,15 +63,19 @@ class SimpleFormElement extends Component {
       case 'date':
         return <DatePicker {...x} format={item.format}/>
 
+      case 'textarea':
       case 'textArea':
         return <TextArea {...x} rows={x.rows}/>
+
+      case 'editor':
+        return <ReactQuill  {...x} />
 
       case 'file':
 
         let limit = 1
         if (!!item.limit) limit = item.limit
 
-        let {fileUploads, item: {key}} = x
+        let { fileUploads, item: { key } } = x
 
         let uploadEnable = true
         if (fileUploads[key] !== undefined) {
@@ -102,7 +111,7 @@ class SimpleFormElement extends Component {
       case 'select':
 
         if (!x.options) x.options = []
-        if (!x.item.defaultValue) x.item.defaultValue = {'key': 'Please Select'}
+        if (!x.item.defaultValue) x.item.defaultValue = { 'key': 'Please Select' }
         return <SelectDynamicComp {...x}/>
 
       case 'radioGroup':
@@ -117,9 +126,9 @@ class SimpleFormElement extends Component {
   }
 
   render () {
-    const {item} = this.props
+    const { item } = this.props
 
-    const {type} = item
+    const { type } = item
     return (
       <React.Fragment>
         {this.section(type)}
@@ -138,8 +147,8 @@ class SelectDynamicComp extends Component {
     if (!x.item.disabled) x.item.disabled = false
     let options = x.item.options
 
-    let keyAccessor = x.keyAccessor ? x.keyAccessor : (val) => val.id
-    let valueAccessor = x.valueAccessor ? x.valueAccessor : (val) => val.display
+    let keyAccessor = x.keyAccessor ? x.keyAccessor : val => val.id ? val.id : val._id
+    let valueAccessor = x.valueAccessor ? x.valueAccessor : val => val.display
 
     return (<Select {...x}
                     showSearch={x.item.showSearch}
@@ -209,7 +218,7 @@ class getAllFormFields extends Component {
     }
     let fileUploads = this.state.fileUploads
     fileUploads[name] = e.fileList
-    this.setState({fileUploads})
+    this.setState({ fileUploads })
     return e && e.fileList
   }
 
@@ -220,7 +229,7 @@ class getAllFormFields extends Component {
 
   updateUploadState = (key) => {
 
-    const {getFieldValue} = this.props
+    const { getFieldValue } = this.props
 
     if (!getFieldValue) return false
 
@@ -233,7 +242,7 @@ class getAllFormFields extends Component {
         fileUploads[key] = xx
 
         setTimeout(() => {
-          this.setState({fileUploads})
+          this.setState({ fileUploads })
         }, 30)
 
       }
@@ -241,24 +250,23 @@ class getAllFormFields extends Component {
     }
   }
 
-
   render () {
 
-    const {inputSchema, getFieldDecorator, children, formItemLayout, apiurl} = this.props
+    const { inputSchema, getFieldDecorator, children, formItemLayout, apiurl } = this.props
 
     let FIL = {}
 
     if (!formItemLayout) {
       FIL = {
         labelCol: {
-          xs: {span: 24},
-          sm: {span: 8},
-          md: {span: 8}
+          xs: { span: 24 },
+          sm: { span: 8 },
+          md: { span: 8 }
         },
         wrapperCol: {
-          xs: {span: 24},
-          sm: {span: 16},
-          md: {span: 12}
+          xs: { span: 24 },
+          sm: { span: 16 },
+          md: { span: 12 }
         }
       }
     } else {
@@ -299,7 +307,6 @@ class getAllFormFields extends Component {
             inputProps.options = ['Choose']
           }
 
-
           if (!!item.type) inputProps.type = item.type
           if (!!item.mode) inputProps.mode = item.mode
           if (!!item.rows) inputProps.rows = item.rows
@@ -325,16 +332,41 @@ class getAllFormFields extends Component {
             this.updateUploadState(item.key)
           }
 
+          if (item.type === 'editor') {
+            customEvent = {
+              ...customEvent,
+              initialValue: item.initialValue ? item.initialValue : '',
+              valuePropName: 'value',
+              getValueFromEvent: this.onChange
+            }
+
+          }
+
+
+          inputProps = {
+            ...inputProps,
+            ...item.customProps
+          }
+
+          let propFormItem = {
+            key: item.key,
+            label: item.label
+          }
+
+          if (item.help) {
+            propFormItem.help = item.help
+          }
+
           return (
             <React.Fragment key={item.key}>
 
+
+
               {item.prefixComp ? item.prefixComp : null}
 
-              <FormItem {...FIL}
-                        key={item.key}
-                        label={item.label}>
+              <FormItem {...FIL} {...propFormItem}>
 
-                {getFieldDecorator(item.key, {rules, ...customEvent})(
+                {getFieldDecorator(item.key, { rules, ...customEvent })(
                   <SimpleFormElement item={item} {...inputProps}/>)}
 
               </FormItem>

@@ -136,10 +136,10 @@ class TableMain extends Component {
 
   reload = () => {
 
-    if (!!this.props.apiRequest) {
+    let {  apiRequest } = this.props
+    if (!!apiRequest) {
       this.fetch(this.state.dataSearchParams)
     }
-
   }
 
   setDataState = async () => {
@@ -270,6 +270,8 @@ class TableMain extends Component {
   render () {
 
     const { apiRequest } = this.props
+    console.log(apiRequest)
+
     return (
       <React.Fragment>{!!apiRequest ? this.renderDynamic() : this.renderStatic()}</React.Fragment>
     )

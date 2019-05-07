@@ -1,10 +1,8 @@
 export default {}
 
-export const pageTitle = 'CarD2C design'
-export const subTitle = 'Powered by Hindusthan Thermostatics'
-// export const apiUrl = `http://carsd2c.scizers.com`
-// export const apiUrl = `http://medmatrix.wss.io`
-// export const apiUrl = `http://localhost:8045`
-export const apiUrl = `https://medmetrxmerlin-n.newparadigmbd.com`
+export const pageTitle = 'HCP Engagement'
+export const subTitle = 'Vector Health - Powered by New Paradigm'
+export const apiUrl = `http://35.162.172.217:8022`
+// export const apiUrl = `http://localhost:8046`
+// export const apiUrl = `https://medmetrxmerlin-n.newparadigmbd.com`
 
-//
