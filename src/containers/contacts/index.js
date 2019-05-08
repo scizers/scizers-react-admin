@@ -47,6 +47,14 @@ const HONORARIUM = [
   750, 1000, 1500, 2000, 2500
 ]
 
+const HOURLY_RATES = [
+  250,
+  200,
+  150,
+  100,
+  75
+]
+
 const SPEAKER_CAP = [
   '$6,000.00',
   '$9,000.00',
@@ -324,613 +332,58 @@ class ContactsView extends Component {
     this.changeReason = _.debounce(this._changeReason, 500)
   }
 
-  componentDidMount () {
-    this.apiRequest2()
+  _changeReason = async (data) => {
 
-    if (this.props.pathname === '/adviser/all') {
+    const { _id, type, value } = data
+
+    // console.log(data)
+
+    let {
+      dataSource1,
+      dataSource2,
+      dataSource3,
+      dataSource4
+    } = this.state
+
+
+    let data1 = _.clone(dataSource1)
+    let data2 = _.clone(dataSource2)
+    let data3 = _.clone(dataSource3)
+    let data4 = _.clone(dataSource4)
+
+    let x = _.find(data1, c => c._id == _id)
+    if (x) {
+      x[type] = value
       this.setState({
-        showingAll: true
+        dataSource1: data1
       })
     }
 
-    this.setState({
-      columns: [
-        {
-          rowKey: 'firstName',
-          key: 'firstName',
-          dataIndex: 'firstName',
-          title: 'Name',
-          sorter: (a, b) => {
-            return a.firstName.length - b.firstName.length
-          },
-          sortDirections: ['descend'],
 
-          render: (val, record) => {
-            return <span>{record.lastName}, {record.firstName}</span>
-          }
-        },
-        {
-          key: 'uniqueId',
-          dataIndex: 'uniqueId',
-          rowKey: 'uniqueId',
-          title: 'Unique Id',
-          sorter: (a, b) => {
-            return a.uniqueId.length - b.uniqueId.length
-          },
-          sortDirections: ['descend']
-        },
-        {
-          key: 'hcpType',
-          rowKey: 'hcpType',
-          dataIndex: 'hcpType',
-          title: 'HCP Type'
-        },
-        /*  {
-            key: 'contactType',
-            rowKey: 'contactType',
-            dataIndex: 'contactType',
-            title: 'Contact Type',
-            render: (val) => {
-              return val.join(', ')
-            }
-          },*/
-        {
-          key: 'historicalTier',
-          dataIndex: 'historicalTier',
-          title: 'Historical Tier',
-          rowKey: 'historicalTier'
-        },
-        {
-          key: 'qualification',
-          dataIndex: 'qualification',
-          rowKey: 'qualification',
-          title: 'Qualification',
-          render: (val, record) => {
+    x = _.find(data2, c => c._id == _id)
+    if (x) {
+      x[type] = value
+      this.setState({
+        dataSource2: data2
+      })
+    }
 
-            return <div>
-              <table className={styles.qualification}>
-                <tbody>
-                <tr>
-                  <td>academic</td>
-                  <td>research</td>
-                  <td>peerReviewed</td>
-                  <td>leadership</td>
+    x = _.find(data3, c => c._id == _id)
+    if (x) {
+      x[type] = value
+      this.setState({
+        dataSource3: data3
+      })
+    }
 
-                </tr>
+    x = _.find(data4, c => c._id == _id)
+    if (x) {
+      x[type] = value
+      this.setState({
+        dataSource4: data4
+      })
+    }
 
-                {!this.state.editContact ?
-                  <tr>
-                    <td>{val.academic}</td>
-                    <td>{val.research}</td>
-                    <td>{val.peerReviewed}</td>
-                    <td>{val.leadership}</td>
-
-                  </tr>
-                  :
-                  <tr>
-                    <td><SimpleSelect value={val.academic} onChange={value => {
-                      this.changeQual({ type: 'academic', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.research} onChange={value => {
-                      this.changeQual({ type: 'research', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.peerReviewed} onChange={value => {
-                      this.changeQual({ type: 'peerReviewed', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.leadership} onChange={value => {
-                      this.changeQual({ type: 'leadership', value, _id: record._id })
-                    }}/></td>
-
-                  </tr>
-                }
-
-                </tbody>
-              </table>
-
-              <table className={styles.qualification} style={{ marginTop: 10 }}>
-                <tbody>
-                <tr>
-                  <td>presentations</td>
-                  <td>experience</td>
-                  <td>credibility</td>
-                </tr>
-
-                {!this.state.editContact ?
-                  <tr>
-                    <td>{val.presentations}</td>
-                    <td>{val.experience}</td>
-                    <td>{val.credibility}</td>
-                  </tr>
-                  :
-                  <tr>
-                    <td><SimpleSelect value={val.presentations} onChange={value => {
-                      this.changeQual({ type: 'presentations', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.experience} onChange={value => {
-                      this.changeQual({ type: 'experience', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.credibility} onChange={value => {
-                      this.changeQual({ type: 'credibility', value, _id: record._id })
-                    }}/></td>
-                  </tr>
-                }
-
-                </tbody>
-              </table>
-            </div>
-
-          }
-        },
-        {
-          key: 'tier',
-          rowKey: 'tier',
-          dataIndex: 'tier',
-          title: 'Tier',
-          render: (val, record) => {
-            return <React.Fragment>
-              {
-                !record.override1 ? (<span>{val} {record.override && (
-                  <Tooltip title="Overridden FMV calculation">
-                    <small className={styles.override}>*</small>
-                  </Tooltip>
-                )}</span>) : (<div>
-                  <Select style={{ minWidth: 100 }}
-                          placeholder={'Tier'}
-                          onChange={value => {
-                            this.changeValues({ type: 'tier', value, _id: record._id })
-                          }}>
-
-
-                    {TIERS.map((val) => {
-                      return <Option key={val}>{val}</Option>
-                    })}
-
-                  </Select>
-                </div>)
-              }
-            </React.Fragment>
-          }
-        },
-        {
-          key: 'honorarium',
-          dataIndex: 'honorarium',
-          rowKey: 'honorarium',
-          title: 'Honorarium',
-          render: (val, record) => {
-            return <React.Fragment>
-              {
-                !record.override1 ? (<span>{val} {record.override && (
-                  <Tooltip title="Overridden FMV calculation">
-                    <small className={styles.override}>*</small>
-                  </Tooltip>
-                )}</span>) : (<div>
-                  <Select style={{ minWidth: 100 }}
-                          placeholder={'Honorarium'}
-                          onChange={value => {
-                            this.changeValues({ type: 'honorarium', value, _id: record._id })
-                          }}>
-
-                    {HONORARIUM.map((val) => {
-                      return <Option key={val}>{val}</Option>
-                    })}
-
-                  </Select>
-                </div>)
-              }
-            </React.Fragment>
-          }
-
-        },
-        {
-          key: 'speakerCap',
-          dataIndex: 'speakercap',
-          rowKey: 'speakerCap',
-          title: 'Speaker Cap',
-          render: (val, record) => {
-            return <React.Fragment>
-              {
-                !record.override1 ? (<span>{val} {record.override && (
-                  <Tooltip title="Overridden FMV calculation">
-                    <small className={styles.override}>*</small>
-                  </Tooltip>
-                )}</span>) : (<div>
-                  <Select style={{ minWidth: 100 }}
-                          placeholder={'Speaker Cap'}
-                          onChange={value => {
-                            this.changeValues({ type: 'speakerCap', value, _id: record._id })
-                          }}>
-
-                    {SPEAKER_CAP.map((val) => {
-                      return <Option key={val}>{val}</Option>
-                    })}
-
-                  </Select>
-                </div>)
-              }
-            </React.Fragment>
-          }
-
-        },
-        {
-          key: 'cv',
-          rowKey: 'cv',
-          dataIndex: 'cv',
-          title: 'CV',
-          render: (cv, record) => {
-            return <div>
-              {cv &&
-              <Button type="link" target={'_blank'} href={`${apiUrl}${cv.path.replace('public/', '/')}`}>Download
-                {cv.name}</Button>}
-
-              <Button onClick={() => {
-                this.setState({
-                  cvRecord: record,
-                  visible3: true
-                })
-              }}>
-                Add CV
-              </Button>
-            </div>
-          }
-        },
-        {
-          key: 'supportingDocuments',
-          rowKey: 'supportingDocuments',
-          dataIndex: 'supportingDocuments',
-          title: 'Supporting Documents',
-          render: (cv, record) => {
-
-            return <div>
-              {cv && cv.map((x, k) => {
-                return (
-                  <Button key={k} type="link"
-                          target={'_blank'}
-                          href={`${apiUrl}${x.path.replace('public/', '/')}`}>
-                    {x.originalname}
-                  </Button>
-                )
-              })}
-
-              <Button onClick={() => {
-                this.setState({
-                  cvRecord: record,
-                  visible4: true
-                })
-              }}>
-                Add Supporting Documents
-              </Button>
-            </div>
-
-          }
-        },
-        {
-          key: 'override',
-          dataIndex: 'override',
-          rowKey: 'override',
-          title: 'Actions',
-          render: (cap, record) => {
-            return <React.Fragment>
-
-              <Button type={'primary'}
-                      shape={'circle'}
-                      icon={'edit'}
-                      onClick={() => {
-                        this.setState({
-                          editingSpeaker: record,
-                          visible: true
-                        })
-                      }}/>
-
-              {!record.override1 ? <Button onClick={() => {
-                this.changeSpeakerCap(true, record)
-              }}>
-                Override
-              </Button> : (
-                <div>
-
-                  <TextArea placeholder={'Reason For Override'}
-                            defaultValue={record.overrideMsg}
-                            onChange={(val) => {
-                              let value = val.target.value
-                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
-                            }}
-                  />
-
-                  <Button type={'primary'}
-                          disabled={!record.overrideMsg}
-                          onClick={() => {
-                            this.save2(record)
-                          }}>
-                    Save
-                  </Button>
-                  <Button onClick={() => {
-                    this.cancelOverride(record)
-                  }}>
-                    Cancel
-                  </Button>
-                </div>
-              )
-              }
-            </React.Fragment>
-
-          }
-        }
-      ],
-      columns2: [
-        {
-          rowKey: 'firstName',
-          key: 'firstName',
-          dataIndex: 'firstName',
-          title: 'Name',
-          sorter: (a, b) => {
-            return a.firstName.length - b.firstName.length
-          },
-          sortDirections: ['descend'],
-
-          render: (val, record) => {
-            return <span>{record.lastName}, {record.firstName}</span>
-          }
-        },
-        {
-          key: 'uniqueId',
-          dataIndex: 'uniqueId',
-          rowKey: 'uniqueId',
-          title: 'Unique Id',
-          sorter: (a, b) => {
-            return a.uniqueId.length - b.uniqueId.length
-          },
-          sortDirections: ['descend']
-        },
-        {
-          key: 'hcpType',
-          rowKey: 'hcpType',
-          dataIndex: 'hcpType',
-          title: 'HCP Type'
-        },
-        /*  {
-            key: 'contactType',
-            rowKey: 'contactType',
-            dataIndex: 'contactType',
-            title: 'Contact Type',
-            render: (val) => {
-              return val.join(', ')
-            }
-          },*/
-        {
-          key: 'historicalTier',
-          dataIndex: 'historicalTier',
-          title: 'Historical Tier',
-          rowKey: 'historicalTier'
-        },
-        {
-          key: 'qualification',
-          dataIndex: 'qualification',
-          rowKey: 'qualification',
-          title: 'Qualification',
-          render: (val, record) => {
-
-            return <div>
-              <table className={styles.qualification}>
-                <tbody>
-                <tr>
-                  <td>academic</td>
-                  <td>research</td>
-                  <td>peerReviewed</td>
-                  <td>leadership</td>
-
-                </tr>
-
-                {!this.state.editContact ?
-                  <tr>
-                    <td>{val.academic}</td>
-                    <td>{val.research}</td>
-                    <td>{val.peerReviewed}</td>
-                    <td>{val.leadership}</td>
-
-                  </tr>
-                  :
-                  <tr>
-                    <td><SimpleSelect value={val.academic} onChange={value => {
-                      this.changeQual({ type: 'academic', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.research} onChange={value => {
-                      this.changeQual({ type: 'research', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.peerReviewed} onChange={value => {
-                      this.changeQual({ type: 'peerReviewed', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.leadership} onChange={value => {
-                      this.changeQual({ type: 'leadership', value, _id: record._id })
-                    }}/></td>
-
-                  </tr>
-                }
-
-                </tbody>
-              </table>
-
-              <table className={styles.qualification} style={{ marginTop: 10 }}>
-                <tbody>
-                <tr>
-                  <td>presentations</td>
-                  <td>experience</td>
-                  <td>credibility</td>
-                </tr>
-
-                {!this.state.editContact ?
-                  <tr>
-                    <td>{val.presentations}</td>
-                    <td>{val.experience}</td>
-                    <td>{val.credibility}</td>
-                  </tr>
-                  :
-                  <tr>
-                    <td><SimpleSelect value={val.presentations} onChange={value => {
-                      this.changeQual({ type: 'presentations', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.experience} onChange={value => {
-                      this.changeQual({ type: 'experience', value, _id: record._id })
-                    }}/></td>
-                    <td><SimpleSelect value={val.credibility} onChange={value => {
-                      this.changeQual({ type: 'credibility', value, _id: record._id })
-                    }}/></td>
-                  </tr>
-                }
-
-                </tbody>
-              </table>
-            </div>
-
-          }
-        },
-        {
-          key: 'tier',
-          rowKey: 'tier',
-          dataIndex: 'tier',
-          title: 'Tier',
-          render: (val, record) => {
-            return <React.Fragment>
-              {
-                !record.override1 ? (<span>{val} {record.override && (
-                  <Tooltip title="Overridden FMV calculation">
-                    <small className={styles.override}>*</small>
-                  </Tooltip>
-                )}</span>) : (<div>
-                  <Select style={{ minWidth: 100 }}
-                          placeholder={'Tier'}
-                          onChange={value => {
-                            this.changeValues({ type: 'tier', value, _id: record._id })
-                          }}>
-
-
-                    {TIERS.map((val) => {
-                      return <Option key={val}>{val}</Option>
-                    })}
-
-                  </Select>
-                </div>)
-              }
-            </React.Fragment>
-          }
-        },
-        {
-          key: 'honorarium',
-          dataIndex: 'honorarium',
-          rowKey: 'honorarium',
-          title: 'Honorarium / Hourly Rate',
-          render: (val, record) => {
-            return <React.Fragment>
-              {val} {record.otherDetails && record.otherDetails.hourlyrate}
-            </React.Fragment>
-          }
-
-        },
-        {
-          key: 'cv',
-          rowKey: 'cv',
-          dataIndex: 'cv',
-          title: 'CV',
-          render: (cv, record) => {
-            return <div>
-              {cv &&
-              <Button type="link" target={'_blank'} href={`${apiUrl}${cv.path.replace('public/', '/')}`}>Download
-                {cv.name}</Button>}
-
-              <Button onClick={() => {
-                this.setState({
-                  cvRecord: record,
-                  visible3: true
-                })
-              }}>
-                Add CV
-              </Button>
-            </div>
-          }
-        },
-        {
-          key: 'supportingDocuments',
-          rowKey: 'supportingDocuments',
-          dataIndex: 'supportingDocuments',
-          title: 'Supporting Documents',
-          render: (cv, record) => {
-
-            return <div>
-              {cv && cv.map((x, k) => {
-                return (
-                  <Button key={k} type="link"
-                          target={'_blank'}
-                          href={`${apiUrl}${x.path.replace('public/', '/')}`}>
-                    {x.originalname}
-                  </Button>
-                )
-              })}
-
-              <Button onClick={() => {
-                this.setState({
-                  cvRecord: record,
-                  visible4: true
-                })
-              }}>
-                Add Supporting Documents
-              </Button>
-            </div>
-
-          }
-        },
-        {
-          key: 'override',
-          dataIndex: 'override',
-          rowKey: 'override',
-          title: 'Actions',
-          render: (cap, record) => {
-            return <React.Fragment>
-
-              <Button type={'primary'}
-                      shape={'circle'}
-                      icon={'edit'}
-                      onClick={() => {
-                        this.setState({
-                          editingSpeaker: record,
-                          visible: true
-                        })
-                      }}/>
-
-              {!record.override1 ? <Button onClick={() => {
-                this.changeSpeakerCap(true, record)
-              }}>
-                Override
-              </Button> : (
-                <div>
-
-                  <TextArea placeholder={'Reason For Override'}
-                            defaultValue={record.overrideMsg}
-                            onChange={(val) => {
-                              let value = val.target.value
-                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
-                            }}
-                  />
-
-                  <Button type={'primary'}
-                          disabled={!record.overrideMsg}
-                          onClick={() => {
-                            this.save2(record)
-                          }}>
-                    Save
-                  </Button>
-                  <Button onClick={() => {
-                    this.cancelOverride(record)
-                  }}>
-                    Cancel
-                  </Button>
-                </div>
-              )
-              }
-            </React.Fragment>
-
-          }
-        }
-      ]
-    })
 
   }
 
@@ -1156,33 +609,722 @@ class ContactsView extends Component {
 
   }
 
-  _changeReason = async (data) => {
+  componentDidMount () {
+    this.apiRequest2()
 
-    const { _id, type, value } = data
-
-
-    let {
-      dataSource1,
-      dataSource2,
-      dataSource3,
-      dataSource4
-    } = this.state
-
-
-    let data1 = _.clone(dataSource1)
-    let data2 = _.clone(dataSource2)
-    let data3 = _.clone(dataSource3)
-    let data4 = _.clone(dataSource4)
-
-    let x = _.find(data1, c => c._id == _id)
-    if (x) {
-      x[type] = value
+    if (this.props.pathname === '/adviser/all') {
+      this.setState({
+        showingAll: true
+      })
     }
 
     this.setState({
-      dataSource1: data1
-    })
+      columns: [
+        {
+          rowKey: 'firstName',
+          key: 'firstName',
+          dataIndex: 'firstName',
+          title: 'Name',
+          fixed: 'left',
+          width: 100,
+          sorter: (a, b) => {
+            return a.firstName.length - b.firstName.length
+          },
+          sortDirections: ['descend'],
 
+          render: (val, record) => {
+            return <span>{record.lastName}, {record.firstName}</span>
+          }
+        },
+        {
+          key: 'uniqueId',
+          dataIndex: 'uniqueId',
+          rowKey: 'uniqueId',
+          title: 'Unique Id',
+          sorter: (a, b) => {
+            return a.uniqueId.length - b.uniqueId.length
+          },
+          sortDirections: ['descend']
+        },
+        {
+          key: 'hcpType',
+          rowKey: 'hcpType',
+          dataIndex: 'hcpType',
+          title: 'HCP Type'
+        },
+        /*  {
+            key: 'contactType',
+            rowKey: 'contactType',
+            dataIndex: 'contactType',
+            title: 'Contact Type',
+            render: (val) => {
+              return val.join(', ')
+            }
+          },*/
+        {
+          key: 'historicalTier',
+          dataIndex: 'historicalTier',
+          title: 'Historical Tier',
+          rowKey: 'historicalTier'
+        },
+        {
+          key: 'qualification',
+          dataIndex: 'qualification',
+          rowKey: 'qualification',
+          title: 'Qualification',
+          render: (val, record) => {
+
+            return <div>
+              <table className={styles.qualification}>
+                <tbody>
+                <tr>
+                  <td>academic</td>
+                  <td>research</td>
+                  <td>peerReviewed</td>
+                  <td>leadership</td>
+
+                </tr>
+
+                {!this.state.editContact ?
+                  <tr>
+                    <td>{val.academic}</td>
+                    <td>{val.research}</td>
+                    <td>{val.peerReviewed}</td>
+                    <td>{val.leadership}</td>
+
+                  </tr>
+                  :
+                  <tr>
+                    <td><SimpleSelect value={val.academic} onChange={value => {
+                      this.changeQual({ type: 'academic', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.research} onChange={value => {
+                      this.changeQual({ type: 'research', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.peerReviewed} onChange={value => {
+                      this.changeQual({ type: 'peerReviewed', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.leadership} onChange={value => {
+                      this.changeQual({ type: 'leadership', value, _id: record._id })
+                    }}/></td>
+
+                  </tr>
+                }
+
+                </tbody>
+              </table>
+
+              <table className={styles.qualification} style={{ marginTop: 10 }}>
+                <tbody>
+                <tr>
+                  <td>presentations</td>
+                  <td>experience</td>
+                  <td>credibility</td>
+                </tr>
+
+                {!this.state.editContact ?
+                  <tr>
+                    <td>{val.presentations}</td>
+                    <td>{val.experience}</td>
+                    <td>{val.credibility}</td>
+                  </tr>
+                  :
+                  <tr>
+                    <td><SimpleSelect value={val.presentations} onChange={value => {
+                      this.changeQual({ type: 'presentations', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.experience} onChange={value => {
+                      this.changeQual({ type: 'experience', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.credibility} onChange={value => {
+                      this.changeQual({ type: 'credibility', value, _id: record._id })
+                    }}/></td>
+                  </tr>
+                }
+
+                </tbody>
+              </table>
+            </div>
+
+          }
+        },
+        {
+          key: 'tier',
+          rowKey: 'tier',
+          dataIndex: 'tier',
+          title: 'Tier',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Tier'}
+                          onChange={value => {
+                            this.changeValues({ type: 'tier', value, _id: record._id })
+                          }}>
+
+
+                    {TIERS.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'hourlyrate',
+          dataIndex: 'hourlyrate',
+          rowKey: 'hourlyrate',
+          title: 'Hourly Rate',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Hourly Rate'}
+                          onChange={value => {
+                            this.changeValues({ type: 'hourlyrate', value, _id: record._id })
+                          }}>
+
+                    {HOURLY_RATES.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'honorarium',
+          dataIndex: 'honorarium',
+          rowKey: 'honorarium',
+          title: 'Honorarium',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Honorarium'}
+                          onChange={value => {
+                            this.changeValues({ type: 'honorarium', value, _id: record._id })
+                          }}>
+
+                    {HONORARIUM.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'maxnumberofengagemnts',
+          dataIndex: 'otherDetails',
+          rowKey: 'maxnumberofengagemnts',
+          title: 'Max No. Engagements',
+          render: (val, record) => {
+            return <React.Fragment>
+              {(<span>{val.maxnumberofengagemnts}</span>)}
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'speakerCap',
+          dataIndex: 'speakercap',
+          rowKey: 'speakerCap',
+          title: 'Speaker Cap',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Speaker Cap'}
+                          onChange={value => {
+                            this.changeValues({ type: 'speakercap', value, _id: record._id })
+                          }}>
+
+                    {SPEAKER_CAP.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'cv',
+          rowKey: 'cv',
+          dataIndex: 'cv',
+          title: 'CV',
+          render: (cv, record) => {
+            return <div>
+              {cv &&
+              <Button type="link" target={'_blank'} href={`${apiUrl}${cv.path.replace('public/', '/')}`}>Download
+                {cv.name}</Button>}
+
+              <Button onClick={() => {
+                this.setState({
+                  cvRecord: record,
+                  visible3: true
+                })
+              }}>
+                Add CV
+              </Button>
+            </div>
+          }
+        },
+        {
+          key: 'supportingDocuments',
+          rowKey: 'supportingDocuments',
+          dataIndex: 'supportingDocuments',
+          title: 'Supporting Documents',
+          render: (cv, record) => {
+
+            return <div>
+              {cv && cv.map((x, k) => {
+                return (
+                  <Button key={k} type="link"
+                          target={'_blank'}
+                          href={`${apiUrl}${x.path.replace('public/', '/')}`}>
+                    {x.originalname}
+                  </Button>
+                )
+              })}
+
+              <Button onClick={() => {
+                this.setState({
+                  cvRecord: record,
+                  visible4: true
+                })
+              }}>
+                Add Supporting Documents
+              </Button>
+            </div>
+
+          }
+        },
+        {
+          key: 'override',
+          dataIndex: 'override',
+          rowKey: 'override',
+          title: 'Actions',
+          render: (cap, record) => {
+            return <React.Fragment>
+
+              <Button type={'primary'}
+                      shape={'circle'}
+                      icon={'edit'}
+                      onClick={() => {
+                        this.setState({
+                          editingSpeaker: record,
+                          visible: true
+                        })
+                      }}/>
+
+              {!record.override1 ? <Button onClick={() => {
+                this.changeSpeakerCap(true, record)
+              }}>
+                Override
+              </Button> : (
+                <div>
+
+                  <TextArea placeholder={'Reason For Override'}
+                            defaultValue={record.overrideMsg}
+                            onChange={(val) => {
+                              let value = val.target.value
+                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
+                            }}
+                  />
+
+                  <Button type={'primary'}
+                          disabled={!record.overrideMsg}
+                          onClick={() => {
+                            this.save2(record)
+                          }}>
+                    Save
+                  </Button>
+                  <Button onClick={() => {
+                    this.cancelOverride(record)
+                  }}>
+                    Cancel
+                  </Button>
+                </div>
+              )
+              }
+            </React.Fragment>
+
+          }
+        }
+      ],
+      columns2: [
+        {
+          rowKey: 'firstName',
+          key: 'firstName',
+          dataIndex: 'firstName',
+          title: 'Name',
+          fixed: 'left',
+          width: 100,
+          sorter: (a, b) => {
+            return a.firstName.length - b.firstName.length
+          },
+          sortDirections: ['descend'],
+
+          render: (val, record) => {
+            return <span>{record.lastName}, {record.firstName}</span>
+          }
+        },
+        {
+          key: 'uniqueId',
+          dataIndex: 'uniqueId',
+          rowKey: 'uniqueId',
+          title: 'Unique Id',
+          sorter: (a, b) => {
+            return a.uniqueId.length - b.uniqueId.length
+          },
+          sortDirections: ['descend']
+        },
+        {
+          key: 'hcpType',
+          rowKey: 'hcpType',
+          dataIndex: 'hcpType',
+          title: 'HCP Type'
+        },
+        /*  {
+            key: 'contactType',
+            rowKey: 'contactType',
+            dataIndex: 'contactType',
+            title: 'Contact Type',
+            render: (val) => {
+              return val.join(', ')
+            }
+          },*/
+        {
+          key: 'historicalTier',
+          dataIndex: 'historicalTier',
+          title: 'Historical Tier',
+          rowKey: 'historicalTier'
+        },
+        {
+          key: 'qualification',
+          dataIndex: 'qualification',
+          rowKey: 'qualification',
+          title: 'Qualification',
+          render: (val, record) => {
+
+            return <div>
+              <table className={styles.qualification}>
+                <tbody>
+                <tr>
+                  <td>academic</td>
+                  <td>research</td>
+                  <td>peerReviewed</td>
+                  <td>leadership</td>
+
+                </tr>
+
+                {!this.state.editContact ?
+                  <tr>
+                    <td>{val.academic}</td>
+                    <td>{val.research}</td>
+                    <td>{val.peerReviewed}</td>
+                    <td>{val.leadership}</td>
+
+                  </tr>
+                  :
+                  <tr>
+                    <td><SimpleSelect value={val.academic} onChange={value => {
+                      this.changeQual({ type: 'academic', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.research} onChange={value => {
+                      this.changeQual({ type: 'research', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.peerReviewed} onChange={value => {
+                      this.changeQual({ type: 'peerReviewed', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.leadership} onChange={value => {
+                      this.changeQual({ type: 'leadership', value, _id: record._id })
+                    }}/></td>
+
+                  </tr>
+                }
+
+                </tbody>
+              </table>
+
+              <table className={styles.qualification} style={{ marginTop: 10 }}>
+                <tbody>
+                <tr>
+                  <td>presentations</td>
+                  <td>experience</td>
+                  <td>credibility</td>
+                </tr>
+
+                {!this.state.editContact ?
+                  <tr>
+                    <td>{val.presentations}</td>
+                    <td>{val.experience}</td>
+                    <td>{val.credibility}</td>
+                  </tr>
+                  :
+                  <tr>
+                    <td><SimpleSelect value={val.presentations} onChange={value => {
+                      this.changeQual({ type: 'presentations', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.experience} onChange={value => {
+                      this.changeQual({ type: 'experience', value, _id: record._id })
+                    }}/></td>
+                    <td><SimpleSelect value={val.credibility} onChange={value => {
+                      this.changeQual({ type: 'credibility', value, _id: record._id })
+                    }}/></td>
+                  </tr>
+                }
+
+                </tbody>
+              </table>
+            </div>
+
+          }
+        },
+        {
+          key: 'tier',
+          rowKey: 'tier',
+          dataIndex: 'tier',
+          title: 'Tier',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Tier'}
+                          onChange={value => {
+                            this.changeValues({ type: 'tier', value, _id: record._id })
+                          }}>
+
+
+                    {TIERS.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'hourlyrate',
+          dataIndex: 'hourlyrate',
+          rowKey: 'hourlyrate',
+          title: 'Hourly Rate',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          placeholder={'Hourly Rate'}
+                          onChange={value => {
+                            this.changeValues({ type: 'hourlyrate', value, _id: record._id })
+                          }}>
+
+                    {HOURLY_RATES.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'maxhoursengagement',
+          dataIndex: 'otherDetails',
+          rowKey: 'maxhoursengagement',
+          title: 'Max hours/engagement',
+          render: (val, record) => {
+            return <React.Fragment>
+              {(<span>{val.maxhoursengagement}</span>)}
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'rateperengagement',
+          dataIndex: 'otherDetails',
+          rowKey: 'rateperengagement',
+          title: 'Rate Per Engagement',
+          render: (val, record) => {
+            return <React.Fragment>
+              {(<span>{val.rateperengagement}</span>)}
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'maxengagements',
+          dataIndex: 'otherDetails',
+          rowKey: 'maxengagements',
+          title: 'Max Engagements',
+          render: (val, record) => {
+            return <React.Fragment>
+              {(<span>{val.maxengagements}</span>)}
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'maxffs',
+          dataIndex: 'otherDetails',
+          rowKey: 'maxengagements',
+          title: 'Max FFS',
+          render: (val, record) => {
+            return <React.Fragment>
+              {(<span>{val.maxffs}</span>)}
+            </React.Fragment>
+          }
+        },
+        {
+          key: 'cv',
+          rowKey: 'cv',
+          dataIndex: 'cv',
+          title: 'CV',
+          render: (cv, record) => {
+            return <div>
+              {cv &&
+              <Button type="link" target={'_blank'} href={`${apiUrl}${cv.path.replace('public/', '/')}`}>Download
+                {cv.name}</Button>}
+
+              <Button onClick={() => {
+                this.setState({
+                  cvRecord: record,
+                  visible3: true
+                })
+              }}>
+                Add CV
+              </Button>
+            </div>
+          }
+        },
+        {
+          key: 'supportingDocuments',
+          rowKey: 'supportingDocuments',
+          dataIndex: 'supportingDocuments',
+          title: 'Supporting Documents',
+          render: (cv, record) => {
+
+            return <div>
+              {cv && cv.map((x, k) => {
+                return (
+                  <Button key={k} type="link"
+                          target={'_blank'}
+                          href={`${apiUrl}${x.path.replace('public/', '/')}`}>
+                    {x.originalname}
+                  </Button>
+                )
+              })}
+
+              <Button onClick={() => {
+                this.setState({
+                  cvRecord: record,
+                  visible4: true
+                })
+              }}>
+                Add Supporting Documents
+              </Button>
+            </div>
+
+          }
+        },
+        {
+          key: 'override',
+          dataIndex: 'override',
+          rowKey: 'override',
+          title: 'Actions',
+          render: (cap, record) => {
+            return <React.Fragment>
+
+              <Button type={'primary'}
+                      shape={'circle'}
+                      icon={'edit'}
+                      onClick={() => {
+                        this.setState({
+                          editingSpeaker: record,
+                          visible: true
+                        })
+                      }}/>
+
+              {!record.override1 ? <Button onClick={() => {
+                this.changeSpeakerCap(true, record)
+              }}>
+                Override
+              </Button> : (
+                <div>
+
+                  <TextArea placeholder={'Reason For Override'}
+                            defaultValue={record.overrideMsg}
+                            onChange={(val) => {
+                              let value = val.target.value
+                              console.log(value)
+                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
+                            }}
+                  />
+
+                  <Button type={'primary'}
+                          disabled={!record.overrideMsg}
+                          onClick={() => {
+                            this.save2(record)
+                          }}>
+                    Save
+                  </Button>
+                  <Button onClick={() => {
+                    this.cancelOverride(record)
+                  }}>
+                    Cancel
+                  </Button>
+                </div>
+              )
+              }
+            </React.Fragment>
+
+          }
+        }
+      ]
+    })
 
   }
 
@@ -1553,16 +1695,13 @@ class ContactsView extends Component {
                           })
 
 
-                        }}>Edit</Button>
+                        }}>EDIT FMV</Button>
                 :
                 <div>
                   <Button type="primary"
                           onClick={async () => {
-
                             await this.save()
-
-                          }}>Save Changes</Button>
-
+                          }}>Save FMV</Button>
                   <Button
                     style={{ marginLeft: 10 }}
                     type="danger"
@@ -1667,7 +1806,7 @@ class ContactsView extends Component {
           <Tabs defaultActiveKey="1">
             <TabPane tab="Speakers" key="1"><Table
               reloadButon={false}
-              scroll={{ x: true }}
+              scroll={{ x: 1600 }}
               rowKey={record => record._id}
               bordered
               loading={loading}
@@ -1683,7 +1822,7 @@ class ContactsView extends Component {
             /></TabPane>
             <TabPane tab="Advisory Boards" key="2"><Table
               reloadButon={false}
-              scroll={{ x: true }}
+              scroll={{ x: 1800 }}
               rowKey={record => record._id}
               bordered
               loading={loading}
@@ -1699,7 +1838,7 @@ class ContactsView extends Component {
             /></TabPane>
             <TabPane tab="Consulting Arrangements" key="3"><Table
               reloadButon={false}
-              scroll={{ x: true }}
+              scroll={{ x: 1600 }}
 
               rowKey={record => record._id}
               bordered
@@ -1716,7 +1855,7 @@ class ContactsView extends Component {
             /></TabPane>
             <TabPane tab="Other HCP Engagements" key="4"><Table
               reloadButon={false}
-              scroll={{ x: true }}
+              scroll={{ x: 1600 }}
               rowKey={record => record._id}
               bordered
               loading={loading}

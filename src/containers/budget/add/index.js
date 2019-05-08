@@ -5,11 +5,15 @@ import {
   notification,
   Button,
   Card,
+  InputNumber,
+  Row, Col,
+  Input,
   Icon
 } from 'antd'
 import _ from 'lodash'
 import moment from 'moment'
-import { FormUtils as GetAllFormFields } from 'sz-react-utils'
+import GetAllFormFields from '../../../components/_utils/formUtils'
+// import { FormUtils as GetAllFormFields } from 'sz-react-utils'
 import { matchPath } from 'react-router-dom'
 import { goBack } from 'connected-react-router'
 
@@ -17,6 +21,10 @@ import { hideLoader, showLoader } from '../../../modules/actions'
 import Request from '../../../request'
 import { connect } from 'react-redux'
 import { getUrlParams } from '../../../routes'
+
+import CKEditor from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
 
 @Form.create()
 class AddBudget extends PureComponent {
@@ -41,24 +49,17 @@ class AddBudget extends PureComponent {
           type: 'number'
         },
         {
-          key: 'format',
-          type: 'textArea'
-        }, {
-          key: 'objective',
-          type: 'textArea'
-        },
-        {
-          key: 'comments',
-          type: 'textArea'
-        },
-        {
           key: 'order',
-          type: 'Number'
+          type: 'number'
         }
 
       ]
-    }
-
+    },
+    extraData: [{
+      name: '',
+      value: 0,
+      desc: ''
+    }]
   }
 
   handleSubmit = e => {
@@ -88,8 +89,8 @@ class AddBudget extends PureComponent {
             dispatch(goBack())
           }
 
+          // this.props.form.resetFields()
 
-          this.props.form.resetFields()
         } else {
           notification.error({
             message: 'Error Saving',
@@ -113,13 +114,50 @@ class AddBudget extends PureComponent {
         message: 'Error Loading Data'
       })
     } else {
-      form.setFieldsValue(data)
+      this.setState({
+        extraData: data.customItems
+      }, () => {
+
+        setTimeout(() => {
+          form.setFieldsValue(data)
+        }, 200)
+
+      })
     }
     dispatch(hideLoader())
   }
 
   constructor (props) {
     super(props)
+
+  }
+
+  addNewField = () => {
+
+    let x = _.clone(this.state.extraData)
+
+    x.push({
+      name: '',
+      value: 0,
+      desc: ''
+    })
+
+    this.setState({
+      extraData: x
+    })
+
+  }
+  removeNewField = (key) => {
+
+    let x = _.clone(this.state.extraData)
+
+    x = _.remove(x, (k, i) => {
+      return i === key
+    })
+
+    this.setState({
+      extraData: x
+    })
 
   }
 
@@ -132,18 +170,18 @@ class AddBudget extends PureComponent {
         id: data.id
       })
       this.setFormValues(data.id)
-
     }
+
 
   }
 
   render () {
 
-    const { submitting } = this.props
+    const { extraData } = this.state
     const {
-      form: { getFieldDecorator, getFieldValue }
+      submitting,
+      form: { getFieldDecorator, getFieldValue, getFieldProps, setFieldsValue }
     } = this.props
-
 
     const formItemLayout = {
       labelCol: {
@@ -186,6 +224,66 @@ class AddBudget extends PureComponent {
 
             <GetAllFormFields inputSchema={this.state.inputTypes} formItemLayout={formItemLayout}
                               getFieldDecorator={getFieldDecorator}/>
+
+
+            {extraData.map((val, key) => {
+
+              return <div className={'extraData'} key={key}>
+
+                <Row>
+                  <Col span={8}>
+                    <Form.Item style={{ textAlign: 'right' }}>
+                      {getFieldDecorator(`customItems[${key}].name`, {
+                        rules: [{ required: true, message: 'Please add name of field' }]
+                      })(
+                        <Input placeholder={'Item Name'} style={{ width: 200, marginRight: 10 }}/>
+                      )}
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item>
+                      {getFieldDecorator(`customItems[${key}].value`)(
+                        <InputNumber placeholder={'Amount'} style={{ width: 200 }}/>
+                      )}
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col span={8}></Col>
+                  <Col span={12}>
+                    <Form.Item>
+                      {getFieldDecorator(`customItems[${key}].desc`, {
+                        valuePropName: 'data',
+                        getValueFromEvent: (e, editor) => {
+                          return editor.getData()
+                        }
+                      })(
+                        <CKEditor
+                          editor={ClassicEditor}
+                        />
+                      )}
+                    </Form.Item>
+                  </Col>
+
+                </Row>
+
+              </div>
+            })}
+
+            <Row>
+              <Col span={8} style={{ textAlign: 'right' }}>
+                <Button type="dashed"
+                        style={{ margin: 8 }}
+                        shape={'circle'}
+                        icon={'plus-circle'}
+                        onClick={() => {
+                          this.addNewField()
+                        }}/>
+
+              </Col>
+            </Row>
+
 
             <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={this.props.loading}>

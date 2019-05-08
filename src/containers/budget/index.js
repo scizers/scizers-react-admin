@@ -99,7 +99,13 @@ class BudgetView extends Component {
         title={'Annual Brand Budget'}>
 
         <Card bordered={true}>
-          <TableComp columns={columns} dataSource={data} loading={loading}/>
+          <TableComp
+            pagination={{
+              showSizeChanger: true,
+              defaultPageSize: 100,
+              pageSizeOptions: ['10', '20', '50', '100', '1000']
+            }}
+            columns={columns} dataSource={data} loading={loading}/>
         </Card>
 
 

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Icon } from 'antd'
 import styles from './AuthLayout.less'
-import logo from '../assets/logo.svg'
+import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom'
 import GlobalFooter from '../components/GlobalFooter'
 import { subTitle, pageTitle } from '../settings'

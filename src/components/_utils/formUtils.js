@@ -5,6 +5,8 @@ import ReactQuill from 'react-quill' // ES6
 import 'react-quill/dist/quill.snow.css' // ES6
 import 'react-quill/dist/quill.bubble.css' // ES6
 
+import CKEditor from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 import { Form, Input, Upload, Icon, Button, InputNumber, Select, DatePicker, Spin, Switch, Radio } from 'antd'
 import _ from 'lodash'
@@ -46,7 +48,6 @@ class SimpleFormElement extends Component {
 
   handleChange = (v) => {
 
-
     console.log(v)
 
   }
@@ -69,6 +70,12 @@ class SimpleFormElement extends Component {
 
       case 'editor':
         return <ReactQuill  {...x} />
+
+      case 'ckeditor':
+        return <CKEditor
+          editor={ClassicEditor}
+          {...x}
+        />
 
       case 'file':
 
@@ -342,29 +349,33 @@ class getAllFormFields extends Component {
 
           }
 
+          if (item.type === 'ckeditor') {
+            customEvent = {
+              ...customEvent,
+              // initialValue: item.initialValue ? item.initialValue : '',
+              valuePropName: 'data',
+              getValueFromEvent: (event, editor) => {
+                const data = editor.getData()
+                return data
+              }
+            }
+
+          }
+
 
           inputProps = {
             ...inputProps,
             ...item.customProps
           }
 
-          let propFormItem = {
-            key: item.key,
-            label: item.label
-          }
-
-          if (item.help) {
-            propFormItem.help = item.help
-          }
-
           return (
             <React.Fragment key={item.key}>
 
-
-
               {item.prefixComp ? item.prefixComp : null}
 
-              <FormItem {...FIL} {...propFormItem}>
+              <FormItem {...FIL}
+                        key={item.key}
+                        label={item.label}>
 
                 {getFieldDecorator(item.key, { rules, ...customEvent })(
                   <SimpleFormElement item={item} {...inputProps}/>)}

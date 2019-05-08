@@ -5,3 +5,43 @@
 .ql-snow .ql-editor h5 {
     font-size: 1.4em;
 }
+
+.ant-menu-dark {
+    background-color: #a5a5a5;
+}
+
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+    background: #A5A5A5;
+}
+
+.ant-menu-dark .ant-menu-item, .ant-menu-dark .ant-menu-item-group-title, .ant-menu-dark .ant-menu-item > a {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) inset;
+    background-color: #9b9b9b;
+}
+
+.extraData .ant-form-item {
+    margin-bottom: 10px;
+}
+
+figure.table table {
+    background-color: #fdfdfd;
+    width: 100%;
+}
+
+figure.table td {
+    padding: 3px;
+}
+
+figure.table td {
+    border: 1px #c3c3c3 solid;
+}
+
+.scrollCard {
+    overflow: scroll;
+}
+
+

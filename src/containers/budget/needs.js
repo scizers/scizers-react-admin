@@ -20,8 +20,10 @@ import { connect } from 'react-redux'
 import memoizeOne from 'memoize-one'
 import update from 'immutability-helper'
 import { getPushPathWrapper } from '../../routes'
+import renderHTML from 'react-render-html'
 
 const TabPane = Tabs.TabPane
+const COUNT = 2
 
 class BudgetView extends Component {
 
@@ -45,9 +47,14 @@ class BudgetView extends Component {
 
     let { data, error } = await Request.getBudget()
 
+    let data2 = _.reject(data, (x, y) => {
+      return y < COUNT
+    })
+
     if (!error) {
       this.setState({
         data,
+        data2,
         loading: false
       })
     }
@@ -55,7 +62,7 @@ class BudgetView extends Component {
 
   render () {
 
-    const { data, loading } = this.state
+    const { data, data2, loading } = this.state
     const { dispatch } = this.props
     return (
       <PageHeaderWrapper
@@ -63,41 +70,96 @@ class BudgetView extends Component {
 
         <Card bordered={true}>
 
-          <Tabs tabPosition={'left'}>
+          {!loading && <Tabs>
 
-            {data && data.map((val, index) => {
+            {data && data.slice(0, COUNT).map((val, index) => {
               return <TabPane tab={val.tactic} key={index + 1}>
 
-                <table className={styles.tableNeeds}>
-                  <tbody>
-                  <tr>
-                    <td>Allocated Budget</td>
-                    <td>{val.allocatedBudget}</td>
-                  </tr>
-                  <tr>
-                    <td>Actual Budget</td>
-                    <td>{val.actualBudget}</td>
-                  </tr>
-                  <tr>
-                    <td>format</td>
-                    <td>{val.format}</td>
-                  </tr>
-                  <tr>
-                    <td>objective</td>
-                    <td>{val.objective}</td>
-                  </tr>
+                <Card className={'scrollCard'}>
+                  <table className={styles.tableNeeds}>
+                    <tbody>
 
-                  <tr>
-                    <td>comments</td>
-                    <td>{val.comments}</td>
-                  </tr>
-                  </tbody>
-                </table>
+                    <tr>
+                      <td>Allocated Budget</td>
+                      <td>{val.allocatedBudget}</td>
+                    </tr>
+
+                    <tr>
+                      <td>Actual Budget</td>
+                      <td>{val.actualBudget}</td>
+                    </tr>
+
+                    {val.customItems.map((x, key) => {
+                      return <React.Fragment key={key}>
+                        <tr>
+                          <td>{x.name}</td>
+                          <td>{x.value ? x.value : renderHTML(x.desc)}</td>
+                        </tr>
+                        {x.desc && x.value &&
+                        <tr>
+                          <td></td>
+                          <td>{renderHTML(x.desc)}</td>
+                        </tr>
+                        }
+                      </React.Fragment>
+                    })}
+
+                    </tbody>
+                  </table>
+                </Card>
 
               </TabPane>
             })}
 
-          </Tabs>
+
+            <TabPane tab={'Others'} key={COUNT + 1}>
+
+              <Tabs tabPosition={'left'}>
+
+                {data2 && data2.map((val, index) => {
+                  return <TabPane tab={val.tactic} key={index + 1}>
+
+                    <Card className={'scrollCard'}>
+                      <table className={styles.tableNeeds}>
+                        <tbody>
+
+                        <tr>
+                          <td>Allocated Budget</td>
+                          <td>{val.allocatedBudget}</td>
+                        </tr>
+
+                        <tr>
+                          <td>Actual Budget</td>
+                          <td>{val.actualBudget}</td>
+                        </tr>
+
+                        {val.customItems.map((x, key) => {
+                          return <React.Fragment key={key}>
+                            <tr>
+                              <td>{x.name}</td>
+                              <td>{x.value ? x.value : renderHTML(x.desc)}</td>
+                            </tr>
+                            {x.desc && x.value &&
+                            <tr>
+                              <td></td>
+                              <td>{renderHTML(x.desc)}</td>
+                            </tr>
+                            }
+                          </React.Fragment>
+                        })}
+
+                        </tbody>
+                      </table>
+                    </Card>
+
+                  </TabPane>
+                })}
+
+              </Tabs>
+
+            </TabPane>
+
+          </Tabs>}
 
 
         </Card>
