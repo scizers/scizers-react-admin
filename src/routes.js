@@ -9,6 +9,7 @@ import AddUsers from './containers/users/add'
 
 import Budget from './containers/budget'
 import BudgetNeeds from './containers/budget/needs'
+import BudgetNeedsSingle from './containers/budget/single'
 import BudgetAdd from './containers/budget/add'
 import Speaker from './containers/speakers'
 import AdvisoryBoard from './containers/advisoryBoard'
@@ -24,6 +25,19 @@ const menu = [
     'key': 'needs',
     'homepage': true,
     'component': BudgetNeeds,
+    'authority': [
+      'admin',
+      'user'
+    ]
+  },
+  {
+    'path': '/needs/:id',
+    dontShowOnMenu: true,
+    'name': 'Needs Analysis',
+    'icon': 'user',
+    'key': 'needsSingle',
+    'homepage': true,
+    'component': BudgetNeedsSingle,
     'authority': [
       'admin',
       'user'

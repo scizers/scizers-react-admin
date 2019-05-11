@@ -74,7 +74,7 @@ class BudgetView extends Component {
         title: 'Actions',
         render: (val, record) => {
 
-          return <React.Fragment>
+          return <div className={'test'}>
             {val &&
             <Tooltip title="View Details">
               <Button shape="circle" onClick={() => {
@@ -82,13 +82,19 @@ class BudgetView extends Component {
               }} icon="link"/>
             </Tooltip>}
 
-            <Tooltip title="View Details">
+            <Tooltip title="Edit">
               <Button shape="circle" onClick={() => {
                 dispatch(getPushPathWrapper('settings.editBudget', { id: record._id }))
               }} icon="edit"/>
             </Tooltip>
 
-          </React.Fragment>
+            <Tooltip title="Review Tactic">
+              <Button type="primary" onClick={() => {
+                dispatch(getPushPathWrapper('needsSingle', { id: record._id }))
+              }}>Review</Button>
+            </Tooltip>
+
+          </div>
 
         }
       }
@@ -99,6 +105,15 @@ class BudgetView extends Component {
         title={'Annual Brand Budget'}>
 
         <Card bordered={true}>
+
+          <div className={'test'} style={{ float: 'right', marginBottom: 15 }}>
+
+            <Button>Save As Draft</Button>
+            <Button type={'primary'}>Save and Submit</Button>
+
+
+          </div>
+
           <TableComp
             pagination={{
               showSizeChanger: true,

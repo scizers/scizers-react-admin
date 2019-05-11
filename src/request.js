@@ -147,6 +147,37 @@ class Request {
     })
   }
 
+
+  removeContact (data) {
+    return new Promise((next) => {
+      authAxios
+        .delete(`/contact/${data._id}`, getToken())
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
+  approveAll (data) {
+    return new Promise((next) => {
+      authAxios
+        .post(`/contactapprove`, { ...data}, getToken())
+        .then((d) => {
+          next(d.data)
+        })
+        .catch((err) => {
+          next({ error: true, err })
+          this.error(err)
+        })
+
+    })
+  }
+
   addBudget (data) {
     return new Promise((next) => {
       authAxios

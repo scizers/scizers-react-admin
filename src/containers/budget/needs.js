@@ -21,6 +21,7 @@ import memoizeOne from 'memoize-one'
 import update from 'immutability-helper'
 import { getPushPathWrapper } from '../../routes'
 import renderHTML from 'react-render-html'
+import Currency from 'react-currency-formatter'
 
 const TabPane = Tabs.TabPane
 const COUNT = 2
@@ -76,24 +77,45 @@ class BudgetView extends Component {
               return <TabPane tab={val.tactic} key={index + 1}>
 
                 <Card className={'scrollCard'}>
+
+                  <div className={'test'} style={{ float: 'right' }}>
+
+                    <Button>Save As Draft</Button>
+                    <Button type={'primary'}>Save and Submit</Button>
+
+                    <Button shape="circle"
+                            onClick={() => {
+                              dispatch(getPushPathWrapper('settings.editBudget', { id: val._id }))
+                            }} icon="edit"/>
+
+                  </div>
+
+
                   <table className={styles.tableNeeds}>
                     <tbody>
 
                     <tr>
-                      <td>Allocated Budget</td>
-                      <td>{val.allocatedBudget}</td>
+                      <td>Budget</td>
+                      <td><p className={styles.price}><Currency
+                        quantity={val.allocatedBudget}
+                        currency="USD"
+                      /></p>
+                      </td>
                     </tr>
 
-                    <tr>
+                    {/*  <tr>
                       <td>Actual Budget</td>
                       <td>{val.actualBudget}</td>
-                    </tr>
+                    </tr>*/}
 
                     {val.customItems.map((x, key) => {
                       return <React.Fragment key={key}>
                         <tr>
                           <td>{x.name}</td>
-                          <td>{x.value ? x.value : renderHTML(x.desc)}</td>
+                          <td>{x.value ? <p className={styles.price}><Currency
+                            quantity={x.value}
+                            currency="USD"
+                          /></p> : renderHTML(x.desc)}</td>
                         </tr>
                         {x.desc && x.value &&
                         <tr>
@@ -106,6 +128,7 @@ class BudgetView extends Component {
 
                     </tbody>
                   </table>
+
                 </Card>
 
               </TabPane>
@@ -120,18 +143,35 @@ class BudgetView extends Component {
                   return <TabPane tab={val.tactic} key={index + 1}>
 
                     <Card className={'scrollCard'}>
+
+                      <div style={{ float: 'right' }}>
+
+                        <Button>Save As Draft</Button>
+                        <Button type={'primary'}>Save and Submit</Button>
+
+                        <Button shape="circle"
+                                onClick={() => {
+                                  dispatch(getPushPathWrapper('settings.editBudget', { id: val._id }))
+                                }} icon="edit"/>
+
+                      </div>
+
+
                       <table className={styles.tableNeeds}>
                         <tbody>
 
                         <tr>
-                          <td>Allocated Budget</td>
-                          <td>{val.allocatedBudget}</td>
+                          <td>Budget</td>
+                          <td><p className={styles.price}><Currency
+                            quantity={val.allocatedBudget}
+                            currency="USD"
+                          /></p></td>
                         </tr>
 
-                        <tr>
+                        {/* <tr>
                           <td>Actual Budget</td>
                           <td>{val.actualBudget}</td>
-                        </tr>
+                        </tr>*/}
 
                         {val.customItems.map((x, key) => {
                           return <React.Fragment key={key}>

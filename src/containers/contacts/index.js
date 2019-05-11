@@ -23,7 +23,7 @@ import { hideLoader, showLoader } from '../../modules/actions'
 import moment from 'moment/moment'
 // import { FormUtils } from 'sz-react-utils'
 import FormUtils from '../../components/_utils/formUtils'
-import TableComp from '../../components/_utils/table'
+// import TableComp from '../../components/_utils/table'
 import { apiUrl } from '../../settings'
 
 const Option = Select.Option
@@ -318,6 +318,7 @@ class ContactsView extends Component {
     editContact: false,
     edit: false,
     showingAll: false,
+    currentTab: '1',
     params: {
       hcpType: ''
     },
@@ -609,7 +610,13 @@ class ContactsView extends Component {
 
   }
 
+  remove = async (_id) => {
+    await Request.removeContact({ _id })
+    this.reload()
+  }
+
   componentDidMount () {
+
     this.apiRequest2()
 
     if (this.props.pathname === '/adviser/all') {
@@ -938,24 +945,55 @@ class ContactsView extends Component {
           rowKey: 'override',
           title: 'Actions',
           render: (cap, record) => {
+
+            console.log(record)
+
             return <React.Fragment>
 
-              <Button type={'primary'}
-                      shape={'circle'}
-                      icon={'edit'}
-                      onClick={() => {
-                        this.setState({
-                          editingSpeaker: record,
-                          visible: true
-                        })
-                      }}/>
+              <div style={{ marginBottom: 5 }}>
 
-              {!record.override1 ? <Button onClick={() => {
+                <Button type={'primary'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'edit'}
+                        onClick={() => {
+                          this.setState({
+                            editingSpeaker: record,
+                            visible: true
+                          })
+                        }}/>
+
+                <Button type={'danger'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'delete'}
+                        onClick={() => {
+                          this.remove(record._id)
+                        }}/>
+
+
+                {/*  <Button size={'small'}
+                        type={'primary'}
+                        onClick={() => {
+                          console.log('asdf')
+                        }}>
+                  Approve
+                </Button>
+                <Button size={'small'}
+                        type={'danger'}
+                        onClick={() => {
+                          console.log('asdf')
+                        }}>
+                  Disapprove
+                </Button>*/}
+
+              </div>
+
+              {!record.override1 ? <Button size={'small'} onClick={() => {
                 this.changeSpeakerCap(true, record)
               }}>
                 Override
-              </Button> : (
-                <div>
+              </Button> : (<div>
 
                   <TextArea placeholder={'Reason For Override'}
                             defaultValue={record.overrideMsg}
@@ -965,21 +1003,27 @@ class ContactsView extends Component {
                             }}
                   />
 
-                  <Button type={'primary'}
-                          disabled={!record.overrideMsg}
-                          onClick={() => {
-                            this.save2(record)
-                          }}>
-                    Save
-                  </Button>
-                  <Button onClick={() => {
-                    this.cancelOverride(record)
-                  }}>
-                    Cancel
-                  </Button>
-                </div>
-              )
-              }
+                <Button type={'primary'} size={'small'}
+                        disabled={!record.overrideMsg}
+                        onClick={() => {
+                          this.save2(record)
+                        }}>
+                  Save
+                </Button>
+                <Button size={'small'} onClick={() => {
+                  this.cancelOverride(record)
+                }}>
+                  Cancel
+                </Button>
+              </div>)}
+
+              <div style={{ marginBottom: 5 }}>
+
+                {record.approved ? <span className={styles.approved}>Approved</span> :
+                  <span className={styles.notapproved}>Not Approved</span>}
+
+              </div>
+
             </React.Fragment>
 
           }
@@ -1274,26 +1318,40 @@ class ContactsView extends Component {
           key: 'override',
           dataIndex: 'override',
           rowKey: 'override',
+          width : 100,
           title: 'Actions',
           render: (cap, record) => {
             return <React.Fragment>
 
-              <Button type={'primary'}
-                      shape={'circle'}
-                      icon={'edit'}
-                      onClick={() => {
-                        this.setState({
-                          editingSpeaker: record,
-                          visible: true
-                        })
-                      }}/>
+              <div style={{ marginBottom: 5 }}>
+
+
+                <Button type={'primary'}
+                        shape={'circle'}
+                        icon={'edit'}
+                        onClick={() => {
+                          this.setState({
+                            editingSpeaker: record,
+                            visible: true
+                          })
+                        }}/>
+
+                <Button type={'danger'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'delete'}
+                        onClick={() => {
+                          this.remove(record._id)
+                        }}/>
+
+              </div>
+
 
               {!record.override1 ? <Button onClick={() => {
                 this.changeSpeakerCap(true, record)
               }}>
                 Override
-              </Button> : (
-                <div>
+              </Button> : (<div>
 
                   <TextArea placeholder={'Reason For Override'}
                             defaultValue={record.overrideMsg}
@@ -1316,9 +1374,15 @@ class ContactsView extends Component {
                   }}>
                     Cancel
                   </Button>
-                </div>
-              )
-              }
+
+                </div>)}
+
+
+              <div style={{ marginBottom: 5 }}>
+                {record.approved ? <span className={styles.approved}>Approved</span> :
+                  <span className={styles.notapproved}>Not Approved</span>}
+              </div>
+
             </React.Fragment>
 
           }
@@ -1422,6 +1486,48 @@ class ContactsView extends Component {
       test.overrideMsg = record.overrideMsg
       let x = await Request.editContact(test)
     }
+
+    this.setState({
+      loading: false
+    })
+
+  }
+
+  approved = async (checked, record) => {
+
+    let {
+      dataSource1,
+      dataSource2,
+      dataSource3,
+      dataSource4
+    } = this.state
+
+    this.setState({
+      loading: true
+    })
+
+    let data1 = _.clone(dataSource1)
+    let data2 = _.clone(dataSource2)
+    let data3 = _.clone(dataSource3)
+    let data4 = _.clone(dataSource4)
+
+    let x = _.find(data1, x => x._id == record._id)
+    if (x) {
+      x.approved = checked
+      this.setState({
+        dataSource1: data1
+      })
+    }
+
+
+    /*
+        let test = _.find(changes, x => x._id == record._id)
+        if (test) {
+          test.override = true
+          test.overrideMsg = record.overrideMsg
+          let x = await Request.editContact(test)
+        }
+    */
 
     this.setState({
       loading: false
@@ -1680,6 +1786,21 @@ class ContactsView extends Component {
             </Col>
 
             <Col span={16} style={{ textAlign: 'right' }}>
+
+              <Button onClick={async () => {
+
+                let { currentTab: x } = this.state
+                console.log(x)
+                let allApproveId = _.map(this.state[`dataSource${x}`], (val) => {
+                  return val._id
+                })
+
+                await Request.approveAll({ approve: true, ids: allApproveId })
+
+                this.reload()
+
+              }}>Approve All</Button>
+
               {!Edit ?
                 <Button type="primary"
                         onClick={() => {
@@ -1803,23 +1924,29 @@ class ContactsView extends Component {
           </Row>}
 
 
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Speakers" key="1"><Table
-              reloadButon={false}
-              scroll={{ x: 1600 }}
-              rowKey={record => record._id}
-              bordered
-              loading={loading}
-              pagination={{
-                showSizeChanger: true,
-                defaultPageSize: 100,
-                pageSizeOptions: ['10', '20', '50', '100', '1000']
-              }}
-              columns={columns}
-              dataSource={dataSource1}
+          <Tabs defaultActiveKey="1"
+                onChange={(e) => {
+                  this.setState({
+                    currentTab: e
+                  })
+                }}>
+            <TabPane tab="Speakers" key="1">
+              <Table
+                reloadButon={false}
+                scroll={{ x: 1600 }}
+                rowKey={record => record._id}
+                bordered
+                loading={loading}
+                pagination={{
+                  showSizeChanger: true,
+                  defaultPageSize: 100,
+                  pageSizeOptions: ['10', '20', '50', '100', '1000']
+                }}
+                columns={columns}
+                dataSource={dataSource1}
 
 
-            /></TabPane>
+              /></TabPane>
             <TabPane tab="Advisory Boards" key="2"><Table
               reloadButon={false}
               scroll={{ x: 1800 }}

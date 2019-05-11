@@ -75,7 +75,7 @@ export default class GlobalHeaderRight extends PureComponent {
     } = this.props
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-        <Menu.Item key="userCenter">
+        {/*  <Menu.Item key="userCenter">
           <Icon type="user"/>
           <span>account center</span>
         </Menu.Item>
@@ -89,7 +89,8 @@ export default class GlobalHeaderRight extends PureComponent {
           <span>trigger error</span>
 
         </Menu.Item>
-        <Menu.Divider/>
+        <Menu.Divider/>*/}
+
         <Menu.Item key="logout">
           <Icon type="logout"/>
           <span>logout</span>
@@ -106,7 +107,7 @@ export default class GlobalHeaderRight extends PureComponent {
     }
     return (
       <div className={className}>
-        <HeaderSearch
+        {/*<HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder={'Search Anything Here'}
           dataSource={[]}
@@ -116,9 +117,9 @@ export default class GlobalHeaderRight extends PureComponent {
           onPressEnter={value => {
             console.log('enter', value)
           }}
-        />
+        />*/}
 
-        <NoticeIcon
+        {/*     <NoticeIcon
           className={styles.action}
           count={11}
           onItemClick={(item, tabProps) => {
@@ -150,7 +151,7 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyText={'You have viewed all Messages.'}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
           />
-        </NoticeIcon>
+        </NoticeIcon>*/}
 
         {user.email ? (
           <HeaderDropdown overlay={menu}>
