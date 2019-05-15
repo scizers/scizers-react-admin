@@ -30,7 +30,498 @@ const Option = Select.Option
 const TabPane = Tabs.TabPane
 const TextArea = Input.TextArea
 
-const HCT_TYPES = [
+const Tier = [
+  {
+    'type': 'speaker',
+    'data': [
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 1-National',
+        'points': '(15-21)',
+        'honorarium': '2500',
+        'maxnumberofengagemnts': 40,
+        'speakercap': '100000',
+        'hourlyrate': 250
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 2-Regional',
+        'points': '(8-14)',
+        'honorarium': '2000',
+        'maxnumberofengagemnts': 10,
+        'speakercap': '20000',
+        'hourlyrate': 200
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 3-Local',
+        'points': '(1-7)',
+        'honorarium': '1500',
+        'maxnumberofengagemnts': 6,
+        'speakercap': '9000',
+        'hourlyrate': 150
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'honorarium': '2000',
+        'hourlyrate': 200,
+        'maxnumberofengagemnts': 25,
+        'speakercap': '50000'
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 150,
+        'honorarium': '1500',
+        'maxnumberofengagemnts': 8,
+        'speakercap': '12000'
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 100,
+        'honorarium': '1000',
+        'maxnumberofengagemnts': 6,
+        'speakercap': '6000'
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'honorarium': '1500',
+        'hourlyrate': 150,
+        'maxnumberofengagemnts': 8,
+        'speakercap': '12000'
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'honorarium': '1000',
+        'hourlyrate': 100,
+        'maxnumberofengagemnts': 10,
+        'speakercap': '10000'
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'honorarium': '750',
+        'hourlyrate': 75,
+        'maxnumberofengagemnts': 8,
+        'speakercap': '6000'
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'honorarium': '1500',
+        'hourlyrate': 150,
+        'maxnumberofengagemnts': 20,
+        'speakercap': '30000'
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'honorarium': '1000',
+        'hourlyrate': 100,
+        'maxnumberofengagemnts': 10,
+        'speakercap': '10000'
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'honorarium': '750',
+        'hourlyrate': 75,
+        'maxnumberofengagemnts': 8,
+        'speakercap': '6000'
+      }
+    ]
+  },
+  {
+    'type': 'advisoryBoard',
+    'data': [
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 1-National',
+        'points': '(15-21)',
+        'hourlyrate': 250,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2500,
+        'maxengagements': 5,
+        'maxffs': 12500
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 2-Regional',
+        'points': '(8-14)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 3-Local',
+        'points': '(1-7)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      }
+    ]
+  },
+  {
+    'type': 'consultingArrangement',
+    'data': [
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 1-National',
+        'points': '(15-21)',
+        'hourlyrate': 250,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2500,
+        'maxengagements': 5,
+        'maxffs': 12500
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 2-Regional',
+        'points': '(8-14)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 3-Local',
+        'points': '(1-7)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      }
+    ]
+  },
+  {
+    'type': 'otherHCPEngagement',
+    'data': [
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 1-National',
+        'points': '(15-21)',
+        'hourlyrate': 250,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2500,
+        'maxengagements': 5,
+        'maxffs': 12500
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 2-Regional',
+        'points': '(8-14)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Physician',
+        'tier': 'Tier 3-Local',
+        'points': '(1-7)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 200,
+        'maxhoursengagement': 10,
+        'rateperengagement': 2000,
+        'maxengagements': 5,
+        'maxffs': 10000
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Research Academic)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Non-Physician (Mid-Level)',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 1-National',
+        'points': '(13-18)',
+        'hourlyrate': 150,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1500,
+        'maxengagements': 5,
+        'maxffs': 7500
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 2-Regional',
+        'points': '(7-12)',
+        'hourlyrate': 100,
+        'maxhoursengagement': 10,
+        'rateperengagement': 1000,
+        'maxengagements': 5,
+        'maxffs': 5000
+      },
+      {
+        'hcptype': 'Management',
+        'tier': 'Tier 3-Local',
+        'points': '(1-6)',
+        'hourlyrate': 75,
+        'maxhoursengagement': 10,
+        'rateperengagement': 750,
+        'maxengagements': 5,
+        'maxffs': 3750
+      }
+    ]
+  }
+]
+
+const HCP_TYPES = [
   'Physician',
   'Non-Physician (Research Academic)',
   'Non-Physician (Mid-Level)',
@@ -41,7 +532,7 @@ const HISTORICAL_TIER = [
   'Local', 'Regional', 'National', 'International'
 ]
 const TIERS = [
-  'Tier 1 - National', 'Tier 2 - Regional', 'Tier 3 - Local'
+  'Tier 1-National', 'Tier 2-Regional', 'Tier 3-Local'
 ]
 const HONORARIUM = [
   750, 1000, 1500, 2000, 2500
@@ -161,7 +652,7 @@ class AddContact extends PureComponent {
           label: 'HCP Type',
           type: 'select',
           required: true,
-          options: HCT_TYPES,
+          options: HCP_TYPES,
           onChange: (v) => {
             this.props.form.setFieldsValue({ hcpType: v })
           }
@@ -324,7 +815,8 @@ class ContactsView extends Component {
     },
     changes: [],
     changes2: [],
-    editingSpeaker: null
+    editingSpeaker: null,
+    uploadType: 'speaker'
 
   }
 
@@ -472,29 +964,6 @@ class ContactsView extends Component {
 
   }
 
-  changeQual = (data) => {
-
-    const { _id, type, value } = data
-    let { changes: ddd } = this.state
-    let changes = _.clone(ddd)
-
-    let x = _.find(changes, x => x._id == _id)
-
-    if (!x) {
-      changes.push({
-        _id,
-        [type]: value
-      })
-    } else {
-      x[type] = value
-    }
-
-    // console.log(changes)
-    this.setState({
-      changes
-    })
-
-  }
   save = async () => {
 
     let {
@@ -587,10 +1056,35 @@ class ContactsView extends Component {
 
   }
 
+  changeQual = (data) => {
+
+    const { _id, type, value } = data
+    let { changes: ddd } = this.state
+    let changes = _.clone(ddd)
+
+    let x = _.find(changes, x => x._id == _id)
+
+    if (!x) {
+      changes.push({
+        _id,
+        [type]: value
+      })
+    } else {
+      x[type] = value
+    }
+
+    // console.log(changes)
+    this.setState({
+      changes
+    })
+
+  }
+
   changeValues = (data) => {
 
     const { _id, type, value } = data
     let { changes2: ddd } = this.state
+
     let changes2 = _.clone(ddd)
 
     let x = _.find(changes2, x => x._id == _id)
@@ -613,6 +1107,289 @@ class ContactsView extends Component {
   remove = async (_id) => {
     await Request.removeContact({ _id })
     this.reload()
+  }
+
+  _changeTier = ({ value, record }) => {
+
+    let out = this.getTier(value, record.hcpType, record.contactType[0])
+
+    this.changeValues({ type: 'maxhoursengagement', value: out.maxhoursengagement, _id: record._id })
+    this.changeValues({ type: 'rateperengagement', value: out.rateperengagement, _id: record._id })
+    this.changeValues({ type: 'maxengagements', value: out.maxengagements, _id: record._id })
+    this.changeValues({ type: 'maxffs', value: out.maxffs, _id: record._id })
+
+    this.changeValues({ type: 'honorarium', value: out.honorarium, _id: record._id })
+    this.changeValues({ type: 'hourlyrate', value: out.hourlyrate, _id: record._id })
+    this.changeValues({ type: 'speakercap', value: out.speakercap, _id: record._id })
+    this.changeValues({ type: 'maxnumberofengagemnts', value: out.maxnumberofengagemnts, _id: record._id })
+
+
+  }
+
+  _changeHCP = ({ value, record }) => {
+
+    let out = this.getTier(record.tier, value, record.contactType[0])
+
+    this.changeValues({ type: 'maxhoursengagement', value: out.maxhoursengagement, _id: record._id })
+    this.changeValues({ type: 'rateperengagement', value: out.rateperengagement, _id: record._id })
+    this.changeValues({ type: 'maxengagements', value: out.maxengagements, _id: record._id })
+    this.changeValues({ type: 'maxffs', value: out.maxffs, _id: record._id })
+
+    this.changeValues({ type: 'honorarium', value: out.honorarium, _id: record._id })
+    this.changeValues({ type: 'hourlyrate', value: out.hourlyrate, _id: record._id })
+    this.changeValues({ type: 'speakercap', value: out.speakercap, _id: record._id })
+    this.changeValues({ type: 'maxnumberofengagemnts', value: out.maxnumberofengagemnts, _id: record._id })
+
+  }
+
+  getTier = (tier, hcpType, type) => {
+
+    const bigT = _.find(Tier, x => x.type === type)
+
+    const main = _.find(bigT.data, x => {
+      return (x.hcptype == hcpType) && x.tier == tier
+    })
+
+    return main
+
+
+  }
+  uploadCSVRequest = () => {
+    return new Promise(async (resolve) => {
+
+      let { uploadData, uploadType: type } = this.state
+      await Request.csvUpload({ uploadData, type })
+      notification.success({ message: 'New Data Uploaded', description: 'Reload to view' })
+
+      this.setState({
+        disabled: false,
+        uploadData: null,
+        visible2: false
+      })
+
+      resolve()
+    })
+  }
+
+  save2 = async (record) => {
+
+    let {
+      changes2: changes,
+      dataSource1,
+      dataSource2,
+      dataSource3,
+      dataSource4
+    } = this.state
+
+    this.setState({
+      loading: true
+    })
+
+    let data1 = _.clone(dataSource1)
+    let data2 = _.clone(dataSource2)
+    let data3 = _.clone(dataSource3)
+    let data4 = _.clone(dataSource4)
+
+    _.each(data1, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        _.each(x, (val, key) => {
+          c[key] = val
+        })
+        c.override1 = false
+        c.override = true
+      }
+
+      this.setState({
+        dataSource1: data1
+      })
+
+    })
+    _.each(data2, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        _.each(x, (val, key) => {
+          c[key] = val
+        })
+        c.override1 = false
+        c.override = true
+
+      }
+
+      this.setState({
+        dataSource2: data2
+      })
+
+    })
+    _.each(data3, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        _.each(x, (val, key) => {
+          c[key] = val
+        })
+        c.override1 = false
+        c.override = true
+
+      }
+
+      this.setState({
+        dataSource3: data3
+      })
+
+    })
+    _.each(data4, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        _.each(x, (val, key) => {
+          c[key] = val
+        })
+        c.override1 = false
+        c.override = true
+
+      }
+
+      this.setState({
+        dataSource4: data4
+      })
+
+    })
+
+
+    let test = _.find(changes, x => x._id == record._id)
+    if (test) {
+      test.override = true
+      test.overrideMsg = record.overrideMsg
+      let x = await Request.editContact(test)
+    }
+
+    this.setState({
+      loading: false
+    })
+
+  }
+
+  approved = async (checked, record) => {
+
+    let {
+      dataSource1,
+      dataSource2,
+      dataSource3,
+      dataSource4
+    } = this.state
+
+    this.setState({
+      loading: true
+    })
+
+    let data1 = _.clone(dataSource1)
+    let data2 = _.clone(dataSource2)
+    let data3 = _.clone(dataSource3)
+    let data4 = _.clone(dataSource4)
+
+    let x = _.find(data1, x => x._id == record._id)
+    if (x) {
+      x.approved = checked
+      this.setState({
+        dataSource1: data1
+      })
+    }
+
+
+    /*
+        let test = _.find(changes, x => x._id == record._id)
+        if (test) {
+          test.override = true
+          test.overrideMsg = record.overrideMsg
+          let x = await Request.editContact(test)
+        }
+    */
+
+    this.setState({
+      loading: false
+    })
+
+  }
+
+  cancelOverride = async (record) => {
+
+    let {
+      changes2: changes,
+      dataSource1,
+      dataSource2,
+      dataSource3,
+      dataSource4
+    } = this.state
+
+    this.setState({
+      loading: true
+    })
+
+    let data1 = _.clone(dataSource1)
+    let data2 = _.clone(dataSource2)
+    let data3 = _.clone(dataSource3)
+    let data4 = _.clone(dataSource4)
+
+    _.each(data1, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        c.override1 = false
+      }
+
+      this.setState({
+        dataSource1: data1
+      })
+
+    })
+    _.each(data2, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        c.override1 = false
+      }
+
+      this.setState({
+        dataSource2: data2
+      })
+
+    })
+    _.each(data3, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        c.override1 = false
+      }
+
+      this.setState({
+        dataSource3: data3
+      })
+
+    })
+    _.each(data4, (c) => {
+
+      let x = _.find(changes, x => x._id == c._id)
+      if (x) {
+        c.override1 = false
+      }
+
+      this.setState({
+        dataSource4: data4
+      })
+
+    })
+
+
+    let test = _.reject(changes, x => x._id == record._id)
+
+    this.setState({
+      loading: false,
+      changes2: test
+    })
+
   }
 
   componentDidMount () {
@@ -657,7 +1434,32 @@ class ContactsView extends Component {
           key: 'hcpType',
           rowKey: 'hcpType',
           dataIndex: 'hcpType',
-          title: 'HCP Type'
+          title: 'HCP Type',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          defaultValue={val}
+                          onChange={value => {
+                            this.changeValues({ type: 'hcpType', value, _id: record._id })
+                            this._changeHCP({ value, record })
+                          }}>
+
+                    {HCP_TYPES.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
         },
         /*  {
             key: 'contactType',
@@ -771,9 +1573,12 @@ class ContactsView extends Component {
                   <Select style={{ minWidth: 100 }}
                           placeholder={'Tier'}
                           onChange={value => {
-                            this.changeValues({ type: 'tier', value, _id: record._id })
-                          }}>
+                            // this.changeValues({ type: 'tier', value, _id: record._id })
 
+                            this.changeValues({ type: 'tier', value, _id: record._id })
+                            this._changeTier({ value, record })
+
+                          }}>
 
                     {TIERS.map((val) => {
                       return <Option key={val}>{val}</Option>
@@ -799,6 +1604,7 @@ class ContactsView extends Component {
                   </Tooltip>
                 )}</span>) : (<div>
                   <Select style={{ minWidth: 100 }}
+                    // value={val}
                           placeholder={'Hourly Rate'}
                           onChange={value => {
                             this.changeValues({ type: 'hourlyrate', value, _id: record._id })
@@ -809,6 +1615,7 @@ class ContactsView extends Component {
                     })}
 
                   </Select>
+
                 </div>)
               }
             </React.Fragment>
@@ -945,8 +1752,6 @@ class ContactsView extends Component {
           rowKey: 'override',
           title: 'Actions',
           render: (cap, record) => {
-
-            console.log(record)
 
             return <React.Fragment>
 
@@ -1318,7 +2123,7 @@ class ContactsView extends Component {
           key: 'override',
           dataIndex: 'override',
           rowKey: 'override',
-          width : 100,
+          width: 100,
           title: 'Actions',
           render: (cap, record) => {
             return <React.Fragment>
@@ -1362,20 +2167,20 @@ class ContactsView extends Component {
                             }}
                   />
 
-                  <Button type={'primary'}
-                          disabled={!record.overrideMsg}
-                          onClick={() => {
-                            this.save2(record)
-                          }}>
-                    Save
-                  </Button>
-                  <Button onClick={() => {
-                    this.cancelOverride(record)
-                  }}>
-                    Cancel
-                  </Button>
+                <Button type={'primary'}
+                        disabled={!record.overrideMsg}
+                        onClick={() => {
+                          this.save2(record)
+                        }}>
+                  Save
+                </Button>
+                <Button onClick={() => {
+                  this.cancelOverride(record)
+                }}>
+                  Cancel
+                </Button>
 
-                </div>)}
+              </div>)}
 
 
               <div style={{ marginBottom: 5 }}>
@@ -1390,246 +2195,6 @@ class ContactsView extends Component {
       ]
     })
 
-  }
-
-  save2 = async (record) => {
-
-    let {
-      changes2: changes,
-      dataSource1,
-      dataSource2,
-      dataSource3,
-      dataSource4
-    } = this.state
-
-    this.setState({
-      loading: true
-    })
-
-    let data1 = _.clone(dataSource1)
-    let data2 = _.clone(dataSource2)
-    let data3 = _.clone(dataSource3)
-    let data4 = _.clone(dataSource4)
-
-    _.each(data1, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        _.each(x, (val, key) => {
-          c[key] = val
-        })
-        c.override1 = false
-        c.override = true
-      }
-
-      this.setState({
-        dataSource1: data1
-      })
-
-    })
-    _.each(data2, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        _.each(x, (val, key) => {
-          c[key] = val
-        })
-        c.override1 = false
-        c.override = true
-
-      }
-
-      this.setState({
-        dataSource2: data2
-      })
-
-    })
-    _.each(data3, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        _.each(x, (val, key) => {
-          c[key] = val
-        })
-        c.override1 = false
-        c.override = true
-
-      }
-
-      this.setState({
-        dataSource3: data3
-      })
-
-    })
-    _.each(data4, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        _.each(x, (val, key) => {
-          c[key] = val
-        })
-        c.override1 = false
-        c.override = true
-
-      }
-
-      this.setState({
-        dataSource4: data4
-      })
-
-    })
-
-
-    let test = _.find(changes, x => x._id == record._id)
-    if (test) {
-      test.override = true
-      test.overrideMsg = record.overrideMsg
-      let x = await Request.editContact(test)
-    }
-
-    this.setState({
-      loading: false
-    })
-
-  }
-
-  approved = async (checked, record) => {
-
-    let {
-      dataSource1,
-      dataSource2,
-      dataSource3,
-      dataSource4
-    } = this.state
-
-    this.setState({
-      loading: true
-    })
-
-    let data1 = _.clone(dataSource1)
-    let data2 = _.clone(dataSource2)
-    let data3 = _.clone(dataSource3)
-    let data4 = _.clone(dataSource4)
-
-    let x = _.find(data1, x => x._id == record._id)
-    if (x) {
-      x.approved = checked
-      this.setState({
-        dataSource1: data1
-      })
-    }
-
-
-    /*
-        let test = _.find(changes, x => x._id == record._id)
-        if (test) {
-          test.override = true
-          test.overrideMsg = record.overrideMsg
-          let x = await Request.editContact(test)
-        }
-    */
-
-    this.setState({
-      loading: false
-    })
-
-  }
-
-  cancelOverride = async (record) => {
-
-    let {
-      changes2: changes,
-      dataSource1,
-      dataSource2,
-      dataSource3,
-      dataSource4
-    } = this.state
-
-    this.setState({
-      loading: true
-    })
-
-    let data1 = _.clone(dataSource1)
-    let data2 = _.clone(dataSource2)
-    let data3 = _.clone(dataSource3)
-    let data4 = _.clone(dataSource4)
-
-    _.each(data1, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        c.override1 = false
-      }
-
-      this.setState({
-        dataSource1: data1
-      })
-
-    })
-    _.each(data2, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        c.override1 = false
-      }
-
-      this.setState({
-        dataSource2: data2
-      })
-
-    })
-    _.each(data3, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        c.override1 = false
-      }
-
-      this.setState({
-        dataSource3: data3
-      })
-
-    })
-    _.each(data4, (c) => {
-
-      let x = _.find(changes, x => x._id == c._id)
-      if (x) {
-        c.override1 = false
-      }
-
-      this.setState({
-        dataSource4: data4
-      })
-
-    })
-
-
-    let test = _.reject(changes, x => x._id == record._id)
-
-    this.setState({
-      loading: false,
-      changes2: test
-    })
-
-  }
-
-  uploadCSVRequest = () => {
-    return new Promise(async (resolve) => {
-
-      let { uploadData } = this.state
-      let type = 'contact'
-
-      await Request.csvUpload({ uploadData, type })
-      notification.success({ message: 'New Data Uploaded', description: 'Reload to view' })
-
-      this.setState({
-        disabled: true,
-        uploadData: null,
-        visible2: false
-      })
-
-      resolve()
-    })
   }
 
   uploadCVRequest = (type) => {
@@ -1777,11 +2342,11 @@ class ContactsView extends Component {
                 })
               }}>Add Contact</Button>
 
-              {/* <Button type="dashed" onClick={() => {
+              <Button type="dashed" onClick={() => {
                 this.setState({
                   visible2: true
                 })
-              }}>Upload Contacts</Button>*/}
+              }}>Upload Contacts</Button>
 
             </Col>
 
@@ -1860,7 +2425,7 @@ class ContactsView extends Component {
                       }}>
 
                 <Option value={''}>All </Option>
-                {HCT_TYPES.map((val) => {
+                {HCP_TYPES.map((val) => {
                   return <Option key={val}>{val}</Option>
                 })}
 
@@ -2024,8 +2589,9 @@ class ContactsView extends Component {
         </Drawer>
 
         <Drawer
-          title="Upload  CSV "
+          title="Upload CSV "
           placement="right"
+          width={400}
           closable={true}
           onClose={() => {
             this.setState({
@@ -2038,6 +2604,30 @@ class ContactsView extends Component {
         >
 
           <div className={styles.drawerWrapper}>
+
+            <div style={{ marginBottom: 10 }}>
+
+              <Select style={{ minWidth: 150 }}
+                      value={this.state.uploadType}
+                      placeholder={'HCP Type'}
+                      onChange={(val) => {
+
+                        this.setState({
+                          uploadType: val
+                        })
+
+                      }}>
+
+                {CONTACT_TYPES.map((val) => {
+                  return <Option key={val.name} value={val.id}>{val.name}</Option>
+                })}
+
+
+              </Select>
+
+
+            </div>
+
             <Upload {...uploadprops}>
               <Button>
                 <Icon type="upload"/> Click to Upload
@@ -2061,9 +2651,11 @@ class ContactsView extends Component {
 
           </div>
 
-          <a href={`${apiUrl}/sample.csv`} style={{ marginTop: 10 }}>
-            Download Sample File
-          </a>
+          <div style={{ textAlign: 'center' }}>
+            <a href={`${apiUrl}/sample.csv`} style={{ marginTop: 10 }}>
+              Download Sample File
+            </a>
+          </div>
 
         </Drawer>
 

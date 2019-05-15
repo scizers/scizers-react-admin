@@ -5,7 +5,7 @@
     "deploy": "now && now alias",
     "start": "craco start",
     "now-start": "serve -s ./build",
-    "build": "craco build",
+    "build": "export NODE_OPTIONS=--max_old_space_size=4096 && craco build",
     "test": "craco test --env=jsdom",
     "eject": "react-scripts eject",
     "precommit": "pretty-quick --staged"

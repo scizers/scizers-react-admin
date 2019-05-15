@@ -103,6 +103,12 @@ class BudgetView extends Component {
                       </td>
                     </tr>
 
+                    <tr>
+                      <td>HCP Pool</td>
+                      <td><b>{val.currentPool}</b> out of <b>{val.totalPool}</b>
+                      </td>
+                    </tr>
+
                     {/*  <tr>
                       <td>Actual Budget</td>
                       <td>{val.actualBudget}</td>

@@ -51,6 +51,10 @@ class AddBudget extends PureComponent {
         {
           key: 'order',
           type: 'number'
+        },
+        {
+          key: 'totalPool',
+          type: 'number'
         }
 
       ]
