@@ -40,12 +40,6 @@ let inputTypes = {
       label: 'Password',
       key: 'password',
       required: true
-    },
-    {
-      label: 'User Type',
-      key: 'userType',
-      required: true,
-      type: 'select', options: ['Agent', 'Applicant', 'Either']
     }]
 }
 
@@ -82,33 +76,6 @@ class AddWebsite extends PureComponent {
 
       }
     })
-  }
-
-  setFormValues = async (slug) => {
-
-    let { data } = await Request.getWebsite(slug)
-
-    this.setState({
-      extraFeilds: data.extraUrls.length
-    })
-
-    let x = {
-      url: data.url,
-      category: data.category,
-      tags: data.tags,
-      description: data.description,
-      baseColor: data.baseColor,
-      logoBgColor: data.logoBgColor,
-      logoUrl: data.logoUrl,
-      projectDate: moment(data.projectDate)
-    }
-
-    _.each(data.extraUrls, (val, k) => {
-      x[`extraUrl-${k}`] = val
-    })
-
-    this.props.form.setFieldsValue(x)
-
   }
 
   constructor (props) {
@@ -165,8 +132,7 @@ class AddWebsite extends PureComponent {
 
     return (
       <PageHeaderWrapper
-        title={'Add New Website'}
-        content={'This is some descopt '}
+        title={'Add User'}
       >
 
         <Card bordered={true}>

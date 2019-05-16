@@ -1296,17 +1296,53 @@ class ContactsView extends Component {
       this.setState({
         dataSource1: data1
       })
+
+      Request.editContact({
+        _id: record._id,
+        approved: checked
+      })
+
     }
 
+    x = _.find(data2, x => x._id == record._id)
+    if (x) {
+      x.approved = checked
+      this.setState({
+        dataSource2: data2
+      })
 
-    /*
-        let test = _.find(changes, x => x._id == record._id)
-        if (test) {
-          test.override = true
-          test.overrideMsg = record.overrideMsg
-          let x = await Request.editContact(test)
-        }
-    */
+      Request.editContact({
+        _id: record._id,
+        approved: checked
+      })
+    }
+
+    x = _.find(data3, x => x._id == record._id)
+    if (x) {
+      x.approved = checked
+      this.setState({
+        dataSource3: data3
+      })
+
+      Request.editContact({
+        _id: record._id,
+        approved: checked
+      })
+    }
+
+    x = _.find(data4, x => x._id == record._id)
+    if (x) {
+      x.approved = checked
+      this.setState({
+        dataSource4: data4
+      })
+
+      Request.editContact({
+        _id: record._id,
+        approved: checked
+      })
+    }
+
 
     this.setState({
       loading: false
@@ -1421,66 +1457,115 @@ class ContactsView extends Component {
           }
         },
         {
-          key: 'uniqueId',
-          dataIndex: 'uniqueId',
-          rowKey: 'uniqueId',
-          title: 'Unique Id',
-          sorter: (a, b) => {
-            return a.uniqueId.length - b.uniqueId.length
-          },
-          sortDirections: ['descend']
-        },
-        {
-          key: 'hcpType',
-          rowKey: 'hcpType',
-          dataIndex: 'hcpType',
-          title: 'HCP Type',
-          render: (val, record) => {
+          key: 'override',
+          dataIndex: 'override',
+          rowKey: 'override',
+          fixed: 'left',
+          width: 100,
+          title: 'Actions',
+          render: (cap, record) => {
+
             return <React.Fragment>
-              {
-                !record.override1 ? (<span>{val} {record.override && (
-                  <Tooltip title="Overridden FMV calculation">
-                    <small className={styles.override}>*</small>
-                  </Tooltip>
-                )}</span>) : (<div>
-                  <Select style={{ minWidth: 100 }}
-                          defaultValue={val}
-                          onChange={value => {
-                            this.changeValues({ type: 'hcpType', value, _id: record._id })
-                            this._changeHCP({ value, record })
-                          }}>
 
-                    {HCP_TYPES.map((val) => {
-                      return <Option key={val}>{val}</Option>
-                    })}
+              <div style={{ marginBottom: 5 }}>
 
-                  </Select>
-                </div>)
-              }
+                <Button type={'primary'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'edit'}
+                        onClick={() => {
+                          this.setState({
+                            editingSpeaker: record,
+                            visible: true
+                          })
+                        }}/>
+
+                <Button type={'danger'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'delete'}
+                        onClick={() => {
+                          this.remove(record._id)
+                        }}/>
+
+
+                {/*  <Button size={'small'}
+                        type={'primary'}
+                        onClick={() => {
+                          console.log('asdf')
+                        }}>
+                  Approve
+                </Button>
+                <Button size={'small'}
+                        type={'danger'}
+                        onClick={() => {
+                          console.log('asdf')
+                        }}>
+                  Disapprove
+                </Button>*/}
+
+              </div>
+
+              {!record.override1 ? <Button size={'small'} onClick={() => {
+                this.changeSpeakerCap(true, record)
+              }}>
+                Override
+              </Button> : (<div>
+
+                  <TextArea placeholder={'Reason For Override'}
+                            defaultValue={record.overrideMsg}
+                            onChange={(val) => {
+                              let value = val.target.value
+                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
+                            }}
+                  />
+
+                <Button type={'primary'} size={'small'}
+                        disabled={!record.overrideMsg}
+                        onClick={() => {
+                          this.save2(record)
+                        }}>
+                  Save
+                </Button>
+                <Button size={'small'} onClick={() => {
+                  this.cancelOverride(record)
+                }}>
+                  Cancel
+                </Button>
+              </div>)}
+
+              <div style={{ margin: 6 }}>
+
+                {/* {record.approved ? <span className={styles.approved}>Approved</span> :
+                  <span className={styles.notapproved}>Not Approved</span>}*/}
+
+                <Switch
+                  checked={record.approved}
+                  checkedChildren={'Approved'}
+                  unCheckedChildren={'NotApproved'}
+                  onChange={(val) => {
+
+                    this.approved(val, record)
+
+                    // approved
+
+                  }}
+                />
+
+
+              </div>
+
             </React.Fragment>
-          }
 
-        },
-        /*  {
-            key: 'contactType',
-            rowKey: 'contactType',
-            dataIndex: 'contactType',
-            title: 'Contact Type',
-            render: (val) => {
-              return val.join(', ')
-            }
-          },*/
-        {
-          key: 'historicalTier',
-          dataIndex: 'historicalTier',
-          title: 'Historical Tier',
-          rowKey: 'historicalTier'
+          }
         },
         {
           key: 'qualification',
           dataIndex: 'qualification',
           rowKey: 'qualification',
           title: 'Qualification',
+          fixed: 'left',
+          width: 200,
           render: (val, record) => {
 
             return <div>
@@ -1556,6 +1641,53 @@ class ContactsView extends Component {
             </div>
 
           }
+        },
+        {
+          key: 'uniqueId',
+          dataIndex: 'uniqueId',
+          rowKey: 'uniqueId',
+          title: 'Unique Id',
+          sorter: (a, b) => {
+            return a.uniqueId.length - b.uniqueId.length
+          },
+          sortDirections: ['descend']
+        },
+        {
+          key: 'hcpType',
+          rowKey: 'hcpType',
+          dataIndex: 'hcpType',
+          title: 'HCP Type',
+          render: (val, record) => {
+            return <React.Fragment>
+              {
+                !record.override1 ? (<span>{val} {record.override && (
+                  <Tooltip title="Overridden FMV calculation">
+                    <small className={styles.override}>*</small>
+                  </Tooltip>
+                )}</span>) : (<div>
+                  <Select style={{ minWidth: 100 }}
+                          defaultValue={val}
+                          onChange={value => {
+                            this.changeValues({ type: 'hcpType', value, _id: record._id })
+                            this._changeHCP({ value, record })
+                          }}>
+
+                    {HCP_TYPES.map((val) => {
+                      return <Option key={val}>{val}</Option>
+                    })}
+
+                  </Select>
+                </div>)
+              }
+            </React.Fragment>
+          }
+
+        },
+        {
+          key: 'historicalTier',
+          dataIndex: 'historicalTier',
+          title: 'Historical Tier',
+          rowKey: 'historicalTier'
         },
         {
           key: 'tier',
@@ -1745,94 +1877,8 @@ class ContactsView extends Component {
             </div>
 
           }
-        },
-        {
-          key: 'override',
-          dataIndex: 'override',
-          rowKey: 'override',
-          title: 'Actions',
-          render: (cap, record) => {
-
-            return <React.Fragment>
-
-              <div style={{ marginBottom: 5 }}>
-
-                <Button type={'primary'}
-                        size={'small'}
-                        shape={'circle'}
-                        icon={'edit'}
-                        onClick={() => {
-                          this.setState({
-                            editingSpeaker: record,
-                            visible: true
-                          })
-                        }}/>
-
-                <Button type={'danger'}
-                        size={'small'}
-                        shape={'circle'}
-                        icon={'delete'}
-                        onClick={() => {
-                          this.remove(record._id)
-                        }}/>
-
-
-                {/*  <Button size={'small'}
-                        type={'primary'}
-                        onClick={() => {
-                          console.log('asdf')
-                        }}>
-                  Approve
-                </Button>
-                <Button size={'small'}
-                        type={'danger'}
-                        onClick={() => {
-                          console.log('asdf')
-                        }}>
-                  Disapprove
-                </Button>*/}
-
-              </div>
-
-              {!record.override1 ? <Button size={'small'} onClick={() => {
-                this.changeSpeakerCap(true, record)
-              }}>
-                Override
-              </Button> : (<div>
-
-                  <TextArea placeholder={'Reason For Override'}
-                            defaultValue={record.overrideMsg}
-                            onChange={(val) => {
-                              let value = val.target.value
-                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
-                            }}
-                  />
-
-                <Button type={'primary'} size={'small'}
-                        disabled={!record.overrideMsg}
-                        onClick={() => {
-                          this.save2(record)
-                        }}>
-                  Save
-                </Button>
-                <Button size={'small'} onClick={() => {
-                  this.cancelOverride(record)
-                }}>
-                  Cancel
-                </Button>
-              </div>)}
-
-              <div style={{ marginBottom: 5 }}>
-
-                {record.approved ? <span className={styles.approved}>Approved</span> :
-                  <span className={styles.notapproved}>Not Approved</span>}
-
-              </div>
-
-            </React.Fragment>
-
-          }
         }
+
       ],
       columns2: [
         {
@@ -1852,41 +1898,85 @@ class ContactsView extends Component {
           }
         },
         {
-          key: 'uniqueId',
-          dataIndex: 'uniqueId',
-          rowKey: 'uniqueId',
-          title: 'Unique Id',
-          sorter: (a, b) => {
-            return a.uniqueId.length - b.uniqueId.length
-          },
-          sortDirections: ['descend']
-        },
-        {
-          key: 'hcpType',
-          rowKey: 'hcpType',
-          dataIndex: 'hcpType',
-          title: 'HCP Type'
-        },
-        /*  {
-            key: 'contactType',
-            rowKey: 'contactType',
-            dataIndex: 'contactType',
-            title: 'Contact Type',
-            render: (val) => {
-              return val.join(', ')
-            }
-          },*/
-        {
-          key: 'historicalTier',
-          dataIndex: 'historicalTier',
-          title: 'Historical Tier',
-          rowKey: 'historicalTier'
+          key: 'override',
+          dataIndex: 'override',
+          rowKey: 'override',
+          width: 100,
+          fixed: 'left',
+          title: 'Actions',
+          render: (cap, record) => {
+            return <React.Fragment>
+
+              <div style={{ marginBottom: 5 }}>
+
+
+                <Button type={'primary'}
+                        shape={'circle'}
+                        icon={'edit'}
+                        onClick={() => {
+                          this.setState({
+                            editingSpeaker: record,
+                            visible: true
+                          })
+                        }}/>
+
+                <Button type={'danger'}
+                        size={'small'}
+                        shape={'circle'}
+                        icon={'delete'}
+                        onClick={() => {
+                          this.remove(record._id)
+                        }}/>
+
+              </div>
+
+              {!record.override1 ? <Button onClick={() => {
+                this.changeSpeakerCap(true, record)
+              }}>
+                Override
+              </Button> : (<div>
+
+                  <TextArea placeholder={'Reason For Override'}
+                            defaultValue={record.overrideMsg}
+                            onChange={(val) => {
+                              let value = val.target.value
+                              console.log(value)
+                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
+                            }}
+                  />
+
+                <Button type={'primary'}
+                        disabled={!record.overrideMsg}
+                        onClick={() => {
+                          this.save2(record)
+                        }}>
+                  Save
+                </Button>
+                <Button onClick={() => {
+                  this.cancelOverride(record)
+                }}>
+                  Cancel
+                </Button>
+
+              </div>)}
+
+              <div style={{ marginBottom: 5 }}>
+                {record.approved ? <span className={styles.approved}>Approved</span> :
+                  <span className={styles.notapproved}>Not Approved</span>}
+              </div>
+
+            </React.Fragment>
+
+          }
         },
         {
           key: 'qualification',
           dataIndex: 'qualification',
           rowKey: 'qualification',
           title: 'Qualification',
+          fixed: 'left',
+          width: 200,
+
           render: (val, record) => {
 
             return <div>
@@ -1962,6 +2052,28 @@ class ContactsView extends Component {
             </div>
 
           }
+        },
+        {
+          key: 'uniqueId',
+          dataIndex: 'uniqueId',
+          rowKey: 'uniqueId',
+          title: 'Unique Id',
+          sorter: (a, b) => {
+            return a.uniqueId.length - b.uniqueId.length
+          },
+          sortDirections: ['descend']
+        },
+        {
+          key: 'hcpType',
+          rowKey: 'hcpType',
+          dataIndex: 'hcpType',
+          title: 'HCP Type'
+        },
+        {
+          key: 'historicalTier',
+          dataIndex: 'historicalTier',
+          title: 'Historical Tier',
+          rowKey: 'historicalTier'
         },
         {
           key: 'tier',
@@ -2116,79 +2228,6 @@ class ContactsView extends Component {
                 Add Supporting Documents
               </Button>
             </div>
-
-          }
-        },
-        {
-          key: 'override',
-          dataIndex: 'override',
-          rowKey: 'override',
-          width: 100,
-          title: 'Actions',
-          render: (cap, record) => {
-            return <React.Fragment>
-
-              <div style={{ marginBottom: 5 }}>
-
-
-                <Button type={'primary'}
-                        shape={'circle'}
-                        icon={'edit'}
-                        onClick={() => {
-                          this.setState({
-                            editingSpeaker: record,
-                            visible: true
-                          })
-                        }}/>
-
-                <Button type={'danger'}
-                        size={'small'}
-                        shape={'circle'}
-                        icon={'delete'}
-                        onClick={() => {
-                          this.remove(record._id)
-                        }}/>
-
-              </div>
-
-
-              {!record.override1 ? <Button onClick={() => {
-                this.changeSpeakerCap(true, record)
-              }}>
-                Override
-              </Button> : (<div>
-
-                  <TextArea placeholder={'Reason For Override'}
-                            defaultValue={record.overrideMsg}
-                            onChange={(val) => {
-                              let value = val.target.value
-                              console.log(value)
-                              this.changeReason({ type: 'overrideMsg', value, _id: record._id })
-                            }}
-                  />
-
-                <Button type={'primary'}
-                        disabled={!record.overrideMsg}
-                        onClick={() => {
-                          this.save2(record)
-                        }}>
-                  Save
-                </Button>
-                <Button onClick={() => {
-                  this.cancelOverride(record)
-                }}>
-                  Cancel
-                </Button>
-
-              </div>)}
-
-
-              <div style={{ marginBottom: 5 }}>
-                {record.approved ? <span className={styles.approved}>Approved</span> :
-                  <span className={styles.notapproved}>Not Approved</span>}
-              </div>
-
-            </React.Fragment>
 
           }
         }

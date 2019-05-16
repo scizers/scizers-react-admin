@@ -44,7 +44,7 @@ class Request {
   getAllUser (data) {
     return new Promise((next) => {
       authAxios
-        .get('/users', { params: { ...data } }, getToken())
+        .get('/user', { params: { ...data } }, getToken())
         .then((d) => {
           next(d.data)
         })
@@ -59,7 +59,7 @@ class Request {
   addUser (data) {
     return new Promise((next) => {
       authAxios
-        .post('/users', { ...data }, getToken())
+        .post('/user', { ...data }, getToken())
         .then((d) => {
           next(d.data)
         })
